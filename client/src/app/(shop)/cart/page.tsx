@@ -160,24 +160,53 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <section className="py-8 md:py-12">
-        <div className="mx-auto max-w-lg rounded-xl border border-border/80 bg-surface/90 p-6 text-center shadow-[0_18px_60px_rgba(0,0,0,0.06)] sm:p-10">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-surface2 text-text">
-            <ShoppingBag className="h-7 w-7" strokeWidth={1.8} />
+      <section className="pt-2 pb-8 md:pb-24">
+        <div className="mx-auto max-w-lg text-center">
+          {/* Hero illustration */}
+          <div className="relative mx-auto mb-8 flex h-28 w-28 items-center justify-center">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-text/5 to-text/10 animate-pulse" />
+            <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-surface2 border border-border/60">
+              <ShoppingBag className="h-9 w-9 text-text2/60" strokeWidth={1.2} />
+            </div>
           </div>
-          <h1 className="mt-6 text-2xl font-semibold tracking-[-0.035em] text-text sm:text-3xl">
-            Giỏ hàng của bạn đang trống
+
+          <h1 className="text-3xl font-bold tracking-[-0.04em] text-text sm:text-4xl">
+            Giỏ hàng trống
           </h1>
-          <p className="mx-auto mt-3 max-w-sm text-sm leading-6 text-text2">
-            Khám phá sản phẩm và thêm món bạn thích vào giỏ.
+          <p className="mx-auto mt-4 max-w-sm text-base leading-7 text-text2">
+            Bạn chưa có sản phẩm nào trong giỏ. <br />
+            Khám phá bộ sưu tập mới nhất của chúng tôi.
           </p>
-          <Link
-            href="/"
-            className="mt-7 inline-flex h-11 items-center justify-center gap-2 rounded-radius-btn bg-text px-5 text-sm font-semibold text-bg shadow-[0_12px_32px_var(--accent-glow)] transition-all hover:opacity-90 active:translate-y-px"
-          >
-            Mua sắm ngay
-            <ArrowRight className="h-4 w-4" strokeWidth={1.8} />
-          </Link>
+
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <Link
+              href="/"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-text px-7 text-sm font-semibold text-bg shadow-[0_12px_32px_var(--accent-glow)] transition-all hover:opacity-90 active:translate-y-px"
+            >
+              Tiếp tục mua sắm
+              <ArrowRight className="h-4 w-4" strokeWidth={1.8} />
+            </Link>
+            <Link
+              href="/?sort=rating"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-border px-7 text-sm font-semibold text-text transition-all hover:bg-surface2 active:translate-y-px"
+            >
+              Bán chạy nhất
+            </Link>
+          </div>
+
+          <div className="mt-10 grid grid-cols-3 gap-4 border-t border-border/60 pt-8">
+            {[
+              { icon: RotateCcw, label: 'Đổi trả miễn phí', desc: 'Trong 30 ngày' },
+              { icon: Truck, label: 'Vận chuyển', desc: 'Miễn phí từ 500K' },
+              { icon: ShieldCheck, label: 'Thanh toán', desc: 'An toàn tuyệt đối' },
+            ].map((item) => (
+              <div key={item.label} className="text-center">
+                <item.icon className="mx-auto mb-2 h-5 w-5 text-text2/50" strokeWidth={1} />
+                <p className="text-xs font-semibold text-text">{item.label}</p>
+                <p className="text-[11px] text-text2">{item.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         <SuggestedProducts />
@@ -186,8 +215,8 @@ export default function CartPage() {
   }
 
   return (
-    <section className="py-8 md:py-12">
-      <div className="mb-6 md:mb-8">
+    <section>
+      <div className="mb-6 md:mb-8 pt-2">
         <p className="text-sm text-text2">
           {totalItems()} sản phẩm trong giỏ
         </p>
@@ -210,7 +239,7 @@ export default function CartPage() {
               type="button"
               onClick={removeSelected}
               disabled={selectedIds.length === 0}
-              className="inline-flex h-9 items-center gap-2 rounded-radius-btn px-3 text-sm font-medium text-text2 transition-all hover:bg-surface2 hover:text-red disabled:pointer-events-none disabled:opacity-40"
+              className="inline-flex h-9 items-center gap-2 rounded-full px-3 text-sm font-medium text-text2 transition-all hover:bg-surface2 hover:text-red disabled:pointer-events-none disabled:opacity-40"
             >
               <Trash2 className="h-4 w-4" strokeWidth={1.8} />
               Xóa đã chọn
@@ -423,14 +452,14 @@ function OrderSummary({
         <button
           type="button"
           disabled
-          className="mt-5 flex h-12 w-full items-center justify-center rounded-[10px] bg-surface2 px-5 text-sm font-semibold text-text2"
+          className="mt-5 flex h-12 w-full items-center justify-center rounded-full bg-surface2 px-5 text-sm font-semibold text-text2"
         >
           Chọn sản phẩm
         </button>
       ) : (
         <Link
           href={checkoutHref}
-          className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-[10px] bg-text px-5 text-sm font-semibold text-bg shadow-[0_12px_32px_var(--accent-glow)] transition-all hover:opacity-90 active:translate-y-px"
+          className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-text px-5 text-sm font-semibold text-bg shadow-[0_12px_32px_var(--accent-glow)] transition-all hover:opacity-90 active:translate-y-px"
         >
           Thanh toán
           <ArrowRight className="h-4 w-4" strokeWidth={1.8} />
@@ -479,14 +508,14 @@ function MobileCheckoutBar({
           <button
             type="button"
             disabled
-            className="h-11 rounded-[10px] bg-surface2 px-5 text-sm font-semibold text-text2"
+            className="h-11 rounded-full bg-surface2 px-5 text-sm font-semibold text-text2"
           >
             Chọn sản phẩm
           </button>
         ) : (
           <Link
             href={checkoutHref}
-            className="inline-flex h-11 items-center justify-center rounded-[10px] bg-text px-5 text-sm font-semibold text-bg shadow-[0_12px_32px_var(--accent-glow)]"
+            className="inline-flex h-11 items-center justify-center rounded-full bg-text px-5 text-sm font-semibold text-bg shadow-[0_12px_32px_var(--accent-glow)]"
           >
             Thanh toán
           </Link>

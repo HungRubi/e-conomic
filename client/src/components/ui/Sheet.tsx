@@ -50,7 +50,7 @@ export default function Sheet({
         <>
           {/* Overlay */}
           <motion.div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-60"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -60,7 +60,7 @@ export default function Sheet({
           {/* Sheet panel */}
           <motion.div
             className={`
-              fixed top-0 bottom-0 z-50 w-full max-w-sm
+              fixed top-0 bottom-0 z-60 w-full max-w-sm
               bg-surface border-l border-border shadow-2xl
               flex flex-col
               ${side === 'left' ? 'left-0 border-r' : 'right-0 border-l'}

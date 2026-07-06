@@ -34,7 +34,7 @@ const footerSections = [
 export default function Footer() {
   return (
     <footer className="border-t border-border bg-surface">
-      <div className="max-w-[90rem] mx-auto px-4 py-12">
+      <div className="max-w-[90rem] mx-auto px-3 md:px-4 py-12">
         {/* Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
@@ -91,12 +91,12 @@ export default function Footer() {
                 <input
                   type="email"
                   placeholder="Email của bạn"
-                  className="w-full h-10 pl-10 pr-3 rounded-radius-btn bg-surface2 border border-border text-text text-sm placeholder-text2 focus:outline-none focus:border-border focus:ring-2 focus:ring-border/60 transition-colors"
+                  className="w-full h-10 pl-10 pr-3 rounded-full bg-surface2 border border-border text-text text-sm placeholder-text2 focus:outline-none focus:border-border focus:ring-2 focus:ring-border/60 transition-colors"
                 />
               </div>
               <button
                 type="submit"
-                className="h-10 px-4 rounded-radius-btn bg-accent text-white text-sm font-medium hover:brightness-110 transition-all flex items-center gap-1.5 shrink-0"
+                className="h-10 px-4 rounded-full bg-accent text-white text-sm font-medium hover:brightness-110 transition-all flex items-center gap-1.5 shrink-0"
               >
                 <span>Đăng ký</span>
                 <ArrowRight className="w-4 h-4" />

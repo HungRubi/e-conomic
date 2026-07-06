@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, PackageSearch } from 'lucide-react';
 import ProductCard from '@/components/product/ProductCard';
 import { Select } from '@/components';
-import { ProductGridSkeleton } from '@/components/ui/Skeleton';
+import { ProductCardSkeleton, ProductGridSkeleton } from '@/components/ui/Skeleton';
 import { type Product } from '@/types';
 import { getProducts, getFeaturedProducts, getNewArrivals } from '@/lib/products';
 import { categories } from '@/lib/categories';
@@ -169,7 +169,7 @@ function HomeContent() {
 
       {isCategoryView ? (
         /* ─── CATEGORY PRODUCT LISTING ─── */
-        <section className="py-6 pb-4">
+        <section className="py-6">
           <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div className="min-w-0">
               <div className="flex items-center gap-2">
@@ -288,7 +288,7 @@ function HomeContent() {
             </motion.div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-stretch">
               {loading
-                ? Array.from({ length: 4 }).map((_, i) => <ProductGridSkeleton key={i} />)
+                ? Array.from({ length: 4 }).map((_, i) => <ProductCardSkeleton key={i} />)
                 : featured.map((product, i) => (
                     <ProductCard key={product.id} product={product} index={i} />
                   ))}
@@ -296,7 +296,7 @@ function HomeContent() {
           </section>
 
           {/* NEW ARRIVALS */}
-          <section className="pb-4">
+          <section>
             <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex items-center justify-between mb-5">
               <h2 className="text-xl font-bold text-text">Hàng mới về</h2>
               <Link href="/?sort=newest" className="text-sm text-accent hover:text-accent/80 transition-colors flex items-center gap-1">
@@ -305,7 +305,7 @@ function HomeContent() {
             </motion.div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-stretch">
               {loading
-                ? Array.from({ length: 4 }).map((_, i) => <ProductGridSkeleton key={i} />)
+                ? Array.from({ length: 4 }).map((_, i) => <ProductCardSkeleton key={i} />)
                 : newArrivals.map((product, i) => <ProductCard key={product.id} product={product} index={i} />)}
             </div>
           </section>

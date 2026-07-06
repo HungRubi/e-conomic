@@ -21,7 +21,7 @@ import ProductCard from '@/components/product/ProductCard';
 import { useCartStore } from '@/stores/cart-store';
 import { useToast } from '@/components/ui/Toast';
 import { type Product, type ProductVariant } from '@/types';
-import { getProductBySlug, getRelatedProducts } from '@/lib/products';
+import { products, getProductBySlug, getRelatedProducts } from '@/lib/products';
 
 /* ---------- helpers ---------- */
 
@@ -111,7 +111,7 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="mx-auto max-w-[90rem] px-4 py-20 text-center">
+      <div className="mx-auto max-w-[90rem] px-3 md:px-4 py-20 text-center">
         <div className="mx-auto max-w-md rounded-radius border border-border/50 bg-surface p-8">
           <h1 className="text-2xl font-bold text-text">Không tìm thấy sản phẩm</h1>
           <p className="mt-3 text-sm leading-relaxed text-text2">
@@ -163,7 +163,7 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="mx-auto max-w-[90rem] px-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-4 md:pb-20 md:pt-6">
+    <div className="pt-4 pb-20 md:pb-12 md:pt-6">
       <ProductBreadcrumb name={product.name} />
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-8 xl:gap-10">
@@ -205,20 +205,28 @@ export default function ProductDetailPage() {
               Có thể bạn cũng thích
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-text2">
-              Những sản phẩm cùng nhóm, dễ so sánh trước khi quyết định.
+              Danh sách kéo dài để bạn tiếp tục khám phá sản phẩm phù hợp.
             </p>
           </div>
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4 lg:grid-cols-4">
-            {related.map((item, index) => (
-              <ProductCard key={item.id} product={item} index={index} />
-            ))}
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
+            {Array.from({ length: 4 }, (_, round) =>
+              products
+                .filter((p) => p.id !== product?.id)
+                .map((p) => ({ ...p, feedKey: `${p.id}-rel-${round}` })),
+            )
+              .flat()
+              .map((item, i) => (
+                <ProductCard
+                  key={item.feedKey}
+                  product={item}
+                  index={i % products.length}
+                />
+              ))}
           </div>
         </section>
       )}
 
       <MobileStickyCTA
-        name={product.name}
-        price={displayPrice}
         isAvailable={isAvailable}
         onAdd={handleAddToCart}
         onBuy={handleBuyNow}
@@ -453,8 +461,9 @@ function ProductPurchasePanel({
           {/* CTAs */}
           <div className="hidden gap-3 md:flex">
             <Button
+              variant="secondary"
               size="lg"
-              className="flex-1 whitespace-nowrap bg-text text-bg shadow-[0_4px_16px_rgba(0,0,0,0.12)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.18)] dark:bg-text dark:text-bg dark:shadow-[0_4px_16px_rgba(230,237,243,0.12)] dark:hover:shadow-[0_10px_28px_rgba(230,237,243,0.18)]"
+              className="flex-1 whitespace-nowrap"
               icon={<ShoppingBag className="h-5 w-5" />}
               onClick={onAdd}
               disabled={!isAvailable}
@@ -462,9 +471,8 @@ function ProductPurchasePanel({
               Thêm vào giỏ
             </Button>
             <Button
-              variant="secondary"
               size="lg"
-              className="flex-1 whitespace-nowrap"
+              className="flex-1 whitespace-nowrap bg-text text-bg shadow-[0_4px_16px_rgba(0,0,0,0.12)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.18)] dark:bg-text dark:text-bg dark:shadow-[0_4px_16px_rgba(230,237,243,0.12)] dark:hover:shadow-[0_10px_28px_rgba(230,237,243,0.18)]"
               onClick={onBuy}
               disabled={!isAvailable}
             >
@@ -472,7 +480,7 @@ function ProductPurchasePanel({
             </Button>
             <button
               type="button"
-              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] border border-border/50 text-text2 transition-colors hover:bg-surface2 hover:text-text active:translate-y-px"
+              className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border/50 text-text2 transition-colors hover:bg-surface2 hover:text-text active:translate-y-px"
               aria-label="Yêu thích"
             >
               <Heart className="h-5 w-5" />
@@ -514,7 +522,7 @@ function VariantSelector({ label, value, options, onSelect }: VariantSelectorPro
               type="button"
               onClick={() => onSelect(option)}
               aria-pressed={selected}
-              className={`min-h-10 rounded-[10px] border px-4 text-sm font-semibold transition-all active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text/20 ${
+              className={`min-h-10 rounded-full border px-4 text-sm font-semibold transition-all active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text/20 ${
                 selected
                   ? 'border-text/80 bg-text/10 text-text'
                   : 'border-border bg-surface text-text2 hover:bg-surface2 hover:text-text'
@@ -624,7 +632,7 @@ function ProductStory({ product, stock }: ProductStoryProps) {
 
 function ProductDetailSkeleton() {
   return (
-    <div className="mx-auto max-w-[90rem] px-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-5 md:pb-16 md:pt-8">
+    <div className="pt-5 pb-20 md:pb-12 md:pt-8">
       <div className="mb-6 flex gap-2">
         <Skeleton className="h-4 w-12" />
         <Skeleton className="h-4 w-20" />
@@ -665,24 +673,19 @@ function ProductDetailSkeleton() {
 /* ---------- mobile sticky CTA ---------- */
 
 interface MobileStickyCTAProps {
-  name: string;
-  price: number;
   isAvailable: boolean;
   onAdd: () => void;
   onBuy: () => void;
 }
 
-function MobileStickyCTA({ name, price, isAvailable, onAdd, onBuy }: MobileStickyCTAProps) {
+function MobileStickyCTA({ isAvailable, onAdd, onBuy }: MobileStickyCTAProps) {
   return (
-    <div className="fixed inset-x-0 bottom-[calc(3.5rem+env(safe-area-inset-bottom))] z-50 border-t border-border bg-bg/95 px-3 py-3 shadow-[0_-18px_50px_rgba(0,0,0,0.12)] backdrop-blur-xl md:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-bg/95 px-3 py-3 shadow-[0_-18px_50px_rgba(0,0,0,0.12)] backdrop-blur-xl md:hidden">
       <div className="mx-auto flex max-w-md items-center gap-2">
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-xs font-medium text-text2">{name}</div>
-          <div className="whitespace-nowrap text-sm font-bold text-accent">{formatPrice(price)}</div>
-        </div>
         <Button
+          variant="secondary"
           size="md"
-          className="h-11 flex-1 whitespace-nowrap px-3 text-sm bg-text text-bg"
+          className="h-12 flex-1 whitespace-nowrap px-3 text-sm rounded-full border-border"
           icon={<ShoppingBag className="h-4 w-4" />}
           onClick={onAdd}
           disabled={!isAvailable}
@@ -690,9 +693,8 @@ function MobileStickyCTA({ name, price, isAvailable, onAdd, onBuy }: MobileStick
           Thêm vào giỏ
         </Button>
         <Button
-          variant="secondary"
           size="md"
-          className="h-11 flex-1 whitespace-nowrap px-3 text-sm"
+          className="h-12 flex-1 whitespace-nowrap px-3 text-sm bg-text text-bg rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.15)]"
           onClick={onBuy}
           disabled={!isAvailable}
         >

@@ -28,6 +28,7 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
     ? Math.round((1 - product.price / product.compareAtPrice) * 100)
     : 0;
   const primaryTag = product.tags[0];
+  const soldCount = (product.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 200) + 50;
 
   const addToCart = useCallback(() => {
     const img = cardRef.current?.querySelector('img');
@@ -61,7 +62,7 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
       transition={{ delay: index * 0.04, duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
       className="product-card group h-full"
     >
-      <div className="card h-full overflow-hidden !p-2.5 rounded-xl border-border/80 bg-surface/90 shadow-[0_18px_60px_rgba(0,0,0,0.06)] hover:border-border hover:shadow-[0_18px_50px_rgba(0,0,0,0.10)]">
+      <div className="card h-full overflow-hidden !p-2 rounded-xl border-border/80 bg-surface/90 shadow-[0_18px_60px_rgba(0,0,0,0.06)] hover:border-border hover:shadow-[0_18px_50px_rgba(0,0,0,0.10)]">
         <div className="relative aspect-square overflow-hidden rounded-lg bg-surface2">
           <Link href={`/san-pham/${product.slug}`} aria-label={product.name}>
             <Image
@@ -81,50 +82,53 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
             <div className="product-image-sheen absolute inset-0" />
           </div>
 
-          <div className="absolute left-2.5 top-2.5 flex items-center gap-1.5">
+          {/* Left side: discount + tag */}
+          <div className="absolute left-2 top-2 flex items-center gap-1 max-w-[calc(100%-3.5rem)]">
             {discount > 0 && (
-              <span className="rounded-full bg-red px-2 py-0.5 text-[10px] font-bold text-white">
+              <span className="shrink-0 rounded-full bg-red px-2 py-0.5 text-[10px] font-bold text-white leading-none">
                 -{discount}%
               </span>
             )}
             {primaryTag && (
-              <span className="rounded-full border border-border bg-surface/85 px-2 py-0.5 text-[10px] font-semibold text-text backdrop-blur-md">
+              <span className="truncate rounded-full border border-border bg-surface/85 px-2 py-0.5 text-[10px] font-semibold text-text backdrop-blur-md leading-none">
                 {primaryTag}
               </span>
             )}
           </div>
 
+          {/* Right side: cart icon */}
           <button
             onClick={handleAdd}
-            className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface/85 text-text shadow-sm backdrop-blur-md transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-border hover:bg-surface2 active:translate-y-px"
+            className="absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface/85 text-text shadow-sm backdrop-blur-md transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-border hover:bg-surface2 active:translate-y-px"
             aria-label="Thêm vào giỏ"
           >
             <ShoppingBag className="h-3.5 w-3.5" />
           </button>
         </div>
 
-        <div className="flex min-h-[140px] flex-col px-1.5 pb-1 pt-3">
+        <div className="flex flex-col px-1.5 pb-1 pt-2.5 gap-1">
           <Link href={`/san-pham/${product.slug}`} className="block">
-            <h3 className="line-clamp-2 min-h-[2.6em] text-sm font-semibold leading-snug text-text transition-colors group-hover:text-accent">
+            <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-text transition-colors group-hover:text-accent">
               {product.name}
             </h3>
           </Link>
 
-          <p className="mt-1 line-clamp-2 min-h-[2.5em] text-xs leading-relaxed text-text2">
+          <p className="line-clamp-1 text-xs leading-relaxed text-text2">
             {product.description}
           </p>
 
-          <div className="mt-2">
+          <div className="flex items-center justify-between gap-2">
             <StarRating rating={product.rating} reviewCount={product.reviewCount} />
+            <span className="shrink-0 text-[10px] text-text2/60">Đã bán {soldCount}</span>
           </div>
 
-          <div className="mt-auto flex items-end justify-between gap-2 pt-3">
+          <div className="flex flex-wrap items-end justify-between gap-x-1 pt-1">
             <div className="min-w-0">
-              <div className="text-sm font-bold text-text">
+              <div className="text-sm font-bold text-text leading-tight">
                 {product.price.toLocaleString('vi-VN')}₫
               </div>
               {product.compareAtPrice && (
-                <div className="text-[11px] text-text2 line-through">
+                <div className="text-[10px] text-text2 line-through leading-tight">
                   {product.compareAtPrice.toLocaleString('vi-VN')}₫
                 </div>
               )}
@@ -134,9 +138,9 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
               <button
                 type="button"
                 onClick={handleAdd}
-                className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-text px-3 text-xs font-bold text-bg shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:opacity-85 active:translate-y-px"
+                className="mt-1.5 w-full sm:w-auto inline-flex h-7 items-center justify-center gap-1 rounded-full bg-text px-3 text-[11px] font-bold text-bg shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:opacity-85 active:translate-y-px"
               >
-                <ShoppingCart className="h-3.5 w-3.5" />
+                <ShoppingCart className="h-3 w-3" />
                 Mua ngay
               </button>
             )}

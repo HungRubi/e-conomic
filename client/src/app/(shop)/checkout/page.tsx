@@ -160,7 +160,7 @@ export default function CheckoutPage() {
             ].map((method) => (
               <label
                 key={method.id}
-                className="flex items-center gap-3 p-3 rounded-radius-btn border border-border cursor-pointer hover:bg-surface2 transition-colors"
+                className="flex items-center gap-3 p-3 rounded-full border border-border cursor-pointer hover:bg-surface2 transition-colors"
               >
                 <input
                   type="radio"
