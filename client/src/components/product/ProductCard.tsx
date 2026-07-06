@@ -1,0 +1,148 @@
+'use client';
+
+import { useRef, useState, useCallback } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { ShoppingBag, ShoppingCart } from 'lucide-react';
+import { StarRating } from '@/components';
+import { useCartStore } from '@/stores/cart-store';
+import { useToast } from '@/components/ui/Toast';
+import { useFlyingCart } from './FlyingCartProvider';
+import type { Product } from '@/types';
+
+interface ProductCardProps {
+  product: Product;
+  index?: number;
+  showBuyNow?: boolean;
+}
+
+export default function ProductCard({ product, index = 0, showBuyNow = true }: ProductCardProps) {
+  const addItem = useCartStore((s) => s.addItem);
+  const { showToast } = useToast();
+  const { flyFromRect } = useFlyingCart();
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  const discount = product.compareAtPrice
+    ? Math.round((1 - product.price / product.compareAtPrice) * 100)
+    : 0;
+  const primaryTag = product.tags[0];
+
+  const addToCart = useCallback(() => {
+    const img = cardRef.current?.querySelector('img');
+    if (img) flyFromRect(img.getBoundingClientRect());
+
+    addItem({
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images[0],
+      quantity: 1,
+    });
+    showToast('success', `Đã thêm "${product.name}" vào giỏ`);
+  }, [product, addItem, showToast, flyFromRect]);
+
+  const handleAdd = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+      addToCart();
+    },
+    [addToCart],
+  );
+
+  return (
+    <motion.article
+      ref={cardRef}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ delay: index * 0.04, duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
+      className="product-card group h-full"
+    >
+      <div className="card h-full overflow-hidden !p-2.5 rounded-xl border-border/80 bg-surface/90 shadow-[0_18px_60px_rgba(0,0,0,0.06)] hover:border-border hover:shadow-[0_18px_50px_rgba(0,0,0,0.10)]">
+        <div className="relative aspect-square overflow-hidden rounded-lg bg-surface2">
+          <Link href={`/san-pham/${product.slug}`} aria-label={product.name}>
+            <Image
+              src={product.images[0]}
+              alt={product.name}
+              fill
+              sizes="(max-width: 768px) 50vw, 25vw"
+              className={`product-card-image object-cover transition-[opacity,filter,transform,object-position] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:opacity-95 group-hover:saturate-110 group-hover:scale-105 ${
+                imgLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              onLoad={() => setImgLoaded(true)}
+            />
+          </Link>
+
+          {!imgLoaded && <div className="skeleton absolute inset-0" />}
+          <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+            <div className="product-image-sheen absolute inset-0" />
+          </div>
+
+          <div className="absolute left-2.5 top-2.5 flex items-center gap-1.5">
+            {discount > 0 && (
+              <span className="rounded-full bg-red px-2 py-0.5 text-[10px] font-bold text-white">
+                -{discount}%
+              </span>
+            )}
+            {primaryTag && (
+              <span className="rounded-full border border-border bg-surface/85 px-2 py-0.5 text-[10px] font-semibold text-text backdrop-blur-md">
+                {primaryTag}
+              </span>
+            )}
+          </div>
+
+          <button
+            onClick={handleAdd}
+            className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface/85 text-text shadow-sm backdrop-blur-md transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-border hover:bg-surface2 active:translate-y-px"
+            aria-label="Thêm vào giỏ"
+          >
+            <ShoppingBag className="h-3.5 w-3.5" />
+          </button>
+        </div>
+
+        <div className="flex min-h-[140px] flex-col px-1.5 pb-1 pt-3">
+          <Link href={`/san-pham/${product.slug}`} className="block">
+            <h3 className="line-clamp-2 min-h-[2.6em] text-sm font-semibold leading-snug text-text transition-colors group-hover:text-accent">
+              {product.name}
+            </h3>
+          </Link>
+
+          <p className="mt-1 line-clamp-2 min-h-[2.5em] text-xs leading-relaxed text-text2">
+            {product.description}
+          </p>
+
+          <div className="mt-2">
+            <StarRating rating={product.rating} reviewCount={product.reviewCount} />
+          </div>
+
+          <div className="mt-auto flex items-end justify-between gap-2 pt-3">
+            <div className="min-w-0">
+              <div className="text-sm font-bold text-text">
+                {product.price.toLocaleString('vi-VN')}₫
+              </div>
+              {product.compareAtPrice && (
+                <div className="text-[11px] text-text2 line-through">
+                  {product.compareAtPrice.toLocaleString('vi-VN')}₫
+                </div>
+              )}
+            </div>
+
+            {showBuyNow && (
+              <button
+                type="button"
+                onClick={handleAdd}
+                className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-full bg-text px-3 text-xs font-bold text-bg shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:opacity-85 active:translate-y-px"
+              >
+                <ShoppingCart className="h-3.5 w-3.5" />
+                Mua ngay
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </motion.article>
+  );
+}

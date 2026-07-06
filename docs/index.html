@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>e-conomic — Base Architecture</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111;
+    --surface2: #1a1a1a;
+    --border: #222;
+    --text: #f5f5f7;
+    --text2: #86868b;
+    --accent: #0071e3;
+    --accent-glow: rgba(0,113,227,.3);
+    --green: #30d158;
+    --orange: #ff9f0a;
+    --red: #ff453a;
+    --purple: #bf5af2;
+    --teal: #5ac8fa;
+    --radius: 16px;
+    --radius-sm: 8px;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1200px; margin:0 auto; padding:0 24px; }
+
+  header {
+    padding: 48px 0 32px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  header h1 {
+    font-size: clamp(2rem,5vw,3.2rem);
+    font-weight: 700;
+    letter-spacing: -.03em;
+    background: linear-gradient(135deg,#f5f5f7,#86868b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  header p { color:var(--text2); font-size:1.1rem; margin-top:8px; }
+
+  .tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+  .tag {
+    padding:4px 12px; border-radius:999px; font-size:.75rem; font-weight:500;
+    border:1px solid var(--border); color:var(--text2);
+  }
+  .tag.highlight { border-color:var(--accent); color:var(--accent); }
+
+  section { margin-bottom:64px; }
+  section h2 {
+    font-size:1.6rem; font-weight:600; letter-spacing:-.02em;
+    margin-bottom:24px; padding-bottom:12px;
+    border-bottom:1px solid var(--border);
+  }
+  section h3 {
+    font-size:1.1rem; font-weight:600; margin:24px 0 12px;
+  }
+  section h4 {
+    font-size:.95rem; font-weight:600; margin:16px 0 8px;
+    color:var(--accent);
+  }
+
+  .grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(340px,1fr)); gap:16px; }
+  .grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+  .grid-4 { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:12px; }
+
+  .card {
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:20px; transition:all .2s;
+  }
+  .card:hover { border-color:var(--accent); box-shadow:0 0 30px var(--accent-glow); }
+  .card .emoji { font-size:1.5rem; margin-bottom:8px; }
+  .card h4 { margin:0 0 4px; color:var(--text); }
+  .card p { color:var(--text2); font-size:.85rem; }
+
+  .table-wrap { overflow-x:auto; }
+  table {
+    width:100%; border-collapse:separate; border-spacing:0;
+    font-size:.85rem; border-radius:var(--radius-sm); overflow:hidden;
+    border:1px solid var(--border);
+  }
+  th {
+    background:var(--surface2); color:var(--text2); font-weight:500;
+    text-align:left; padding:10px 14px; border-bottom:1px solid var(--border);
+    font-size:.75rem; text-transform:uppercase; letter-spacing:.04em;
+  }
+  td { padding:10px 14px; border-bottom:1px solid var(--border); }
+  tr:last-child td { border-bottom:none; }
+  tr:hover td { background:var(--surface2); }
+
+  .badge {
+    display:inline-block; padding:2px 8px; border-radius:4px;
+    font-size:.7rem; font-weight:600; letter-spacing:.02em;
+  }
+  .badge.client { background:rgba(0,113,227,.15); color:#0071e3; }
+  .badge.dashboard { background:rgba(191,90,242,.15); color:#bf5af2; }
+  .badge.server { background:rgba(48,209,88,.15); color:#30d158; }
+  .badge.shared { background:rgba(255,159,10,.15); color:#ff9f0a; }
+  .badge.docs { background:rgba(255,69,58,.15); color:#ff453a; }
+  .badge.new { background:rgba(90,200,250,.15); color:#5ac8fa; }
+
+  .diagram {
+    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+    padding:24px; font-family:'SF Mono','Fira Code',monospace; font-size:.8rem;
+    overflow-x:auto; line-height:1.6;
+  }
+
+  pre { background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius-sm); padding:16px; overflow-x:auto; font-size:.8rem; line-height:1.7; color:var(--text); }
+  code { font-family:'SF Mono','Fira Code',monospace; }
+  pre .comment { color:#6e6e73; }
+  pre .keyword { color:#bf5af2; }
+  pre .string { color:#30d158; }
+  pre .func { color:#0071e3; }
+  pre .type { color:#ff9f0a; }
+
+  footer { padding:32px 0; border-top:1px solid var(--border); color:var(--text2); font-size:.85rem; text-align:center; }
+
+  /* ===== ANCHOR NAV ===== */
+  .anchor-link {
+    color:var(--text2); text-decoration:none; opacity:0; transition:opacity .2s;
+    font-size:.8em; margin-left:8px; font-weight:400;
+  }
+  h2:hover .anchor-link,
+  h3:hover .anchor-link,
+  h4:hover .anchor-link { opacity:1; }
+  .anchor-link:hover { color:var(--accent); }
+
+  .back-to-toc {
+    display:inline-flex; align-items:center; gap:4px;
+    color:var(--text2); text-decoration:none; font-size:.75rem;
+    margin-top:24px; transition:color .2s;
+  }
+  .back-to-toc:hover { color:var(--accent); }
+
+  .nav-links {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:16px 0; margin-top:24px; border-top:1px solid var(--border);
+    font-size:.85rem;
+  }
+  .nav-links a {
+    color:var(--text2); text-decoration:none; transition:color .2s;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .nav-links a:hover { color:var(--accent); }
+  .nav-links .disabled { color:var(--border); pointer-events:none; }
+
+  .section-nav {
+    display:flex; flex-wrap:wrap; gap:6px; margin-bottom:24px;
+  }
+  .section-nav a {
+    padding:4px 10px; border-radius:999px; font-size:.72rem; font-weight:500;
+    border:1px solid var(--border); color:var(--text2); text-decoration:none;
+    transition:all .2s;
+  }
+  .section-nav a:hover { border-color:var(--accent); color:var(--accent); }
+
+  .version-banner {
+    background: linear-gradient(135deg, rgba(0,113,227,.1), rgba(191,90,242,.1));
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-bottom: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+  .version-banner .v {
+    display:inline-block; padding:2px 10px; border-radius:4px;
+    background:var(--surface2); border:1px solid var(--border);
+    font-size:.75rem; font-weight:500;
+  }
+  .version-banner .v b { color:var(--accent); }
+
+  @media (max-width:640px) {
+    .container { padding:0 16px; }
+    header { padding:32px 0 24px; }
+    section { margin-bottom:40px; }
+    .grid-2,.grid-3 { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+  <h1>e-conomic · Base Architecture</h1>
+  <p>Full-stack e-commerce platform — latest versions, mobile-first, AI-powered, Vercel/Apple design.</p>
+  <div class="tags">
+    <span class="tag highlight">Next.js 16</span>
+    <span class="tag highlight">NestJS 11</span>
+    <span class="tag highlight">PostgreSQL + Prisma 7</span>
+    <span class="tag highlight">Vite 8 + shadcn/ui</span>
+    <span class="tag highlight">React 19</span>
+    <span class="tag highlight">Tailwind 4.3</span>
+    <span class="tag highlight">AI Chat + Rec</span>
+    <span class="tag highlight">Mobile-first</span>
+  </div>
+  <div class="version-banner">
+    <span style="color:var(--text2);font-size:.85rem;">🚀 Latest versions:</span>
+    <span class="v"><b>Next.js</b> 16</span>
+    <span class="v"><b>NestJS</b> 11</span>
+    <span class="v"><b>React</b> 19</span>
+    <span class="v"><b>Prisma</b> 7</span>
+    <span class="v"><b>Vite</b> 8</span>
+    <span class="v"><b>Tailwind</b> 4.3</span>
+    <span class="v"><b>Zustand</b> 5</span>
+    <span class="v"><b>TanStack Query</b> 5</span>
+    <span class="v"><b>Framer Motion</b> 12</span>
+    <span class="v"><b>pnpm</b> 11</span>
+  </div>
+</header>
+
+<div class="section-nav" id="section-nav-top"></div>
+
+<!-- TOC -->
+<section id="toc">
+  <h2>📋 Muc luc <a href="#toc" class="anchor-link">#</a></h2>
+  <div class="grid-2">
+    <div class="card"><span class="emoji">🏗️</span><h4><a href="#architecture" style="color:inherit;text-decoration:none;">1. Kiến trúc tổng quan</a></h4><p>System design, data flow, latest tech stack</p></div>
+    <div class="card"><span class="emoji">📁</span><h4><a href="#structure" style="color:inherit;text-decoration:none;">2. Cấu trúc thư mục</a></h4><p>Folder tree chi tiết + AI/chat features</p></div>
+    <div class="card"><span class="emoji">🗄️</span><h4><a href="#database" style="color:inherit;text-decoration:none;">3. Database schema</a></h4><p>Prisma models, relationships + AI tables</p></div>
+    <div class="card"><span class="emoji">🔌</span><h4><a href="#api" style="color:inherit;text-decoration:none;">4. API design</a></h4><p>RESTful endpoints, modules + AI/chat APIs</p></div>
+    <div class="card"><span class="emoji">🎨</span><h4><a href="#ui" style="color:inherit;text-decoration:none;">5. UI/UX & Design System</a></h4><p>Design tokens, component tree, mobile-first</p></div>
+    <div class="card"><span class="emoji">💬</span><h4><a href="#chat" style="color:inherit;text-decoration:none;">6. Chat Box & Customer Care</a></h4><p>AI chat, real-time support, ticket system</p></div>
+    <div class="card"><span class="emoji">🤖</span><h4><a href="#recommendation" style="color:inherit;text-decoration:none;">7. AI Recommendation Engine</a></h4><p>Behavior-based, size rec, collaborative filtering</p></div>
+    <div class="card"><span class="emoji">🛡️</span><h4><a href="#roles" style="color:inherit;text-decoration:none;">8. Role & Permission</a></h4><p>RBAC, guards, decorators</p></div>
+    <div class="card"><span class="emoji">⚙️</span><h4><a href="#mcp" style="color:inherit;text-decoration:none;">9. MCP & Tooling</a></h4><p>MCP servers, dev tools, CI/CD</p></div>
+    <div class="card"><span class="emoji">🔍</span><h4><a href="#seo" style="color:inherit;text-decoration:none;">10. SEO Strategy</a></h4><p>Meta, structured data, sitemap, Core Web Vitals</p></div>
+    <div class="card"><span class="emoji">📱</span><h4><a href="#mobile" style="color:inherit;text-decoration:none;">11. Mobile-first approach</a></h4><p>Responsive strategy, touch, performance</p></div>
+    <div class="card"><span class="emoji">📊</span><h4><a href="#dashboard-state" style="color:inherit;text-decoration:none;">12. Dashboard State Management</a></h4><p>Zustand + TanStack Query, why it's the best combo</p></div>
+    <div class="card"><span class="emoji">🗺️</span><h4><a href="#routes" style="color:inherit;text-decoration:none;">13. Routes & Pages</a></h4><p>Tất cả routes client + dashboard + chat</p></div>
+  </div>
+</section>
+
+<!-- ===== 1. ARCHITECTURE ===== -->
+<section id="architecture">
+  <h2>🏗️ 1. Kiến trúc tổng quan <a href="#architecture" class="anchor-link">#</a></h2>
+
+  <h3 id="arch-system-design">System Design <a href="#arch-system-design" class="anchor-link">#</a></h3>
+  <div class="diagram">
+<pre style="background:none;border:none;padding:0;color:inherit;">
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         🌐 Vercel (Edge Network)                         │
+│  ┌──────────────────────────────────────────────────────────────────┐    │
+│  │   🎯 Client (Next.js 16 — App Router)                            │    │
+│  │   RSC · Server Components · Streaming SSR · ISR · SSG · PPR     │    │
+│  │   Domain: e-conomic.com                                          │    │
+│  │   ┌────────────┐ ┌──────────┐ ┌────────────┐ ┌──────────────┐   │    │
+│  │   │ Shop Pages │ │ AI Chat  │ │ Recom-     │ │ Blog / SEO   │   │    │
+│  │   │ (ISR/SSR)  │ │ (RSC)    │ │ mendation  │ │ (ISR)        │   │    │
+│  │   └────────────┘ └──────────┘ └────────────┘ └──────────────┘   │    │
+│  └──────────────────────────┬───────────────────────────────────────┘    │
+│                             │                                           │
+│  ┌──────────────────────────▼───────────────────────────────────────┐    │
+│  │   📊 Dashboard (Vite 8 + React 19 + shadcn/ui)                   │    │
+│  │   Admin · Analytics · Orders · CRM · Chat Management              │    │
+│  │   Domain: admin.e-conomic.com                                     │    │
+│  │   State: Zustand 5 (client) + TanStack Query 5 (server)           │    │
+│  └──────────────────────────┬───────────────────────────────────────┘    │
+└─────────────────────────────┼───────────────────────────────────────────┘
+                              │ HTTPS / REST + WebSocket (Socket.io)
+┌─────────────────────────────▼───────────────────────────────────────────┐
+│                    🖥️ Server (NestJS 11)                                │
+│  ┌──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐    │
+│  │ Auth     │ Product  │ Order    │ Payment  │ Chat     │ AI/Rec   │    │
+│  │ Module   │ Module   │ Module   │ Module   │ Module   │ Module   │    │
+│  └──────────┴──────────┴──────────┴──────────┴──────────┴──────────┘    │
+│  Guards · Interceptors · Pipes · Filters · WebSocket Gateway            │
+│  Swagger · Rate-limit · BullMQ · Cache · OpenAI/Anthropic SDK          │
+└─────────────────────────────┬───────────────────────────────────────────┘
+                              │ Prisma 7 ORM
+┌─────────────────────────────▼───────────────────────────────────────────┐
+│                    🗄️ PostgreSQL 16                                     │
+│  Products · Users · Orders · ChatMessages · UserBehavior · Embeddings   │
+│  Full-text search · pgvector (AI embeddings) · Triggers · Migrations   │
+└─────────────────────────────────────────────────────────────────────────┘
+                              │ Redis (Upstash)
+                              ▼
+                   Session · Cache · Rate-limit · Queue · Pub/Sub
+</pre>
+  </div>
+
+  <h3 id="arch-techstack">Tech Stack — Latest Versions <a href="#arch-techstack" class="anchor-link">#</a></h3>
+  <table>
+    <tr><th>Layer</th><th>Công nghệ</th><th>Version</th><th>Mục đích</th></tr>
+    <tr><td><span class="badge client">Client</span></td><td>Next.js</td><td><b>16</b> (App Router)</td><td>SSR/SSG/ISR/PPR, SEO, RSC, Server Actions, Streaming</td></tr>
+    <tr><td><span class="badge client">Client</span></td><td>React</td><td><b>19</b></td><td>Server Components, Actions, use() hook</td></tr>
+    <tr><td><span class="badge client">Client</span></td><td>Tailwind CSS</td><td><b>4.3</b></td><td>Utility-first, CSS-first config, mobile-first</td></tr>
+    <tr><td><span class="badge client">Client</span></td><td>Framer Motion</td><td><b>12</b></td><td>Micro-interactions, page transitions, layout animations</td></tr>
+    <tr><td><span class="badge client">Client</span></td><td>TanStack Query</td><td><b>5</b></td><td>Server state, caching, optimistic updates, infinite query</td></tr>
+    <tr><td><span class="badge client">Client</span></td><td>Zustand</td><td><b>5</b></td><td>Client state (cart, auth, UI, chat)</td></tr>
+    <tr><td><span class="badge dashboard">Dashboard</span></td><td>Vite</td><td><b>8</b></td><td>Fast dev, HMR, lazy loading</td></tr>
+    <tr><td><span class="badge dashboard">Dashboard</span></td><td>shadcn/ui + Radix</td><td>latest</td><td>Headless UI, accessible, customizable components</td></tr>
+    <tr><td><span class="badge dashboard">Dashboard</span></td><td>Zustand + TanStack Query</td><td><b>5</b></td><td><strong>State management (recommended)</strong></td></tr>
+    <tr><td><span class="badge dashboard">Dashboard</span></td><td>Recharts / Nivo</td><td>latest</td><td>Biểu đồ analytics, orders, revenue</td></tr>
+    <tr><td><span class="badge server">Server</span></td><td>NestJS</td><td><b>11</b></td><td>Modular monolith, decorators, DI, WebSocket</td></tr>
+    <tr><td><span class="badge server">Server</span></td><td>Prisma</td><td><b>7</b></td><td>Type-safe ORM, migrations, relation queries</td></tr>
+    <tr><td><span class="badge server">Server</span></td><td>PostgreSQL</td><td>16</td><td>Relational DB, pgvector, full-text search, JSONB</td></tr>
+    <tr><td><span class="badge server">Server</span></td><td>Redis (Upstash)</td><td>latest</td><td>Session, cache, rate-limit, BullMQ, Pub/Sub chat</td></tr>
+    <tr><td><span class="badge server">Server</span></td><td>OpenAI / Anthropic SDK</td><td>latest</td><td>AI chat, recommendations, embeddings</td></tr>
+    <tr><td><span class="badge server">Server</span></td><td>BullMQ</td><td>latest</td><td>Job queue (email, export, AI async tasks)</td></tr>
+    <tr><td><span class="badge shared">Shared</span></td><td>pnpm</td><td><b>11</b></td><td>Monorepo workspace, fast, disk-efficient</td></tr>
+  </table>
+
+  <div class="nav-links">
+    <span></span>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#structure">📁 Cấu trúc thư mục →</a>
+  </div>
+</section>
+
+<!-- ===== 2. STRUCTURE ===== -->
+<section id="structure">
+  <h2>📁 2. Cấu trúc thư mục + AI Features <a href="#structure" class="anchor-link">#</a></h2>
+
+  <div class="grid-2" style="margin-bottom:16px;">
+    <div><span class="badge client">Client</span></div>
+    <div><span class="badge dashboard">Dashboard</span></div>
+    <div><span class="badge server">Server</span></div>
+    <div><span class="badge new">New: Chat & AI</span></div>
+  </div>
+
+  <div class="diagram">
+<pre style="background:none;border:none;padding:0;color:inherit;">
+client/src/
+├── app/
+│   ├── (shop)/
+│   │   ├── products/
+│   │   ├── cart/
+│   │   ├── checkout/
+│   │   └── ...
+│   ├── (auth)/
+│   ├── account/
+│   ├── <span class="comment">chat/                    // AI chat page</span>
+│   │   └── page.tsx
+│   └── blog/
+├── components/
+│   ├── ui/
+│   ├── layout/
+│   │   ├── Header.tsx
+│   │   ├── Footer.tsx
+│   │   ├── BottomTabBar.tsx
+│   │   └── <span class="comment">ChatFab.tsx              // Floating chat button (mobile)</span>
+│   ├── <span class="comment">chat/                    // Chat components</span>
+│   │   ├── ChatWidget.tsx         // Full chat widget
+│   │   ├── ChatBubble.tsx
+│   │   ├── ChatInput.tsx
+│   │   ├── ChatHistory.tsx
+│   │   ├── QuickReplies.tsx
+│   │   ├── TypingIndicator.tsx
+│   │   ├── EmojiPicker.tsx
+│   │   └── index.ts
+│   ├── <span class="comment">recommendation/          // AI recommendation components</span>
+│   │   ├── RecommendedRow.tsx     // Horizontal scroll row
+│   │   ├── FrequentlyBought.tsx   // FBT section
+│   │   ├── SizeGuide.tsx         // Size recommendation
+│   │   └── PersonalizedFeed.tsx  // Homepage personalized
+│   ├── product/
+│   ├── cart/
+│   └── shared/
+├── hooks/
+│   ├── useCart.ts
+│   ├── useAuth.ts
+│   └── <span class="comment">useChat.ts             // WebSocket chat hook</span>
+├── stores/
+│   ├── cart-store.ts
+│   ├── auth-store.ts
+│   └── <span class="comment">chat-store.ts          // Zustand: chat UI state</span>
+└── lib/
+    └── <span class="comment">chat-socket.ts         // Socket.io client</span>
+
+dashboard/src/
+├── components/
+│   └── <span class="comment">chat/                    // Dashboard Chat management</span>
+│       ├── ChatDashboard.tsx
+│       ├── ConversationList.tsx
+│       ├── MessageArea.tsx
+│       └── ChatAnalytics.tsx
+└── stores/
+    └── <span class="comment">chat-store.ts           // Zustand: dashboard chat state</span>
+
+server/src/modules/
+├── auth/
+├── products/
+├── orders/
+├── ...
+├── <span class="comment">chat/                      // Chat module</span>
+│   ├── chat.module.ts
+│   ├── chat.controller.ts
+│   ├── chat.service.ts
+│   ├── chat.gateway.ts          // WebSocket gateway
+│   ├── chat.dto.ts
+│   └── <span class="comment">ai-chat.service.ts        // AI-powered responses</span>
+├── <span class="comment">recommendation/            // AI recommendation module</span>
+│   ├── recommendation.module.ts
+│   ├── recommendation.controller.ts
+│   ├── recommendation.service.ts
+│   ├── <span class="comment">collaborative.service.ts   // Collaborative filtering</span>
+│   ├── <span class="comment">content-based.service.ts   // Content-based rec</span>
+│   ├── <span class="comment">size-rec.service.ts        // Size recommendation</span>
+│   └── dto/
+└── <span class="comment">behavior/                   // User behavior tracking</span>
+    ├── behavior.module.ts
+    ├── behavior.controller.ts
+    └── behavior.service.ts
+
+prisma/
+├── schema.prisma
+└── <span class="comment">migrations/                // + chat, behavior, embedding tables</span>
+</pre>
+  </div>
+
+  <div class="nav-links">
+    <a href="#architecture">← 🏗️ Kiến trúc</a>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#database">🗄️ Database →</a>
+  </div>
+</section>
+
+<!-- ===== 3. DATABASE ===== -->
+<section id="database">
+  <h2>🗄️ 3. Database Schema — Full Prisma <a href="#database" class="anchor-link">#</a></h2>
+
+  <h3 id="db-models">Core Models Overview <a href="#db-models" class="anchor-link">#</a></h3>
+  <div class="grid-3">
+    <div class="card"><div class="emoji">👤</div><h4>User</h4><p>+ emailVerified, lastLoginAt, deviceTokens[]</p></div>
+    <div class="card"><div class="emoji">📦</div><h4>Product</h4><p>+ embedding vector (pgvector), searchVector tsvector, sizes[], colors[]</p></div>
+    <div class="card"><div class="emoji">📋</div><h4>ProductVariant</h4><p>size, color, sku, stock, price, image</p></div>
+    <div class="card"><div class="emoji">💬</div><h4>ChatMessage <span class="badge new">New</span></h4><p>id, conversationId, userId (nullable), role, content, metadata, createdAt</p></div>
+    <div class="card"><div class="emoji">💬</div><h4>Conversation <span class="badge new">New</span></h4><p>id, userId, title, status, assignedTo, createdAt, lastMessageAt</p></div>
+    <div class="card"><div class="emoji">📊</div><h4>UserBehavior <span class="badge new">New</span></h4><p>id, userId, action, productId, metadata, sessionId, createdAt</p></div>
+    <tr></tr>
+    <div class="card"><div class="emoji">🧬</div><h4>ProductEmbedding <span class="badge new">New</span></h4><p>id, productId, embedding vector(1536), model, updatedAt</p></div>
+    <div class="card"><div class="emoji">🔍</div><h4>SearchLog <span class="badge new">New</span></h4><p>id, userId (nullable), query, filters, resultsCount, clickedProductId, createdAt</p></div>
+    <div class="card"><div class="emoji">📏</div><h4>SizeChart <span class="badge new">New</span></h4><p>id, categoryId, region, measurements JSON, sizeMap JSON</p></div>
+    <div class="card"><div class="emoji">🥇</div><h4>RecommendedCache <span class="badge new">New</span></h4><p>id, userId, type, productIds[], expiresAt</p></div>
+    <div class="card"><div class="emoji">🎫</div><h4>Ticket <span class="badge new">New</span></h4><p>id, userId, subject, message, status, priority, assignedTo, createdAt</p></div>
+  </div>
+
+  <h3 id="db-prisma">Key Prisma Models (AI & Chat) <a href="#db-prisma" class="anchor-link">#</a></h3>
+<pre>
+<span class="comment">// ===== CHAT & CUSTOMER CARE =====</span>
+<span class="keyword">model</span> <span class="type">Conversation</span> {
+  id            <span class="type">String</span>   <span class="func">@id</span> <span class="func">@default</span>(cuid())
+  userId        <span class="type">String</span>?
+  user          <span class="type">User</span>?    <span class="func">@relation</span>(fields: [userId], references: [id])
+  title         <span class="type">String</span>
+  status        <span class="type">ConvStatus</span> <span class="func">@default</span>(OPEN)
+  assignedTo    <span class="type">String</span>?
+  assignedStaff <span class="type">User</span>?    <span class="func">@relation</span>(<span class="string">"StaffConversations"</span>, fields: [assignedTo], references: [id])
+  messages      <span class="type">ChatMessage</span>[]
+  isFromChatbox <span class="type">Boolean</span> <span class="func">@default</span>(true)
+  createdAt     <span class="type">DateTime</span> <span class="func">@default</span>(now())
+  lastMessageAt <span class="type">DateTime</span> <span class="func">@default</span>(now())
+  <span class="func">@@index</span>([userId])
+  <span class="func">@@index</span>([status])
+}
+
+<span class="keyword">model</span> <span class="type">ChatMessage</span> {
+  id             <span class="type">String</span>     <span class="func">@id</span> <span class="func">@default</span>(cuid())
+  conversationId <span class="type">String</span>
+  conversation   <span class="type">Conversation</span> <span class="func">@relation</span>(fields: [conversationId], references: [id])
+  userId         <span class="type">String</span>?
+  user           <span class="type">User</span>?       <span class="func">@relation</span>(fields: [userId], references: [id])
+  role           <span class="type">MsgRole</span>
+  content        <span class="type">String</span>
+  metadata       <span class="type">Json</span>?
+  isRead         <span class="type">Boolean</span>   <span class="func">@default</span>(false)
+  createdAt      <span class="type">DateTime</span>  <span class="func">@default</span>(now())
+  <span class="func">@@index</span>([conversationId, createdAt])
+}
+
+<span class="comment">// ===== USER BEHAVIOR & RECOMMENDATION =====</span>
+<span class="keyword">model</span> <span class="type">UserBehavior</span> {
+  id        <span class="type">String</span>     <span class="func">@id</span> <span class="func">@default</span>(cuid())
+  userId    <span class="type">String</span>
+  user      <span class="type">User</span>       <span class="func">@relation</span>(fields: [userId], references: [id])
+  action    <span class="type">BehaviorAction</span>
+  productId <span class="type">String</span>?
+  product   <span class="type">Product</span>?   <span class="func">@relation</span>(fields: [productId], references: [id])
+  metadata  <span class="type">Json</span>?
+  sessionId <span class="type">String</span>?
+  createdAt <span class="type">DateTime</span>  <span class="func">@default</span>(now())
+  <span class="func">@@index</span>([userId, action, createdAt])
+}
+
+<span class="comment">// ===== SIZE RECOMMENDATION =====</span>
+<span class="keyword">model</span> <span class="type">SizeChart</span> {
+  id         <span class="type">String</span> <span class="func">@id</span> <span class="func">@default</span>(cuid())
+  categoryId <span class="type">String</span>
+  category   <span class="type">Category</span> <span class="func">@relation</span>(fields: [categoryId], references: [id])
+  region     <span class="type">String</span>
+  gender     <span class="type">String</span>?
+  measurements <span class="type">Json</span>
+  sizeMap    <span class="type">Json</span>?
+  updatedAt  <span class="type">DateTime</span> <span class="func">@updatedAt</span>
+  <span class="func">@@unique</span>([categoryId, region])
+}
+
+<span class="comment">// ===== PRODUCT EMBEDDINGS (pgvector) =====</span>
+<span class="comment">// CREATE EXTENSION vector;</span>
+<span class="comment">// CREATE INDEX idx_product_embedding ON "ProductEmbedding" USING ivfflat (embedding vector_cosine_ops);</span>
+<span class="keyword">model</span> <span class="type">ProductEmbedding</span> {
+  id        <span class="type">String</span>   <span class="func">@id</span> <span class="func">@default</span>(cuid())
+  productId <span class="type">String</span>   <span class="func">@unique</span>
+  product   <span class="type">Product</span>  <span class="func">@relation</span>(fields: [productId], references: [id])
+  model     <span class="type">String</span>   <span class="func">@default</span>(<span class="string">"text-embedding-3-small"</span>)
+  updatedAt <span class="type">DateTime</span> <span class="func">@updatedAt</span>
+}
+</pre>
+
+  <div class="nav-links">
+    <a href="#structure">← 📁 Cấu trúc thư mục</a>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#api">🔌 API Design →</a>
+  </div>
+</section>
+
+<!-- ===== 4. API ===== -->
+<section id="api">
+  <h2>🔌 4. API Design — NestJS 11 Modules <a href="#api" class="anchor-link">#</a></h2>
+
+  <h3 id="api-modules">Modules & Prefixes <a href="#api-modules" class="anchor-link">#</a></h3>
+  <table>
+    <tr><th>Module</th><th>Prefix</th><th>Endpoints chính</th></tr>
+    <tr><td>Auth</td><td><code>/api/auth</code></td><td>register, login, refresh, logout, forgot-password, reset-password, me, oauth</td></tr>
+    <tr><td>Users</td><td><code>/api/users</code></td><td>CRUD, profile, addresses, admin manage users</td></tr>
+    <tr><td>Products</td><td><code>/api/products</code></td><td>CRUD, filter, search, featured, related, variants</td></tr>
+    <tr><td>Categories</td><td><code>/api/categories</code></td><td>CRUD, tree, with product count</td></tr>
+    <tr><td>Cart</td><td><code>/api/cart</code></td><td>get, addItem, updateItem, removeItem, clear, merge</td></tr>
+    <tr><td>Orders</td><td><code>/api/orders</code></td><td>create, list, detail, cancel, admin: update status, tracking</td></tr>
+    <tr><td>Reviews</td><td><code>/api/reviews</code></td><td>CRUD (productId), approve (admin)</td></tr>
+    <tr><td>Payments</td><td><code>/api/payments</code></td><td>create-payment, webhook, refund, methods</td></tr>
+    <tr><td>Shipping</td><td><code>/api/shipping</code></td><td>calculate, methods, tracking, zones</td></tr>
+    <tr><td>Discounts</td><td><code>/api/discounts</code></td><td>CRUD coupons, validate, apply, auto-calculate</td></tr>
+    <tr><td>Upload</td><td><code>/api/upload</code></td><td>upload image, delete</td></tr>
+    <tr><td>Search</td><td><code>/api/search</code></td><td>full-text search, suggestions, vector search <span class="badge new">New</span></td></tr>
+    <tr><td><span class="badge new">Chat</span></td><td><code>/api/chat</code></td><td>conversations CRUD, messages, send, mark-read, assign, close</td></tr>
+    <tr><td><span class="badge new">WS Chat</span></td><td>Socket.io <code>/chat</code></td><td>join, send message, typing, online status, AI response stream</td></tr>
+    <tr><td><span class="badge new">Rec</span></td><td><code>/api/recommendations</code></td><td>homepage, PDP (FBT), cart-up-sell, checkout-cross-sell, personalized-feed</td></tr>
+    <tr><td><span class="badge new">Size</span></td><td><code>/api/size-guide</code></td><td>get size chart, recommend-size, product-fit</td></tr>
+    <tr><td><span class="badge new">Behavior</span></td><td><code>/api/behavior</code></td><td>track event (POST), get history, insights</td></tr>
+    <tr><td><span class="badge new">Tickets</span></td><td><code>/api/tickets</code></td><td>CRUD support tickets, categories, priorities</td></tr>
+    <tr><td>Analytics</td><td><code>/api/analytics</code></td><td>revenue, orders, top products, summary, user metrics</td></tr>
+    <tr><td>Notifications</td><td><code>/api/notifications</code></td><td>list, mark-read, settings (email/push/in-app)</td></tr>
+  </table>
+
+  <h3 id="api-ws">WebSocket Events (Chat) <a href="#api-ws" class="anchor-link">#</a></h3>
+  <table>
+    <tr><th>Event</th><th>Direction</th><th>Payload</th></tr>
+    <tr><td><code>chat:join</code></td><td>Client → Server</td><td>{ conversationId }</td></tr>
+    <tr><td><code>chat:send</code></td><td>Client → Server</td><td>{ conversationId, content, metadata? }</td></tr>
+    <tr><td><code>chat:message</code></td><td>Server → Client</td><td>{ id, role, content, metadata, createdAt }</td></tr>
+    <tr><td><code>chat:typing</code></td><td>Both</td><td>{ conversationId, userId, isTyping }</td></tr>
+    <tr><td><code>chat:ai:response</code></td><td>Server → Client</td><td>Stream chunks + final with suggestedProducts[]</td></tr>
+    <tr><td><code>chat:status</code></td><td>Server → Client</td><td>{ conversationId, status, assignedTo }</td></tr>
+    <tr><td><code>chat:read</code></td><td>Client → Server</td><td>{ conversationId, messageIds[] }</td></tr>
+  </table>
+
+  <div class="nav-links">
+    <a href="#database">← 🗄️ Database</a>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#ui">🎨 UI/UX →</a>
+  </div>
+</section>
+
+<!-- ===== 5. UI/UX ===== -->
+<section id="ui">
+  <h2>🎨 5. UI/UX & Design System <a href="#ui" class="anchor-link">#</a></h2>
+
+  <h3 id="ui-principles">Design Principles <a href="#ui-principles" class="anchor-link">#</a></h3>
+  <div class="grid-3">
+    <div class="card"><div class="emoji">📱</div><h4>Mobile-first</h4><p>Thiết kế từ 375px. Bottom tab, touch targets ≥44px, swipe gestures</p></div>
+    <div class="card"><div class="emoji">✨</div><h4>Vercel / Apple</h4><p>Nền tối, glassmorphism, border tinh tế, spacing rộng, typography Inter</p></div>
+    <div class="card"><div class="emoji">⚡</div><h4>Performance</h4><p>LCP &lt;1.5s, CLS 0, FID &lt;50ms. Skeleton loading, progressive hydration</p></div>
+    <div class="card"><div class="emoji">♿</div><h4>Accessibility</h4><p>WCAG 2.1 AA, aria labels, keyboard nav, screen reader</p></div>
+    <div class="card"><div class="emoji">🎭</div><h4>Micro-interactions</h4><p>Framer Motion: page transitions, hover, tap, scroll reveal, parallax</p></div>
+    <div class="card"><div class="emoji">🌙</div><h4>Dark mode</h4><p>Mặc định dark, tôn trọng system preference, toggle (next-themes)</p></div>
+  </div>
+
+  <h3 id="ui-tokens">Design Tokens <a href="#ui-tokens" class="anchor-link">#</a></h3>
+  <table>
+    <tr><th>Token</th><th>Giá trị</th><th>Ghi chú</th></tr>
+    <tr><td><code>--bg</code></td><td>#0a0a0a</td><td>Nền chính</td></tr>
+    <tr><td><code>--surface</code></td><td>#111</td><td>Card, dropdown, chat bubble</td></tr>
+    <tr><td><code>--surface2</code></td><td>#1a1a1a</td><td>Hover, chat input</td></tr>
+    <tr><td><code>--border</code></td><td>#222</td><td>Border mờ</td></tr>
+    <tr><td><code>--text</code></td><td>#f5f5f7</td><td>Apple-style text</td></tr>
+    <tr><td><code>--text2</code></td><td>#86868b</td><td>Secondary text, timestamp chat</td></tr>
+    <tr><td><code>--accent</code></td><td>#0071e3</td><td>Apple Blue (buttons, links, chat send)</td></tr>
+    <tr><td><code>--chat-user</code></td><td>#0071e3</td><td>User chat bubble</td></tr>
+    <tr><td><code>--chat-bot</code></td><td>#1a1a2e</td><td>AI chat bubble</td></tr>
+    <tr><td><code>--radius</code></td><td>16px</td><td>Card radius</td></tr>
+    <tr><td><code>--radius-sm</code></td><td>8px</td><td>Button/Input radius</td></tr>
+    <tr><td><code>font-family</code></td><td>Inter</td><td>System font stack fallback</td></tr>
+  </table>
+
+  <div class="nav-links">
+    <a href="#api">← 🔌 API</a>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#chat">💬 Chat Box →</a>
+  </div>
+</section>
+
+<!-- ===== 6. CHAT ===== -->
+<section id="chat">
+  <h2>💬 6. Chat Box & Customer Care <a href="#chat" class="anchor-link">#</a></h2>
+
+  <h3 id="chat-arch">Architecture <a href="#chat-arch" class="anchor-link">#</a></h3>
+  <div class="diagram">
+<pre style="background:none;border:none;padding:0;color:inherit;">
+┌──────────────────────────────────────────────────────────────────┐
+│                      CHAT SYSTEM ARCHITECTURE                     │
+├──────────────────────────────────────────────────────────────────┤
+│                                                                   │
+│  👤 User (Client)                    👨‍💼 Staff (Dashboard)       │
+│  ┌──────────────────────┐           ┌────────────────────────┐   │
+│  │ ChatWidget (Next.js) │           │ ChatDashboard (Vite)   │   │
+│  │ • Floating button    │           │ • Conversation list    │   │
+│  │ • Full-screen mobile │           │ • Real-time messages   │   │
+│  │ • Slide-over desktop │           │ • Assign/transfer      │   │
+│  │ • Quick replies      │           │ • AI auto-reply toggle │   │
+│  │ • Suggestion chips   │           │ • Chat analytics       │   │
+│  │ • Size recommender   │           │ • Canned responses     │   │
+│  └────────┬─────────────┘           └────────┬───────────────┘   │
+│           │                                  │                   │
+│           └──────────┬───────────────────────┘                   │
+│                      │ Socket.io (WebSocket)                     │
+│             ┌────────▼────────┐                                   │
+│             │  Chat Gateway   │  NestJS WebSocket                 │
+│             │  (chat.gateway) │                                   │
+│             └────────┬────────┘                                   │
+│                      │                                            │
+│        ┌─────────────┼─────────────┐                              │
+│        ▼             ▼             ▼                              │
+│  ChatService   AiChatService   TicketService                      │
+│  (CRUD, assign,  (OpenAI/Anthropic (Support tickets)              │
+│   history, read)   stream response)                               │
+│        │             │             │                              │
+│        └─────────────┼─────────────┘                              │
+│                      │ Prisma                                     │
+│              ┌───────▼───────┐                                     │
+│              │  PostgreSQL   │                                     │
+│              │  + Redis      │  (Pub/Sub for multi-instance)      │
+│              └───────────────┘                                     │
+└──────────────────────────────────────────────────────────────────┘
+</pre>
+  </div>
+
+  <h3 id="chat-features">Chat Widget Features <a href="#chat-features" class="anchor-link">#</a></h3>
+  <div class="grid-3">
+    <div class="card"><div class="emoji">🪟</div><h4>Floating Action Button</h4><p>Fixed bottom-right, badge unread count, pulse animation</p></div>
+    <div class="card"><div class="emoji">📱</div><h4>Mobile-optimized</h4><p>Full-screen modal mobile, slide-over desktop. Swipe to close</p></div>
+    <div class="card"><div class="emoji">🤖</div><h4>AI Agent</h4><p>Xử lý 80% tự động: order status, product info, return policy, size guide</p></div>
+    <div class="card"><div class="emoji">⚡</div><h4>Quick Replies</h4><p>Suggestions chips: "Trạng thái đơn hàng", "Chính sách đổi trả", "Tư vấn size"</p></div>
+    <div class="card"><div class="emoji">📎</div><h4>Rich Messages</h4><p>Ảnh sản phẩm, link, suggested product cards ngay trong chat</p></div>
+    <div class="card"><div class="emoji">🔄</div><h4>Live Transfer</h4><p>AI không xử lý được → chuyển staff. Typing indicator</p></div>
+  </div>
+
+  <h3 id="chat-flow">Chat Flow <a href="#chat-flow" class="anchor-link">#</a></h3>
+  <div class="diagram">
+<pre style="background:none;border:none;padding:0;color:inherit;">
+User opens Chat Widget
+       │
+       ▼
+┌─────────────────────────────────┐
+│ AI: "Chào bạn! Tôi giúp gì được?" │
+│ Quick: [Đơn hàng] [Sản phẩm] [Size]│
+└──────────┬──────────────────────┘
+           │
+           ▼
+┌─────────────────────────────────┐
+│ AI Processing                  │
+│ • Classify intent              │
+│ • Search products/orders       │
+│ • Generate response            │
+└──────────┬──────────────────────┘
+           │
+     ┌─────┴─────┐
+     │           │
+  Can handle   Cannot handle
+     │           │
+     ▼           ▼
+┌────────┐  ┌────────────────┐
+│ AI     │  │ Transfer staff │
+│ reply  │  │ + context      │
+│ + prods│  │ "Đang kết nối  │
+│        │  │ nhân viên..."  │
+└────────┘  └───────┬────────┘
+                    │
+                    ▼
+           ┌────────────────┐
+           │ Staff respond  │
+           │ (Dashboard)    │
+           │ Real-time WS   │
+           └────────────────┘
+</pre>
+  </div>
+
+  <h3 id="chat-dashboard">Dashboard Chat Management <a href="#chat-dashboard" class="anchor-link">#</a></h3>
+  <table>
+    <tr><th>Feature</th><th>Mô tả</th></tr>
+    <tr><td>Conversation queue</td><td>Real-time list, filter: chờ / xử lý / đã đóng</td></tr>
+    <tr><td>Staff assignment</td><td>Auto round-robin hoặc manual, transfer</td></tr>
+    <tr><td>Canned responses</td><td>Mẫu câu nhanh: policy, hướng dẫn, FAQ</td></tr>
+    <tr><td>Customer info sidebar</td><td>Profile, order history, behavior trong khi chat</td></tr>
+    <tr><td>Chat analytics</td><td>Volume, avg response time, satisfaction, AI handle rate</td></tr>
+    <tr><td>AI auto-suggest</td><td>Gợi ý câu trả lời cho staff dựa trên context</td></tr>
+  </table>
+
+  <div class="nav-links">
+    <a href="#ui">← 🎨 UI/UX</a>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#recommendation">🤖 AI Rec →</a>
+  </div>
+</section>
+
+<!-- ===== 7. RECOMMENDATION ===== -->
+<section id="recommendation">
+  <h2>🤖 7. AI Recommendation Engine <a href="#recommendation" class="anchor-link">#</a></h2>
+
+  <h3 id="rec-types">Recommendation Types <a href="#rec-types" class="anchor-link">#</a></h3>
+  <div class="grid-3">
+    <div class="card"><div class="emoji">🏠</div><h4>Homepage Personalization</h4><p>"Gợi ý cho bạn" — browse + search + purchase history. Collaborative + content-based</p></div>
+    <div class="card"><div class="emoji">📄</div><h4>PDP</h4><p>"Sản phẩm tương tự" (content-based) + "Khách hàng cũng mua" (collaborative)</p></div>
+    <div class="card"><div class="emoji">🛒</div><h4>Cart (FBT)</h4><p>"Thường được mua cùng" — association rules từ purchase history</p></div>
+    <div class="card"><div class="emoji">💳</div><h4>Checkout</h4><p>Cross-sell dựa trên items trong giỏ + user profile</p></div>
+    <div class="card"><div class="emoji">🔍</div><h4>Search</h4><p>Search suggestions + "Bạn có muốn mua?" theo query</p></div>
+    <div class="card"><div class="emoji">📏</div><h4>Size Rec</h4><p>Auto-suggest size từ height/weight, purchase history, category. Giảm returns</p></div>
+  </div>
+
+  <h3 id="rec-pipeline">AI Recommendation Pipeline <a href="#rec-pipeline" class="anchor-link">#</a></h3>
+  <div class="diagram">
+<pre style="background:none;border:none;padding:0;color:inherit;">
+┌─────────────────────────────────────────────────────────────┐
+│                  RECOMMENDATION PIPELINE                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  ┌──────────┐   ┌──────────┐   ┌──────────┐   ┌──────────┐  │
+│  │ Collect  │──▶│ Feature  │──▶│ Generate │──▶│ Cache &  │  │
+│  │ Behavior │   │ Engineer │   │ Recs     │   │ Serve    │  │
+│  └──────────┘   └──────────┘   └──────────┘   └──────────┘  │
+│                                                               │
+│  COLLECTION:     FEATURE:         GENERATION:     CACHE:     │
+│  • Real-time     • User cats     • Collab filter  • Redis 1h │
+│  • Batch BullMQ  • Price range   • Content-based  • DB table │
+│                  • Embeddings    • Vector cosine  • Reval    │
+│                  • Collab matrix  • Association    on event  │
+│                                  • LLM rerank                │
+└─────────────────────────────────────────────────────────────┘
+</pre>
+  </div>
+
+  <h3 id="rec-size">Size Recommendation Logic <a href="#rec-size" class="anchor-link">#</a></h3>
+  <table>
+    <tr><th>Input</th><th>Nguồn</th><th>Cách dùng</th></tr>
+    <tr><td>Height / Weight</td><td>User profile / hỏi lần đầu</td><td>Map → size chart</td></tr>
+    <tr><td>Previous purchases</td><td>Order history</td><td>Size đã mua cùng category</td></tr>
+    <tr><td>Category + Brand</td><td>Current product</td><td>Size chart category + region</td></tr>
+    <tr><td>Product reviews</td><td>"vừa/rộng/chật"</td><td>NLP sentiment → adjust</td></tr>
+    <tr><td>Return data</td><td>Lý do return</td><td>Học từ lỗi → update map</td></tr>
+  </table>
+
+  <div class="nav-links">
+    <a href="#chat">← 💬 Chat</a>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#roles">🛡️ Roles →</a>
+  </div>
+</section>
+
+<!-- ===== 8. ROLES ===== -->
+<section id="roles">
+  <h2>🛡️ 8. Role & Permission System <a href="#roles" class="anchor-link">#</a></h2>
+  <table>
+    <tr><th>Role</th><th>Mô tả</th><th>Permissions</th></tr>
+    <tr><td><code>SUPER_ADMIN</code></td><td>Toàn quyền hệ thống</td><td>Tất cả</td></tr>
+    <tr><td><code>ADMIN</code></td><td>Quản trị viên</td><td>CRUD products, orders, users, reviews, coupons, chat stats</td></tr>
+    <tr><td><code>MANAGER</code></td><td>Quản lý</td><td>CRUD products, view orders, inventory, reviews</td></tr>
+    <tr><td><code>STAFF</code></td><td>Nhân viên</td><td>View orders, update status, chat support, view products</td></tr>
+    <tr><td><code>USER</code></td><td>Khách hàng</td><td>Xem, mua, review, chat AI, profile</td></tr>
+  </table>
+
+  <pre>
+<span class="comment">// NestJS Decorator-based RBAC</span>
+<span class="func">@Controller</span>(<span class="string">'chat'</span>)
+<span class="keyword">export class</span> <span class="type">ChatController</span> {
+  <span class="func">@Get</span>(<span class="string">'conversations'</span>)
+  <span class="func">@Roles</span>(Role.STAFF, Role.ADMIN, Role.MANAGER)
+  <span class="keyword">async</span> <span class="func">listConversations</span>() { ... }
+
+  <span class="func">@Post</span>(<span class="string">'conversations/:id/assign'</span>)
+  <span class="func">@Roles</span>(Role.ADMIN, Role.MANAGER)
+  <span class="keyword">async</span> <span class="func">assignConversation</span>(<span class="func">@Param</span>(<span class="string">'id'</span>) id: string) { ... }
+}
+</pre>
+
+  <div class="nav-links">
+    <a href="#recommendation">← 🤖 AI Rec</a>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#mcp">⚙️ MCP →</a>
+  </div>
+</section>
+
+<!-- ===== 9. MCP ===== -->
+<section id="mcp">
+  <h2>⚙️ 9. MCP Servers & Developer Tooling <a href="#mcp" class="anchor-link">#</a></h2>
+  <table>
+    <tr><th>MCP Server</th><th>Công dụng</th><th>Cấu hình</th></tr>
+    <tr><td><code>@anthropic/mcp-server-filesystem</code></td><td>Đọc/ghi file codebase</td><td>allowedDirectories: ["D:/e-conomic"]</td></tr>
+    <tr><td><code>@anthropic/mcp-server-github</code></td><td>GitHub: issues, PRs, code review</td><td>GH_TOKEN env</td></tr>
+    <tr><td><code>@anthropic/mcp-server-postgres</code></td><td>Truy vấn PostgreSQL, migration</td><td>connectionString</td></tr>
+    <tr><td><code>@modelcontextprotocol/server-brave-search</code></td><td>Tìm kiếm web</td><td>BRAVE_API_KEY</td></tr>
+    <tr><td><code>@anthropic/mcp-server-playwright</code></td><td>E2E tests, screenshots</td><td>--headless</td></tr>
+    <tr><td><code>@modelcontextprotocol/server-fetch</code></td><td>Fetch API docs, packages</td><td>—</td></tr>
+  </table>
+
+  <div class="nav-links">
+    <a href="#roles">← 🛡️ Roles</a>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#seo">🔍 SEO →</a>
+  </div>
+</section>
+
+<!-- ===== 10. SEO ===== -->
+<section id="seo">
+  <h2>🔍 10. SEO Strategy <a href="#seo" class="anchor-link">#</a></h2>
+  <div class="grid-3">
+    <div class="card"><div class="emoji">🏗️</div><h4>Technical SEO</h4><p>Next.js SSR/ISR/SSG + PPR · robots.txt · sitemap dynamic · canonical · JSON-LD · hreflang</p></div>
+    <div class="card"><div class="emoji">⚡</div><h4>Core Web Vitals</h4><p>LCP &lt;1.5s · CLS = 0 · FID &lt;50ms · INP &lt;200ms · image opt · font preload</p></div>
+    <div class="card"><div class="emoji">📊</div><h4>Structured Data</h4><p>Product · Organization · BreadcrumbList · FAQPage · Review · SitelinksSearchBox</p></div>
+  </div>
+
+  <div class="nav-links">
+    <a href="#mcp">← ⚙️ MCP</a>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#mobile">📱 Mobile-first →</a>
+  </div>
+</section>
+
+<!-- ===== 11. MOBILE-FIRST ===== -->
+<section id="mobile">
+  <h2>📱 11. Mobile-First Approach <a href="#mobile" class="anchor-link">#</a></h2>
+  <div class="grid-3">
+    <div class="card"><div class="emoji">🎯</div><h4>Breakpoints</h4><p>375px → 640px → 1024px → 1440px. <strong>Base: 375px</strong></p></div>
+    <div class="card"><div class="emoji">🖐️</div><h4>Touch</h4><p>Target ≥44px · Swipe gestures · Bottom sheet · Sticky bottom CTA</p></div>
+    <div class="card"><div class="emoji">🧭</div><h4>Navigation</h4><p>BottomTabBar · Hamburger menu · Search fullscreen modal</p></div>
+  </div>
+
+  <div class="nav-links">
+    <a href="#seo">← 🔍 SEO</a>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#dashboard-state">📊 Dashboard State →</a>
+  </div>
+</section>
+
+<!-- ===== 12. DASHBOARD STATE ===== -->
+<section id="dashboard-state">
+  <h2>📊 12. Dashboard State Management — Khuyến nghị <a href="#dashboard-state" class="anchor-link">#</a></h2>
+
+  <div class="version-banner">
+    <span style="font-size:.9rem;">🏆 <b>Khuyến nghị chính thức:</b> Zustand 5 + TanStack Query 5</span>
+  </div>
+
+  <h3 id="ds-comparison">So sánh State Management cho Dashboard <a href="#ds-comparison" class="anchor-link">#</a></h3>
+  <table>
+    <tr><th>Thư viện</th><th>Version</th><th>Bundle</th><th>Learning</th><th>Boilerplate</th><th>Phù hợp</th></tr>
+    <tr><td><b>🏆 Zustand 5 + TanStack Query 5</b></td><td>5.0 / 5.101</td><td>~3kB</td><td>Thấp</td><td>Cực thấp</td><td><b>✅ Tối ưu nhất</b></td></tr>
+    <tr><td>Redux Toolkit 2</td><td>2.12</td><td>~12kB</td><td>Cao</td><td>Cao</td><td>Dự án lớn</td></tr>
+    <tr><td>Jotai 2</td><td>2.20</td><td>~4kB</td><td>TB</td><td>Thấp</td><td>Atomic state</td></tr>
+    <tr><td>Valtio 2</td><td>2.3</td><td>~5kB</td><td>Thấp</td><td>Thấp</td><td>Proxy-based</td></tr>
+  </table>
+
+  <h3 id="ds-why">Tại sao Zustand + TanStack Query? <a href="#ds-why" class="anchor-link">#</a></h3>
+  <div class="grid-2">
+    <div class="card"><div class="emoji">🔀</div><h4>Phân chia rõ ràng</h4><p><b>Query → Server state</b> (products, orders, users)<br><b>Zustand → Client state</b> (sidebar, filters, modal, chat UI)</p></div>
+    <div class="card"><div class="emoji">📦</div><h4>Bundle siêu nhẹ</h4><p>Zustand ~3kB + TanStack Query ~13kB = 16kB<br>Nhẹ hơn RTK (12kB) + RTK Query (15kB) = 27kB</p></div>
+    <div class="card"><div class="emoji">⚡</div><h4>Performance</h4><p>Zustand chỉ re-render component subscribe đúng state. Query auto cache, dedup, background refetch</p></div>
+    <div class="card"><div class="emoji">🧩</div><h4>DX</h4><p>Zustand: create store 3 dòng. Query: useQuery tự động loading/error state. DevTools sẵn</p></div>
+  </div>
+
+  <h3 id="ds-example">Ví dụ code <a href="#ds-example" class="anchor-link">#</a></h3>
+  <pre>
+<span class="comment">// TanStack Query: Server State</span>
+<span class="keyword">export const</span> useOrders = (filters: OrderFilters) => {
+  <span class="keyword">return</span> useQuery({
+    queryKey: [<span class="string">'orders'</span>, filters],
+    queryFn: () => api.getOrders(filters),
+  });
+};
+
+<span class="comment">// Zustand: Client UI State</span>
+<span class="keyword">export const</span> useUIStore = create&lt;UIStore&gt;((set) => ({
+  sidebarOpen: true,
+  selectedOrders: [],
+  toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
+}));
+
+<span class="comment">// Component</span>
+<span class="keyword">function</span> <span class="func">OrderTable</span>() {
+  <span class="keyword">const</span> filters = useUIStore((s) => s.orderFilters);
+  <span class="keyword">const</span> { data, isLoading } = useOrders(filters);
+  <span class="keyword">if</span> (isLoading) <span class="keyword">return</span> &lt;SkeletonTable /&gt;;
+  <span class="keyword">return</span> &lt;DataTable rows={data?.orders} /&gt;;
+}
+</pre>
+
+  <div class="nav-links">
+    <a href="#mobile">← 📱 Mobile-first</a>
+    <a href="#toc">↑ Muc luc</a>
+    <a href="#routes">🗺️ Routes →</a>
+  </div>
+</section>
+
+<!-- ===== 13. ROUTES ===== -->
+<section id="routes">
+  <h2>🗺️ 13. Routes & Pages <a href="#routes" class="anchor-link">#</a></h2>
+
+  <h3 id="routes-client">Client Routes (Next.js 16) <a href="#routes-client" class="anchor-link">#</a></h3>
+  <table>
+    <tr><th>Route</th><th>Rendering</th><th>SEO</th><th>Auth</th></tr>
+    <tr><td><code>/</code></td><td>ISR (30s)</td><td>✅</td><td>❌</td></tr>
+    <tr><td><code>/products</code></td><td>SSR (filter)</td><td>✅</td><td>❌</td></tr>
+    <tr><td><code>/products/[slug]</code></td><td>ISR (60s)</td><td>✅</td><td>❌</td></tr>
+    <tr><td><code>/categories/[slug]</code></td><td>SSR</td><td>✅</td><td>❌</td></tr>
+    <tr><td><code>/cart</code></td><td>Client</td><td>noindex</td><td>❌</td></tr>
+    <tr><td><code>/checkout</code></td><td>Client</td><td>noindex</td><td>✅</td></tr>
+    <tr><td><code>/account/*</code></td><td>Client</td><td>noindex</td><td>✅</td></tr>
+    <tr><td><code>/blog</code></td><td>ISR (300s)</td><td>✅</td><td>❌</td></tr>
+    <tr><td><code>/blog/[slug]</code></td><td>ISR (300s)</td><td>✅</td><td>❌</td></tr>
+    <tr><td><code>/search</code></td><td>SSR</td><td>noindex</td><td>❌</td></tr>
+    <tr><td><code>/chat</code></td><td>Client (lazy)</td><td>noindex</td><td>❌</td></tr>
+    <tr><td><code>/auth/*</code></td><td>Client</td><td>noindex</td><td>❌</td></tr>
+  </table>
+
+  <h3 id="routes-dashboard">Dashboard Routes (React Router) <a href="#routes-dashboard" class="anchor-link">#</a></h3>
+  <table>
+    <tr><th>Route</th><th>Mô tả</th><th>Role</th></tr>
+    <tr><td><code>/</code></td><td>Dashboard overview — KPIs, charts</td><td>ADMIN+</td></tr>
+    <tr><td><code>/products</code></td><td>Product management table</td><td>MANAGER+</td></tr>
+    <tr><td><code>/products/new</code></td><td>Create product (variant editor, size chart)</td><td>MANAGER+</td></tr>
+    <tr><td><code>/products/:id</code></td><td>Edit product</td><td>MANAGER+</td></tr>
+    <tr><td><code>/orders</code></td><td>Order list + filters + export</td><td>STAFF+</td></tr>
+    <tr><td><code>/orders/:id</code></td><td>Order detail, status, tracking</td><td>STAFF+</td></tr>
+    <tr><td><code>/customers</code></td><td>User management, behavior history</td><td>ADMIN</td></tr>
+    <tr><td><code>/categories</code></td><td>Category tree management</td><td>MANAGER+</td></tr>
+    <tr><td><code>/discounts</code></td><td>Coupon management</td><td>ADMIN</td></tr>
+    <tr><td><code>/reviews</code></td><td>Review moderation</td><td>MANAGER+</td></tr>
+    <tr><td><code>/analytics</code></td><td>Revenue, traffic, top products, AI rec perf</td><td>ADMIN+</td></tr>
+    <tr><td><code>/chat</code></td><td>Chat customer support management</td><td>STAFF+</td></tr>
+    <tr><td><code>/chat/:conversationId</code></td><td>Single conversation view</td><td>STAFF+</td></tr>
+    <tr><td><code>/ai/embeddings</code></td><td>Manage embeddings, re-index</td><td>ADMIN+</td></tr>
+    <tr><td><code>/settings</code></td><td>Site settings, shipping, payment, AI config</td><td>ADMIN</td></tr>
+  </table>
+
+  <div class="nav-links">
+    <a href="#dashboard-state">← 📊 Dashboard State</a>
+    <a href="#toc">↑ Muc luc</a>
+    <span></span>
+  </div>
+</section>
+
+<footer>
+  <p>e-conomic · Base Architecture Document · v2.0 (Latest) · 2026</p>
+</footer>
+
+</div>
+
+<script>
+// Auto-generate section-nav pills from all h2's
+const nav = document.getElementById('section-nav-top');
+const sections = document.querySelectorAll('section[id]');
+sections.forEach(sec => {
+  const h2 = sec.querySelector('h2');
+  if (h2 && sec.id !== 'toc') {
+    const text = h2.textContent.replace('#','').trim();
+    const a = document.createElement('a');
+    a.href = '#' + sec.id;
+    a.textContent = text.length > 35 ? text.slice(0,33)+'…' : text;
+    nav.appendChild(a);
+  }
+});
+</script>
+
+</body>
+</html>
