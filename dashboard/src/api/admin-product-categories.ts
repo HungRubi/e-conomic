@@ -9,7 +9,9 @@ export type AdminProductCategoryRow = {
 	id: string;
 	parentId?: string | null;
 	name: string;
+	enName?: string;
 	slug: string;
+	productCount?: number;
 	description?: string | null;
 	image?: string | null;
 	icon?: string | null;

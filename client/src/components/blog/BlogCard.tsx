@@ -1,9 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { CalendarIcon, ArrowRight } from 'lucide-react';
+import ImageWithFallback from './ImageWithFallback';
 import type { BlogPost } from '@/types';
 
 interface BlogCardProps {
@@ -29,12 +29,10 @@ export default function BlogCard({ post, index = 0 }: BlogCardProps) {
       <Link href={`/blog/${post.slug}`} className="block h-full">
         <div className="card h-full overflow-hidden !p-2 rounded-xl border-border/80 bg-surface/90 shadow-[0_18px_60px_rgba(0,0,0,0.06)] hover:border-border hover:shadow-[0_18px_50px_rgba(0,0,0,0.10)] transition-all duration-300">
           <div className="relative aspect-[16/9] overflow-hidden rounded-lg bg-surface2">
-            <Image
+            <ImageWithFallback
               src={post.image}
               alt={post.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 33vw"
-              className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-105"
             />
           </div>
           <div className="flex flex-col gap-2 p-3">

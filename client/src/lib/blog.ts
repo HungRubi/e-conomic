@@ -7,7 +7,7 @@ export const blogPosts: BlogPost[] = [
     title: 'Cách Chọn Áo Thun Chất Lượng — 5 Tiêu Chí Cần Nhớ',
     excerpt:
       'Áo thun là item cơ bản nhất trong tủ đồ nhưng không phải ai cũng biết cách chọn. Từ chất liệu, đường may đến form dáng, bài viết này sẽ chỉ bạn 5 tiêu chí vàng.',
-    content: '...',
+    content: '## Chất liệu vải\n\nCotton 100% là lựa chọn tốt nhất cho áo thun hàng ngày. Sợi cotton dài cho cảm giác mềm mại, thoáng khí và thấm hút mồ hôi tốt.\n\n## Đường may\n\nKiểm tra đường may ở cổ áo, nách áo và gấu áo. Đường may đều, chắc chắn là dấu hiệu của áo chất lượng.\n\n## Form dáng\n\nRegular fit phù hợp với đa số vóc dáng. Nếu bạn thích thoải mái hơn, chọn oversized.\n\n## Màu sắc\n\nMàu trắng và đen là basic dễ phối đồ nhất. Màu pastel cho phong cách trẻ trung.',
     image:
       'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&h=500&fit=crop',
     author: 'Minh Anh',
@@ -77,13 +77,26 @@ export const blogPosts: BlogPost[] = [
     title: 'Đồ Chơi Giáo Dục Cho Trẻ — Vừa Chơi Vừa Học Nên Chọn Gì?',
     excerpt:
       'Đồ chơi không chỉ để giải trí mà còn phát triển tư duy. Gợi ý các món đồ chơi mang tính giáo dục cao cho từng độ tuổi.',
-    content: '...',
+    content: '## Độ tuổi 0-2\n\nĐồ chơi cảm giác, đồ chơi phát ra âm thanh, sách vải.\n\n## Độ tuổi 3-5\n\nLego lớn, đồ chơi ghép hình, đồ chơi nhập vai.\n\n## Độ tuổi 6-12\n\nRobotics kit, thí nghiệm khoa học, board game.',
     image:
       'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=800&h=500&fit=crop',
     author: 'Thanh Trúc',
     category: 'Mẹ & Bé',
     tags: ['mẹ & bé', 'đồ chơi', 'giáo dục'],
     createdAt: '2026-06-14T00:00:00Z',
+  },
+  {
+    id: 'blog-7',
+    slug: 'test-fallback-image',
+    title: '[TEST] Bài Viết Kiểm Tra Fallback Ảnh',
+    excerpt:
+      'Bài viết này cố tình dùng ảnh hỏng để kiểm tra cơ chế fallback. Nếu bạn thấy ảnh phong cảnh hoặc ảnh mặc định thay thế, fallback hoạt động tốt!',
+    content: '## Fallback image test\n\nNếu bạn đang đọc bài này và thấy ảnh đại diện hiển thị bình thường (dù URL gốc cố tình sai), cơ chế fallback đã hoạt động.\n\nCơ chế này sẽ thử 4 ảnh dự phòng khác nhau, nếu tất cả đều fail sẽ hiển thị ảnh cuối cùng.',
+    image: 'https://invalid-url.example.com/broken-image-12345.jpg',
+    author: 'Admin',
+    category: 'Công nghệ',
+    tags: ['test', 'fallback', 'ảnh'],
+    createdAt: '2026-07-09T00:00:00Z',
   },
 ];
 

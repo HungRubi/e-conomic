@@ -6,7 +6,6 @@ import { uploadProductImage } from '@/api/admin-products';
 import {
 	createProductMaterial,
 	deleteProductMaterial,
-	deleteProductMaterials,
 	fetchProductMaterials,
 	updateProductMaterial,
 	type AdminProductMaterialRow,
@@ -254,7 +253,7 @@ export function ProductMaterialsAdminPanel() {
 			const isLastRowOnPage = rows.length === ids.length;
 			const shouldGoPrevPage = isLastRowOnPage && page > 0;
 
-			await toast.promise(deleteProductMaterials(ids), {
+			await toast.promise(Promise.all(ids.map(id => deleteProductMaterial(id))), {
 				loading: 'Đang xóa…',
 				success: `đã xóa ${ids.length} đá trang trí`,
 				error: 'Xóa thất bại',

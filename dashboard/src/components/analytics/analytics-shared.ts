@@ -1,13 +1,12 @@
 import type { AnalyticsKpi, AnalyticsRange } from '@/api/admin-analytics';
 
-export const ANALYTICS_RANGE_OPTIONS: AnalyticsRange[] = ['7d', '30d', '90d', '12m', 'custom'];
+export const ANALYTICS_RANGE_OPTIONS: AnalyticsRange[] = ['7d', '30d', '90d', '12m'];
 
 export const ANALYTICS_RANGE_LABEL: Record<AnalyticsRange, string> = {
 	'7d': '7 ngày',
 	'30d': '30 ngày',
 	'90d': '90 ngày',
 	'12m': '12 tháng',
-	custom: 'Tuỳ chọn',
 };
 
 export const ANALYTICS_RANGE_HINT: Record<AnalyticsRange, string> = {
@@ -15,7 +14,6 @@ export const ANALYTICS_RANGE_HINT: Record<AnalyticsRange, string> = {
 	'30d': 'Tháng vừa qua',
 	'90d': 'Quý gần nhất',
 	'12m': 'Năm gần nhất',
-	custom: 'Chọn ngày',
 };
 
 const VND_FORMATTER = new Intl.NumberFormat('vi-VN', {

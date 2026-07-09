@@ -125,7 +125,7 @@ export default function AuditLogsPage() {
 	}
 
 	function exportPage() {
-		const items = data?.items ?? [];
+		const items = data?.data ?? [];
 		if (items.length === 0) return;
 		exportToCsv(`audit-logs-${dateStampForFile()}`, items, [
 			{ header: 'Thời gian', accessor: (r: AuditLogRow) => r.createdAt },
@@ -138,7 +138,7 @@ export default function AuditLogsPage() {
 		]);
 	}
 
-	const items = data?.items ?? [];
+	const items = data?.data ?? [];
 	const totalPages = data?.totalPages ?? 1;
 	const total = data?.total ?? 0;
 

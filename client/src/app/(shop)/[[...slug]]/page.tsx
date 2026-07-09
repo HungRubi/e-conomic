@@ -339,7 +339,7 @@ function HomeContent() {
           <BlogSection posts={blogPosts} loading={blogLoading} />
 
           {/* AD BANNER 2 */}
-          <section className="py-5">
+          <section className="pt-5 pb-4">
             <AdBanner ad={ads[1]} index={1} />
           </section>
         </>

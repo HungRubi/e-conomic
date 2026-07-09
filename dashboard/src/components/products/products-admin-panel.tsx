@@ -415,7 +415,7 @@ export function ProductsAdminPanel() {
 				isBracelet: formIsBracelet,
 				sortOrder: sortOrder!,
 				careTips,
-				images: imageUrls.map(url => ({ url, alt: formName.trim() })),
+				images: imageUrls,
 				components: formCustom ? components : [],
 				...(hasVariants
 					? {
@@ -624,7 +624,7 @@ export function ProductsAdminPanel() {
 											{row.categories && row.categories.length > 0 ? (
 												<div className='flex items-center gap-1 min-w-0'>
 													<Badge variant='secondary' className='max-w-[140px] truncate font-normal sm:max-w-[200px]'>
-														{row.categories[0].name}
+														{(row.categories[0] as any).name}
 													</Badge>
 													{row.categories.length > 1 ? (
 														<span className='text-muted-foreground shrink-0 text-[11px]'>+{row.categories.length - 1}</span>

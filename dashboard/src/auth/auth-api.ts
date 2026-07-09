@@ -48,7 +48,7 @@ export function readStoredAccessToken(): string | null {
   }
 }
 
-function readStoredRefreshToken(): string | null {
+export function readStoredRefreshToken(): string | null {
   try {
     return localStorage.getItem(REFRESH_TOKEN_KEY);
   } catch {

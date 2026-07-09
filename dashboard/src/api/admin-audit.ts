@@ -1,3 +1,8 @@
 export type AuditLogRow = Record<string, any>;
 export type ListAuditLogsParams = Record<string, any>;
-export function listAuditLogs(_params?: any) { return Promise.resolve({ data: [], total: 0, totalPages: 0 }); }
+
+const empty = { data: [], items: [], total: 0, page: 0, totalPages: 1 };
+
+export function listAuditLogs(_params?: any): Promise<{ data: AuditLogRow[]; items: AuditLogRow[]; total: number; page: number; totalPages: number }> {
+  return Promise.resolve(empty);
+}

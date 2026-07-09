@@ -24,6 +24,7 @@ export type AdminProductVariant = {
 	stockQuantity: number;
 	trackStock: boolean;
 	allowBackorder: boolean;
+	lowStockThreshold?: number;
 	options?: unknown;
 	metadata?: unknown;
 	sortOrder: number;
@@ -31,6 +32,8 @@ export type AdminProductVariant = {
 	createdAt: string;
 	updatedAt: string;
 };
+
+export type AdminProductVariantInput = { id?: string; name: string; sku?: string; priceVnd?: number; stockQuantity?: number; trackStock?: boolean; images?: string[]; isActive?: boolean; sortOrder?: number; [key: string]: unknown; };
 
 export type AdminProductRow = {
 	id: string;
@@ -215,4 +218,14 @@ export async function uploadProductImage(idOrFile: string | File, maybeFile?: Fi
 	const file = idOrFile instanceof File ? idOrFile : maybeFile;
 	if (!file) return { url: '' };
 	return { url: URL.createObjectURL(file) };
+}
+
+export type InventoryTransaction = Record<string, any>;
+
+export function adjustProductStock(_id: string, _data?: any): Promise<any> {
+	return Promise.resolve({ id: _id });
+}
+
+export function fetchInventoryTransactions(_type?: string, _id?: string): Promise<InventoryTransaction[]> {
+	return Promise.resolve([]);
 }

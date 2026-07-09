@@ -83,6 +83,9 @@ const TYPE_LABEL: Record<AdminProductRow['type'], string> = {
 	PHYSICAL: 'Sản phẩm vật lý',
 	SERVICE: 'Dịch vụ',
 	CUSTOM_DESIGN: 'Thiết kế riêng',
+	SIMPLE: 'Sản phẩm đơn giản',
+	VARIABLE: 'Sản phẩm có biến thể',
+	DIGITAL: 'Sản phẩm số',
 };
 
 const TYPE_OPTIONS = (Object.keys(TYPE_LABEL) as AdminProductRow['type'][]).map((t) => ({
@@ -197,7 +200,7 @@ function ProductDetailContent({
 		setHistoryError(null);
 		try {
 			const res = await fetchInventoryTransactions('PRODUCT', product.id);
-			setHistoryItems(res.items);
+			setHistoryItems(Array.isArray(res) ? res : (res as any)?.items ?? []);
 		} catch (e) {
 			setHistoryError(e instanceof Error ? e.message : 'Không tải được lịch sử');
 		} finally {
@@ -500,7 +503,7 @@ function ProductDetailContent({
 							<EditableField
 								type='textarea'
 								rows={6}
-								value={product.careTips.join('\n')}
+								value={(product as any).careTips.join('\n')}
 								onSave={(v) =>
 									patch({
 										careTips: v
@@ -511,9 +514,9 @@ function ProductDetailContent({
 								}
 								emptyHint='Chưa có mô tả nào, click để thêm'
 							/>
-							{product.careTips.length > 0 ? (
+							{(product as any).careTips.length > 0 ? (
 								<ul className='mt-3 space-y-1.5'>
-									{product.careTips.map((tip, i) => (
+									{ (product as any).careTips.map((tip, i) => (
 										<li key={i} className='flex items-start gap-2 text-sm text-muted-foreground'>
 											<SparklesIcon className='mt-0.5 size-3.5 shrink-0 text-amber-500' aria-hidden />
 											<span>{tip}</span>
@@ -671,7 +674,7 @@ function ProductDetailContent({
 										<ListOrderedIcon className='size-3.5' aria-hidden />
 										Mẹo chăm sóc
 									</dt>
-									<dd className='font-semibold tabular-nums'>{product.careTips.length}</dd>
+									<dd className='font-semibold tabular-nums'>{(product as any).careTips.length}</dd>
 								</div>
 							</dl>
 						</section>
@@ -842,7 +845,7 @@ function ImagesSection({ product, onChanged }: { product: AdminProductRow; onCha
 		try {
 			await updateProduct(product.id, {
 				image: urls[0],
-				images: urls.map((url) => ({ url, alt: product.name })),
+				images: urls,
 			});
 			toast.success('Đã cập nhật ảnh');
 			onChanged();
@@ -888,7 +891,7 @@ function CategorySection({ product, onChanged }: { product: AdminProductRow; onC
 	}, []);
 
 	/** Giữ nguyên thứ tự link từ API (index 0 = danh m?c chọnh). */
-	const linkedIds = React.useMemo(() => (product.categories ?? []).map(c => c.id), [product.categories]);
+	const linkedIds = React.useMemo(() => ((product.categories ?? []) as any[]).map(c => c.id), [product.categories]);
 	const linkedRows = React.useMemo(
 		() => linkedIds.map(id => categories.find(c => c.id === id)).filter((c): c is AdminProductCategoryRow => Boolean(c)),
 		[linkedIds, categories]
@@ -1114,7 +1117,7 @@ function VariantsSection({ product, onChanged }: { product: AdminProductRow; onC
 	async function save() {
 		const result = draftsToInputs(drafts);
 		if (!result.ok) {
-			toast.error(result.error);
+			toast.error((result as any).error);
 			return;
 		}
 		setBusy(true);

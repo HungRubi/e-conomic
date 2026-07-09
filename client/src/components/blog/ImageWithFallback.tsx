@@ -1,17 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import Image from 'next/image';
-
-interface ImageWithFallbackProps {
-  src: string;
-  alt: string;
-  fallback?: string;
-  className?: string;
-  fill?: boolean;
-  sizes?: string;
-  priority?: boolean;
-}
+import { useState, type ImgHTMLAttributes } from 'react';
 
 const FALLBACKS = [
   'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&h=500&fit=crop',
@@ -20,14 +9,16 @@ const FALLBACKS = [
   'https://images.unsplash.com/photo-1432821596592-e2c18b78144f?w=800&h=500&fit=crop',
 ];
 
+interface ImageWithFallbackProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 'onError'> {
+  fallback?: string;
+}
+
 export default function ImageWithFallback({
   src,
   alt,
   fallback,
   className = '',
-  fill,
-  sizes,
-  priority,
+  ...rest
 }: ImageWithFallbackProps) {
   const [imgSrc, setImgSrc] = useState(src);
   const [fallbackIdx, setFallbackIdx] = useState(0);
@@ -40,14 +31,13 @@ export default function ImageWithFallback({
   };
 
   return (
-    <Image
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img
       src={imgSrc}
       alt={alt}
-      fill={fill}
-      sizes={sizes}
-      priority={priority}
       className={className}
       onError={() => setImgSrc(getNextFallback())}
+      {...rest}
     />
   );
 }

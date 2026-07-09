@@ -17,7 +17,7 @@ export default function BlogSection({ posts, loading }: BlogSectionProps) {
   if (!posts.length) return null;
 
   return (
-    <section className="py-6">
+    <section className="py-5">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}

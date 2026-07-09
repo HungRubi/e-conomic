@@ -6,8 +6,22 @@ import {
   getMe,
   clearSession,
   saveSession,
-  readStoredAccessToken,
+  readStoredRefreshToken,
 } from './auth-api';
+import type { AuthUserResponse } from './auth-api';
+
+// ── Helper ──────────────────────────────────────────────────
+function parseUser(u: AuthUserResponse): AuthUser {
+  return {
+    id: u.id,
+    email: u.email,
+    name: u.name,
+    role: u.role as AuthUser['role'],
+    permissions: u.role === 'admin' ? ['*'] : [],
+    totpEnabled: (u as any).totpEnabled ?? false,
+    totpBackupCodesRemaining: (u as any).totpBackupCodesRemaining,
+  };
+}
 
 interface AuthContextValue {
   user: AuthUser | null;
@@ -30,53 +44,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     async function init() {
-      const token = readStoredAccessToken();
-      if (!token) {
-        if (!cancelled) {
-          setIsLoading(false);
-          setReady(true);
-        }
+      const refreshToken = readStoredRefreshToken();
+      if (!refreshToken) {
+        if (!cancelled) { setIsLoading(false); setReady(true); }
+        return;
+      }
+      // Try refresh first — handles expired accessToken in 1 round-trip
+      const newToken = await refreshSession();
+      if (!newToken || cancelled) {
+        if (!cancelled) { setIsLoading(false); setReady(true); }
         return;
       }
       try {
         const userData = await getMe();
         if (!cancelled) {
-          setUser({
-            id: userData.id,
-            email: userData.email,
-            name: userData.name,
-            role: userData.role as AuthUser['role'],
-            permissions: userData.role === 'admin' ? ['*'] : [],
-            totpEnabled: (userData as any).totpEnabled ?? false,
-            totpBackupCodesRemaining: (userData as any).totpBackupCodesRemaining,
-          });
+          setUser(parseUser(userData));
         }
       } catch {
-        // Token expired — try refresh
-        const newToken = await refreshSession();
-        if (newToken && !cancelled) {
-          try {
-            const userData = await getMe();
-            setUser({
-              id: userData.id,
-              email: userData.email,
-              name: userData.name,
-              role: userData.role as AuthUser['role'],
-              permissions: userData.role === 'admin' ? ['*'] : [],
-              totpEnabled: (userData as any).totpEnabled ?? false,
-              totpBackupCodesRemaining: (userData as any).totpBackupCodesRemaining,
-            });
-          } catch {
-            clearSession();
-          }
-        } else {
-          clearSession();
-        }
+        clearSession();
       } finally {
-        if (!cancelled) {
-          setIsLoading(false);
-          setReady(true);
-        }
+        if (!cancelled) { setIsLoading(false); setReady(true); }
       }
     }
     init();
@@ -87,15 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (email: string, password: string) => {
     const res = await loginApi(email, password);
     saveSession(res.token, res.refreshToken);
-    setUser({
-      id: res.user.id,
-      email: res.user.email,
-      name: res.user.name,
-      role: res.user.role as AuthUser['role'],
-      permissions: res.user.role === 'admin' ? ['*'] : [],
-      totpEnabled: false,
-      totpBackupCodesRemaining: undefined,
-    });
+    setUser(parseUser(res.user));
   }, []);
 
   // ── Sign out ────────────────────────────────────────────
@@ -107,15 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const refreshUser = useCallback(async () => {
     try {
       const userData = await getMe();
-      setUser({
-        id: userData.id,
-        email: userData.email,
-        name: userData.name,
-        role: userData.role as AuthUser['role'],
-        permissions: userData.role === 'admin' ? ['*'] : [],
-        totpEnabled: (userData as any).totpEnabled ?? false,
-        totpBackupCodesRemaining: (userData as any).totpBackupCodesRemaining,
-      });
+      setUser(parseUser(userData));
     } catch {
       signOut();
     }

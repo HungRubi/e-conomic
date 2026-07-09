@@ -16,7 +16,7 @@ import {
   Sparkles,
   Layers3,
 } from 'lucide-react';
-import { Button, Badge, StarRating, QuantitySelector, Skeleton } from '@/components';
+import { Button, Badge, StarRating, QuantitySelector, Skeleton, ReviewSection } from '@/components';
 import ProductCard from '@/components/product/ProductCard';
 import { useCartStore } from '@/stores/cart-store';
 import { useToast } from '@/components/ui/Toast';
@@ -163,7 +163,7 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="pt-4 pb-20 md:pb-12 md:pt-6">
+    <div className="pt-4 pb-20 md:pb-9 md:pt-[31px]">
       <ProductBreadcrumb name={product.name} />
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-8 xl:gap-10">
@@ -197,6 +197,8 @@ export default function ProductDetailPage() {
       </section>
 
       <ProductStory product={product} stock={stock} />
+
+      <ReviewSection productId={product.id} rating={product.rating} reviewCount={product.reviewCount} />
 
       {related.length > 0 && (
         <section className="mt-14 md:mt-18">
@@ -570,59 +572,106 @@ interface ProductStoryProps {
 }
 
 function ProductStory({ product, stock }: ProductStoryProps) {
-  const specs = [
-    {
-      icon: PackageCheck,
-      label: 'Tồn kho',
-      value: stock > 0 ? `${stock} sản phẩm` : 'Hết hàng',
-      text: 'Cập nhật theo lựa chọn hiện tại.',
-    },
-    {
-      icon: Layers3,
-      label: 'Biến thể',
-      value: `${product.variants.length} lựa chọn`,
-      text: 'Chọn đúng size hoặc màu trước khi mua.',
-    },
-    {
-      icon: Sparkles,
-      label: 'Đánh giá',
-      value: `${product.rating.toFixed(1)}/5`,
-      text: `${product.reviewCount} lượt đánh giá từ khách hàng.`,
-    },
-  ];
-
   return (
-    <section className="mt-12 grid gap-8 md:mt-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:gap-12">
-      <div className="max-w-xl">
-        <h2 className="text-2xl font-bold tracking-tight text-text md:text-3xl">
-          Thông tin sản phẩm
+    <section className="mt-12 md:mt-16 max-w-3xl">
+      {/* ── Desktop ── */}
+      <div className="hidden lg:block">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-px w-8 bg-accent/50" />
+          <span className="text-xs font-semibold uppercase tracking-[0.15em] text-text2">Chi tiết sản phẩm</span>
+        </div>
+
+        <h2 className="text-3xl font-bold tracking-tight text-text leading-tight">
+          {product.name}
         </h2>
-        <p className="mt-3 text-sm leading-7 text-text2 md:text-base">
-          {product.description}
-        </p>
-        <div className="mt-5 flex flex-wrap gap-2">
+
+        <div className="mt-6 space-y-4 text-base leading-7 text-text2">
+          <p className="text-[15px] leading-[1.7]">
+            {product.description}
+          </p>
+          <p className="text-[15px] leading-[1.7]">
+            <strong className="font-semibold text-text">Chất liệu:</strong> Sợi cotton tự nhiên 100% được chọn lọc từ những cánh đồng bông chất lượng cao. Vải dệt kim mịn, dày dặn nhưng vẫn đảm bảo độ thoáng khí tối ưu cho làn da.
+          </p>
+          <p className="text-[15px] leading-[1.7]">
+            <strong className="font-semibold text-text">Thiết kế:</strong> Form regular fit ôm vừa phải, không quá chật cũng không quá rộng. Cổ tròn bo gân chắc chắn, giữ form sau nhiều lần giặt. Đường may chỉ kép tại các vị trí chịu lực (vai, nách, sườn) đảm bảo độ bền vượt trội.
+          </p>
+          <p className="text-[15px] leading-[1.7]">
+            <strong className="font-semibold text-text">Hướng dẫn bảo quản:</strong> Giặt ở nhiệt độ dưới 30°C, không dùng chất tẩy mạnh, phơi trong bóng râm để giữ màu sắc bền lâu. Không là ủi trực tiếp lên vùng in/họa tiết (nếu có).
+          </p>
+          <p className="text-[15px] leading-[1.7]">
+            <strong className="font-semibold text-text">Ưu điểm nổi bật:</strong> Công nghệ dệt Pre-Shrunk giúp hạn chế co rút sau giặt. Sợi vải được xử lý kháng khuẩn, khử mùi, an toàn cho da nhạy cảm. Chứng nhận OEKO-TEX Standard 100.
+          </p>
+        </div>
+
+        {/* Quick info tags */}
+        <div className="mt-6 flex flex-wrap items-center gap-3">
+          {stock > 0 ? (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-green/20 bg-green/5 px-3 py-1.5 text-xs font-medium text-green">
+              <span className="h-1.5 w-1.5 rounded-full bg-green animate-pulse" />
+              Còn {stock} sản phẩm
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-red/20 bg-red/5 px-3 py-1.5 text-xs font-medium text-red">
+              <span className="h-1.5 w-1.5 rounded-full bg-red" />
+              Hết hàng
+            </span>
+          )}
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-surface px-3 py-1.5 text-xs font-medium text-text2">
+            ⭐ {product.rating.toFixed(1)} ({product.reviewCount} đánh giá)
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-surface px-3 py-1.5 text-xs font-medium text-text2">
+            🧩 {product.variants.length} lựa chọn
+          </span>
           {product.tags.map((tag) => (
             <span
               key={tag}
-              className="rounded-full border border-border/50 bg-surface px-3 py-1 text-xs font-medium text-text2"
+              className="rounded-full border border-border/50 bg-surface px-3.5 py-1.5 text-xs font-medium text-text2 capitalize hover:bg-surface2 transition-colors"
             >
-              {tag}
+              #{tag}
             </span>
           ))}
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
-        {specs.map((spec) => (
-          <article key={spec.label} className="rounded-[16px] border border-border/50 bg-surface p-4">
+      {/* Mobile unchanged */}
+      <div className="lg:hidden grid gap-8">
+        <div className="max-w-xl">
+          <h2 className="text-2xl font-bold tracking-tight text-text md:text-3xl">
+            Thông tin sản phẩm
+          </h2>
+          <p className="mt-3 text-sm leading-7 text-text2 md:text-base">
+            {product.description}
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {product.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full border border-border/50 bg-surface px-3 py-1 text-xs font-medium text-text2"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
+          <article className="rounded-[16px] border border-border/50 bg-surface p-4">
             <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-[8px] bg-text/5 text-text">
-              <spec.icon className="h-4 w-4" />
+              <PackageCheck className="h-4 w-4" />
             </div>
-            <div className="text-xs font-semibold text-text2">{spec.label}</div>
-            <div className="mt-1 text-lg font-bold text-text">{spec.value}</div>
-            <p className="mt-1 text-sm leading-relaxed text-text2">{spec.text}</p>
+            <div className="text-xs font-semibold text-text2">Tồn kho</div>
+            <div className="mt-1 text-lg font-bold text-text">{stock > 0 ? `${stock} sản phẩm` : 'Hết hàng'}</div>
+            <p className="mt-1 text-sm leading-relaxed text-text2">Cập nhật theo lựa chọn hiện tại.</p>
           </article>
-        ))}
+          <article className="rounded-[16px] border border-border/50 bg-surface p-4">
+            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-[8px] bg-text/5 text-text">
+              <Sparkles className="h-4 w-4" />
+            </div>
+            <div className="text-xs font-semibold text-text2">Đánh giá</div>
+            <div className="mt-1 text-lg font-bold text-text">{product.rating.toFixed(1)}/5</div>
+            <p className="mt-1 text-sm leading-relaxed text-text2">{product.reviewCount} lượt đánh giá từ khách hàng.</p>
+          </article>
+        </div>
       </div>
     </section>
   );

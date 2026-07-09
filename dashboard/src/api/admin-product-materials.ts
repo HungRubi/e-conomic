@@ -21,3 +21,5 @@ export function updateProductMaterial(_id: string, _data: any): Promise<AdminPro
 export function deleteProductMaterial(_id: string): Promise<AdminProductMaterialRow> { return Promise.resolve({ id: _id, name: '', priceVnd: 0 }); }
 export function publishProductMaterial(_id: string): Promise<AdminProductMaterialRow> { return Promise.resolve({ id: _id, name: '', priceVnd: 0, status: 'ACTIVE' }); }
 export function archiveProductMaterial(_id: string): Promise<AdminProductMaterialRow> { return Promise.resolve({ id: _id, name: '', priceVnd: 0, status: 'ARCHIVED' }); }
+
+export const fetchProductMaterialById = getProductMaterial;

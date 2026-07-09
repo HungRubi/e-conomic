@@ -1,4 +1,4 @@
-import * as React from 'react';
+﻿import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
@@ -52,21 +52,21 @@ import { publicAssetUrl } from '@/lib/public-asset-url';
 import { cn } from '@/lib/utils';
 
 const STATUS_LABEL: Record<AdminProductCategoryRow['status'], string> = {
-	DRAFT: 'Nháp',
-	ACTIVE: 'Đang hiển thị',
-	ARCHIVED: 'Lưu trữ',
+	DRAFT: 'NhĂ¡p',
+	ACTIVE: 'Äang hiá»ƒn thá»‹',
+	ARCHIVED: 'LÆ°u trá»¯',
 };
 
 const LEVEL_LABEL: Record<number, string> = {
-	0: 'Cấp gốc',
-	1: 'Cấp 1',
-	2: 'Cấp 2',
+	0: 'Cáº¥p gá»‘c',
+	1: 'Cáº¥p 1',
+	2: 'Cáº¥p 2',
 };
 
 const ROOT_PARENT_VALUE = '__root__';
 
 function formatDateTime(iso: string | null): string {
-	if (!iso) return '—';
+	if (!iso) return 'â€”';
 	return new Intl.DateTimeFormat('vi-VN', {
 		day: '2-digit',
 		month: '2-digit',
@@ -81,7 +81,7 @@ async function copyToClipboard(value: string, message: string) {
 		await navigator.clipboard.writeText(value);
 		toast.success(message);
 	} catch {
-		toast.error('Không sao chép được');
+		toast.error('KhĂ´ng sao chĂ©p Ä‘Æ°á»£c');
 	}
 }
 
@@ -104,12 +104,12 @@ export function ProductCategoryDetailPanel() {
 		return (
 			<div className='flex flex-col items-center justify-center gap-3 rounded-xl border border-destructive/40 bg-destructive/5 p-10 text-center'>
 				<p className='text-sm font-medium text-destructive'>
-					{error instanceof Error ? error.message : 'Không tải được danh mục'}
+					{error instanceof Error ? error.message : 'KhĂ´ng táº£i Ä‘Æ°á»£c danh má»¥c'}
 				</p>
 				<Button asChild type='button' variant='ghost'>
 					<Link to='/products/categories'>
 						<ArrowLeftIcon className='mr-1 size-4' />
-						Về danh sách
+						Vá» danh sĂ¡ch
 					</Link>
 				</Button>
 			</div>
@@ -145,10 +145,10 @@ function DetailContent({
 		setActionBusy('publish');
 		try {
 			await publishProductCategory(category.id);
-			toast.success('đã xuất bản danh mục');
+			toast.success('Ä‘Ă£ xuáº¥t báº£n danh má»¥c');
 			onChanged();
 		} catch (e) {
-			toast.error(e instanceof AuthApiError ? e.message : 'Không xuất bản được');
+			toast.error(e instanceof AuthApiError ? e.message : 'KhĂ´ng xuáº¥t báº£n Ä‘Æ°á»£c');
 		} finally {
 			setActionBusy(null);
 		}
@@ -158,10 +158,10 @@ function DetailContent({
 		setActionBusy('archive');
 		try {
 			await archiveProductCategory(category.id);
-			toast.success('đã lưu trữ');
+			toast.success('Ä‘Ă£ lÆ°u trá»¯');
 			onChanged();
 		} catch (e) {
-			toast.error(e instanceof AuthApiError ? e.message : 'Không lưu trữ được');
+			toast.error(e instanceof AuthApiError ? e.message : 'KhĂ´ng lÆ°u trá»¯ Ä‘Æ°á»£c');
 		} finally {
 			setActionBusy(null);
 		}
@@ -171,10 +171,10 @@ function DetailContent({
 		setActionBusy('delete');
 		try {
 			await deleteProductCategory(category.id);
-			toast.success('đã xoá danh mục');
+			toast.success('Ä‘Ă£ xoĂ¡ danh má»¥c');
 			navigate('/products/categories');
 		} catch (e) {
-			toast.error(e instanceof AuthApiError ? e.message : 'Không xoá được');
+			toast.error(e instanceof AuthApiError ? e.message : 'KhĂ´ng xoĂ¡ Ä‘Æ°á»£c');
 			setActionBusy(null);
 		}
 	}
@@ -185,10 +185,10 @@ function DetailContent({
 
 	const parentChoices = parentChoicesForCategoryForm(all, category);
 	const parentOptions = [
-		{ value: ROOT_PARENT_VALUE, label: '(Không — cấp gốc)' },
+		{ value: ROOT_PARENT_VALUE, label: '(KhĂ´ng â€” cáº¥p gá»‘c)' },
 		...parentChoices.map(c => ({
 			value: c.id,
-			label: `${LEVEL_LABEL[c.level] ?? `Cấp ${c.level}`} · ${categoryBreadcrumb(c, all)}`,
+			label: `${LEVEL_LABEL[c.level] ?? `Cáº¥p ${c.level}`} Â· ${categoryBreadcrumb(c, all)}`,
 		})),
 	];
 
@@ -202,13 +202,13 @@ function DetailContent({
 						size='icon'
 						className='shrink-0'
 						onClick={() => navigate('/products/categories')}
-						aria-label='Quay lại danh sách danh mục'
+						aria-label='Quay láº¡i danh sĂ¡ch danh má»¥c'
 					>
 						<ArrowLeftIcon className='size-4' />
 					</Button>
 					<div className='min-w-0'>
 						<p className='text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground'>
-							Danh mục sản phẩm
+							Danh má»¥c sáº£n pháº©m
 						</p>
 						<div className='mt-1 flex items-center gap-2'>
 							<h1 className='truncate text-lg font-semibold tracking-tight'>{category.name}</h1>
@@ -217,8 +217,8 @@ function DetailContent({
 								variant='ghost'
 								size='icon'
 								className='size-7 text-muted-foreground'
-								onClick={() => copyToClipboard(category.slug, 'đã sao chép slug')}
-								aria-label='Sao chép slug'
+								onClick={() => copyToClipboard(category.slug, 'Ä‘Ă£ sao chĂ©p slug')}
+								aria-label='Sao chĂ©p slug'
 							>
 								<CopyIcon className='size-3.5' />
 							</Button>
@@ -228,15 +228,15 @@ function DetailContent({
 								<HashIcon className='size-3' aria-hidden />
 								{category.slug}
 							</span>
-							<span aria-hidden>·</span>
+							<span aria-hidden>Â·</span>
 							<span className='inline-flex items-center gap-1'>
 								<CalendarClockIcon className='size-3.5' aria-hidden />
-								Tạo {formatDateTime(category.createdAt)}
+								Táº¡o {formatDateTime(category.createdAt)}
 							</span>
 							{category.updatedAt !== category.createdAt ? (
 								<>
-									<span aria-hidden>·</span>
-									<span>Cập nhật {formatDateTime(category.updatedAt)}</span>
+									<span aria-hidden>Â·</span>
+									<span>Cáº­p nháº­t {formatDateTime(category.updatedAt)}</span>
 								</>
 							) : null}
 						</div>
@@ -244,7 +244,7 @@ function DetailContent({
 				</div>
 				<div className='flex flex-wrap items-center gap-2'>
 					<Badge variant={CONTENT_STATUS_BADGE[category.status]}>{STATUS_LABEL[category.status]}</Badge>
-					<Badge variant='outline'>{LEVEL_LABEL[category.level] ?? `Cấp ${category.level}`}</Badge>
+					<Badge variant='outline'>{LEVEL_LABEL[category.level] ?? `Cáº¥p ${category.level}`}</Badge>
 				</div>
 			</header>
 
@@ -255,21 +255,21 @@ function DetailContent({
 					<CoverImageSection category={category} onChanged={onChanged} />
 
 					<section className='rounded-xl bg-card p-4 ring-1 ring-foreground/10'>
-						<SectionHeading icon={TextIcon} title='Thông tin chính' />
+						<SectionHeading icon={TextIcon} title='ThĂ´ng tin chĂ­nh' />
 						<div className='mt-3 space-y-1'>
 							<EditableField
-								label='Tên danh mục'
+								label='TĂªn danh má»¥c'
 								type='text'
 								value={category.name}
 								onSave={v => patch({ name: v })}
-								validate={v => (v.trim() ? null : 'Tên không được trống')}
+								validate={v => (v.trim() ? null : 'TĂªn khĂ´ng Ä‘Æ°á»£c trá»‘ng')}
 							/>
 							<EditableField
-								label='Tên tiếng Anh'
+								label='TĂªn tiáº¿ng Anh'
 								type='text'
-								value={category.enName ?? ''}
-								onSave={v => patch({ enName: v.trim() ? v : null })}
-								emptyHint='Chưa có — click để thêm'
+								value={category.name ?? ''}
+onSave={v => patch({ name: v.trim() ? v : null })}
+								emptyHint='ChÆ°a cĂ³ â€” click Ä‘á»ƒ thĂªm'
 							/>
 							<EditableField
 								label='Slug (URL)'
@@ -277,17 +277,17 @@ function DetailContent({
 								value={category.slug}
 								onSave={v => patch({ slug: v })}
 								validate={v =>
-									/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim()) ? null : 'Slug chỉ gồm a-z, 0-9 và dấu -'
+									/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim()) ? null : 'Slug chá»‰ gá»“m a-z, 0-9 vĂ  dáº¥u -'
 								}
 								displayClassName='font-mono text-xs'
 							/>
 							<EditableField
-								label='Mô tả'
+								label='MĂ´ táº£'
 								type='textarea'
 								rows={5}
 								value={category.description ?? ''}
 								onSave={v => patch({ description: v.trim() ? v : null })}
-								emptyHint='Chưa có mô tả — click để thêm'
+								emptyHint='ChÆ°a cĂ³ mĂ´ táº£ â€” click Ä‘á»ƒ thĂªm'
 							/>
 						</div>
 					</section>
@@ -299,11 +299,11 @@ function DetailContent({
 					<div className='space-y-4'>
 						<section className='overflow-hidden rounded-xl bg-card ring-1 ring-foreground/10'>
 							<div className='border-b border-border/60 p-4'>
-								<SectionHeading icon={RocketIcon} title='Thao tác nhanh' />
+								<SectionHeading icon={RocketIcon} title='Thao tĂ¡c nhanh' />
 							</div>
 							<div className='flex flex-col gap-2 p-4'>
 								<div className='flex items-center justify-between gap-2 rounded-md bg-muted/30 px-3 py-2 text-sm'>
-									<span className='text-muted-foreground'>Trạng thái hiển thị</span>
+									<span className='text-muted-foreground'>Tráº¡ng thĂ¡i hiá»ƒn thá»‹</span>
 									<Badge variant={CONTENT_STATUS_BADGE[category.status]}>
 										{STATUS_LABEL[category.status]}
 									</Badge>
@@ -316,7 +316,7 @@ function DetailContent({
 										className='justify-start'
 									>
 										<RocketIcon className='mr-1.5 size-4' />
-										Xuất bản
+										Xuáº¥t báº£n
 									</Button>
 								) : null}
 								{category.status !== 'ARCHIVED' ? (
@@ -328,7 +328,7 @@ function DetailContent({
 										className='justify-start'
 									>
 										<ArchiveIcon className='mr-1.5 size-4' />
-										Lưu trữ
+										LÆ°u trá»¯
 									</Button>
 								) : null}
 								{isAdmin ? (
@@ -340,17 +340,17 @@ function DetailContent({
 										disabled={actionBusy !== null}
 									>
 										<Trash2Icon className='mr-1.5 size-4' />
-										Xoá vĩnh viễn
+										XoĂ¡ vÄ©nh viá»…n
 									</Button>
 								) : null}
 							</div>
 						</section>
 
 						<section className='rounded-xl bg-card p-4 ring-1 ring-foreground/10'>
-							<SectionHeading icon={FolderTreeIcon} title='Phân cấp' />
+							<SectionHeading icon={FolderTreeIcon} title='PhĂ¢n cáº¥p' />
 							<div className='mt-3 space-y-1'>
 								<EditableField
-									label='Danh mục cha'
+									label='Danh má»¥c cha'
 									type='select'
 									value={category.parentId ?? ROOT_PARENT_VALUE}
 									options={parentOptions}
@@ -359,21 +359,21 @@ function DetailContent({
 									}}
 								/>
 								<EditableField
-									label='Thứ tự hiển thị'
+									label='Thá»© tá»± hiá»ƒn thá»‹'
 									type='number'
 									value={category.sortOrder}
 									onSave={v => patch({ sortOrder: v ?? 0 })}
 									min={0}
-									validate={v => (v != null && v >= 0 ? null : 'Phải là số ≥ 0')}
+									validate={v => (v != null && v >= 0 ? null : 'Pháº£i lĂ  sá»‘ â‰¥ 0')}
 								/>
 								<EditableField
-									label='Trạng thái'
+									label='Tráº¡ng thĂ¡i'
 									type='select'
 									value={category.status}
 									options={[
-										{ value: 'DRAFT', label: 'Nháp' },
-										{ value: 'ACTIVE', label: 'Đang hiển thị' },
-										{ value: 'ARCHIVED', label: 'Lưu trữ' },
+										{ value: 'DRAFT', label: 'NhĂ¡p' },
+										{ value: 'ACTIVE', label: 'Äang hiá»ƒn thá»‹' },
+										{ value: 'ARCHIVED', label: 'LÆ°u trá»¯' },
 									]}
 									onSave={v => patch({ status: v as AdminProductCategoryRow['status'] })}
 								/>
@@ -381,28 +381,28 @@ function DetailContent({
 						</section>
 
 						<section className='rounded-xl bg-card p-4 ring-1 ring-foreground/10'>
-							<SectionHeading icon={ListOrderedIcon} title='Số liệu' />
+							<SectionHeading icon={ListOrderedIcon} title='Sá»‘ liá»‡u' />
 							<dl className='mt-2 space-y-2 text-sm'>
 								<div className='flex items-center justify-between'>
 									<dt className='inline-flex items-center gap-1.5 text-muted-foreground'>
 										<LayersIcon className='size-3.5' aria-hidden />
-										Cấp độ
+										Cáº¥p Ä‘á»™
 									</dt>
 									<dd className='font-semibold tabular-nums'>{LEVEL_LABEL[category.level] ?? category.level}</dd>
 								</div>
 								<div className='flex items-center justify-between'>
 									<dt className='inline-flex items-center gap-1.5 text-muted-foreground'>
 										<FolderTreeIcon className='size-3.5' aria-hidden />
-										Danh mục con
+										Danh má»¥c con
 									</dt>
 									<dd className='font-semibold tabular-nums'>{childCount}</dd>
 								</div>
 								<div className='flex items-center justify-between'>
 									<dt className='inline-flex items-center gap-1.5 text-muted-foreground'>
 										<BoxIcon className='size-3.5' aria-hidden />
-										Sản phẩm trong cây
+										Sáº£n pháº©m trong cĂ¢y
 									</dt>
-									<dd className='font-semibold tabular-nums'>{category.productCount ?? '—'}</dd>
+									<dd className='font-semibold tabular-nums'>{(category as any).productCount ?? 'â€”'}</dd>
 								</div>
 							</dl>
 						</section>
@@ -413,20 +413,20 @@ function DetailContent({
 			<AlertDialog open={confirmDelete} onOpenChange={open => !actionBusy && setConfirmDelete(open)}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
-						<AlertDialogTitle>Xoá danh mục này?</AlertDialogTitle>
+						<AlertDialogTitle>XoĂ¡ danh má»¥c nĂ y?</AlertDialogTitle>
 						<AlertDialogDescription>
-							Chỉ xoá được khi danh mục không còn con.{' '}
-							<span className='font-medium text-foreground'>{category.name}</span> sẽ bị xoá vĩnh viễn.
+							Chá»‰ xoĂ¡ Ä‘Æ°á»£c khi danh má»¥c khĂ´ng cĂ²n con.{' '}
+							<span className='font-medium text-foreground'>{category.name}</span> sáº½ bá»‹ xoĂ¡ vÄ©nh viá»…n.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
-						<AlertDialogCancel disabled={actionBusy === 'delete'}>Hủy</AlertDialogCancel>
+						<AlertDialogCancel disabled={actionBusy === 'delete'}>Há»§y</AlertDialogCancel>
 						<AlertDialogAction
 							onClick={() => void onDelete()}
 							disabled={actionBusy === 'delete'}
 							className='bg-destructive text-destructive-foreground hover:bg-destructive/90'
 						>
-							{actionBusy === 'delete' ? 'Đang xoá…' : 'Xoá'}
+							{actionBusy === 'delete' ? 'Äang xoĂ¡â€¦' : 'XoĂ¡'}
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>
@@ -474,7 +474,7 @@ function HeroBanner({
 					</h2>
 					{parent ? (
 						<p className='mt-1.5 text-xs opacity-80'>
-							Thuộc{' '}
+							Thuá»™c{' '}
 							<Link
 								to={`/products/categories/${parent.id}`}
 								className='font-medium underline-offset-2 hover:underline'
@@ -503,10 +503,10 @@ function CoverImageSection({
 		setBusy(true);
 		try {
 			await updateProductCategory(category.id, { image: url });
-			toast.success(url ? 'đã cập nhật ảnh' : 'đã gỡ ảnh đại diện');
+			toast.success(url ? 'Ä‘Ă£ cáº­p nháº­t áº£nh' : 'Ä‘Ă£ gá»¡ áº£nh Ä‘áº¡i diá»‡n');
 			onChanged();
 		} catch (e) {
-			toast.error(e instanceof AuthApiError ? e.message : 'Không cập nhật được');
+			toast.error(e instanceof AuthApiError ? e.message : 'KhĂ´ng cáº­p nháº­t Ä‘Æ°á»£c');
 		} finally {
 			setBusy(false);
 		}
@@ -516,15 +516,15 @@ function CoverImageSection({
 		<section className='rounded-xl bg-card p-4 ring-1 ring-foreground/10'>
 			<SectionHeading
 				icon={ImageIcon}
-				title='Ảnh đại diện'
-				hint='Hiển thị làm banner trên website và thumbnail.'
+				title='áº¢nh Ä‘áº¡i diá»‡n'
+				hint='Hiá»ƒn thá»‹ lĂ m banner trĂªn website vĂ  thumbnail.'
 			/>
 			<div className='mt-3'>
 				<SingleImageUrlDropzone
 					label={
 						category.image
-							? 'Kéo thả hoặc bấm để thay ảnh'
-							: 'Kéo thả hoặc bấm để chọn ảnh đại diện'
+							? 'KĂ©o tháº£ hoáº·c báº¥m Ä‘á»ƒ thay áº£nh'
+							: 'KĂ©o tháº£ hoáº·c báº¥m Ä‘á»ƒ chá»n áº£nh Ä‘áº¡i diá»‡n'
 					}
 					hint='JPEG, PNG, WebP, GIF, SVG'
 					url={category.image ?? ''}
@@ -536,7 +536,7 @@ function CoverImageSection({
 							const { url } = await uploadProductImage(file);
 							await setImage(url);
 						} catch (e) {
-							toast.error(e instanceof AuthApiError ? e.message : 'Tải ảnh thất bại');
+							toast.error(e instanceof AuthApiError ? e.message : 'Táº£i áº£nh tháº¥t báº¡i');
 						} finally {
 							setUploadBusy(false);
 						}
@@ -551,7 +551,7 @@ function CoverImageSection({
 							onClick={() => void setImage(null)}
 							disabled={busy}
 						>
-							Gỡ ảnh
+							Gá»¡ áº£nh
 						</Button>
 					</div>
 				) : null}
@@ -572,7 +572,7 @@ function CategoryProductsSection({ category }: { category: AdminProductCategoryR
 				status: 'all',
 			}).then(res => ({
 				...res,
-				items: res.items.filter(p => (p.categories ?? []).some(c => c.slug === category.slug || c.id === category.id)),
+				items: res.items.filter(p => (p.categories ?? []).some((c: any) => c.slug === category.slug || c.id === category.id)),
 			})),
 	});
 
@@ -583,11 +583,11 @@ function CategoryProductsSection({ category }: { category: AdminProductCategoryR
 		<section className='rounded-xl bg-card p-4 ring-1 ring-foreground/10'>
 			<SectionHeading
 				icon={PackageIcon}
-				title='Sản phẩm trong danh mục'
-				hint={total === 0 ? 'Chưa có sản phẩm gán vào danh mục này.' : `${total} sản phẩm`}
+				title='Sáº£n pháº©m trong danh má»¥c'
+				hint={total === 0 ? 'ChÆ°a cĂ³ sáº£n pháº©m gĂ¡n vĂ o danh má»¥c nĂ y.' : `${total} sáº£n pháº©m`}
 				action={
 					<Button asChild type='button' variant='outline' size='sm'>
-						<Link to={`/products?categorySlug=${category.slug}`}>Mở danh sách sản phẩm</Link>
+						<Link to={`/products?categorySlug=${category.slug}`}>Má»Ÿ danh sĂ¡ch sáº£n pháº©m</Link>
 					</Button>
 				}
 			/>
@@ -600,12 +600,12 @@ function CategoryProductsSection({ category }: { category: AdminProductCategoryR
 					</div>
 				) : productsQuery.isError ? (
 					<p className='rounded-md border border-destructive/40 bg-destructive/5 p-3 text-sm text-destructive'>
-						Không tải được sản phẩm.
+						KhĂ´ng táº£i Ä‘Æ°á»£c sáº£n pháº©m.
 					</p>
 				) : total === 0 ? (
 					<div className='rounded-lg border border-dashed border-border/70 bg-muted/20 p-6 text-center text-sm text-muted-foreground'>
 						<PackageIcon className='mx-auto mb-2 size-6 opacity-50' aria-hidden />
-						Chưa có sản phẩm nào gán vào danh mục này.
+						ChÆ°a cĂ³ sáº£n pháº©m nĂ o gĂ¡n vĂ o danh má»¥c nĂ y.
 					</div>
 				) : (
 					<div className='grid gap-3 sm:grid-cols-2 xl:grid-cols-3'>
@@ -646,11 +646,11 @@ function ProductMiniCard({ product }: { product: AdminProductRow }) {
 						{product.name}
 					</p>
 					<Badge variant={CONTENT_STATUS_BADGE[product.status]} className='shrink-0 text-[10px]'>
-						{product.status === 'ACTIVE' ? 'Đang bán' : product.status === 'DRAFT' ? 'Nháp' : 'Lưu trữ'}
+						{product.status === 'ACTIVE' ? 'Äang bĂ¡n' : product.status === 'DRAFT' ? 'NhĂ¡p' : 'LÆ°u trá»¯'}
 					</Badge>
 				</div>
 				<p className='mt-1 truncate text-xs text-muted-foreground'>
-					{product.priceLabel || '—'} · đã bán {product.sold}
+					{product.priceLabel || 'â€”'} Â· Ä‘Ă£ bĂ¡n {product.sold}
 				</p>
 			</div>
 		</Link>
@@ -685,12 +685,12 @@ function SectionHeading({
 function NotFoundState() {
 	return (
 		<div className='flex flex-col items-center justify-center gap-3 rounded-xl border border-border/60 bg-muted/20 p-10 text-center'>
-			<p className='text-sm font-medium'>Không tìm thấy danh mục</p>
-			<p className='text-xs text-muted-foreground'>Có thể đã bị xoá hoặc URL không đúng.</p>
+			<p className='text-sm font-medium'>KhĂ´ng tĂ¬m tháº¥y danh má»¥c</p>
+			<p className='text-xs text-muted-foreground'>CĂ³ thá»ƒ Ä‘Ă£ bá»‹ xoĂ¡ hoáº·c URL khĂ´ng Ä‘Ăºng.</p>
 			<Button asChild type='button' variant='outline'>
 				<Link to='/products/categories'>
 					<ArrowLeftIcon className='mr-1 size-4' />
-					Về danh sách
+					Vá» danh sĂ¡ch
 				</Link>
 			</Button>
 		</div>

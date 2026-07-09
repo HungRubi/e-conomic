@@ -70,6 +70,18 @@ export interface ChatMessage {
   createdAt: string;
 }
 
+// Reviews
+export interface Review {
+  id: string;
+  productId: string;
+  author: string;
+  rating: number;
+  title: string;
+  body: string;
+  createdAt: string;
+  verified: boolean;
+}
+
 export interface BlogPost {
   id: string;
   slug: string;

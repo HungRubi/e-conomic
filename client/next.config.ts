@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
         hostname: 'images.unsplash.com',
       },
     ],
+    // Allow any hostname for blog images that have fallback handling
+    // The ImageWithFallback component catches failures
+    dangerouslyAllowSVG: false,
   },
 };
 

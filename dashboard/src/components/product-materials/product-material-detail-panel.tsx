@@ -20,7 +20,7 @@ import { toast } from 'sonner';
 
 import {
 	deleteProductMaterial,
-	fetchProductMaterialById,
+	getProductMaterial,
 	updateProductMaterial,
 	type AdminProductMaterialRow,
 } from '@/api/admin-product-materials';
@@ -98,7 +98,7 @@ export function ProductMaterialDetailPanel() {
 
 	const { data, isLoading, error, refetch } = useQuery({
 		queryKey: ['admin-product-material', materialId],
-		queryFn: () => fetchProductMaterialById(materialId),
+		queryFn: () => getProductMaterial(materialId),
 		enabled: materialId.length > 0,
 	});
 

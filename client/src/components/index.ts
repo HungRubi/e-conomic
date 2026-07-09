@@ -23,3 +23,8 @@ export { default as BlogSection } from './blog/BlogSection';
 
 // Ads
 export { default as AdBanner } from './ads/AdBanner';
+
+// Reviews
+export { default as ReviewCard } from './review/ReviewCard';
+export { default as ReviewSection } from './review/ReviewSection';
+export { default as RatingSummary } from './review/RatingSummary';

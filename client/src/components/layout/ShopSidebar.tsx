@@ -268,8 +268,8 @@ export default function ShopSidebar() {
 
   return (
     <>
-      <aside className="hidden md:block w-56 lg:w-64 shrink-0 self-stretch">
-        <div className="sticky top-20 mb-6">
+      <aside className="hidden md:block w-56 lg:w-64 shrink-0 self-stretch pb-5">
+        <div className="sticky top-20">
           <div className="bg-surface border border-border rounded-xl px-3 py-4 overflow-y-auto scrollbar-hover max-h-[calc(100vh-5.5rem)]">
             <SidebarContent />
           </div>
