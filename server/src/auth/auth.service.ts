@@ -12,6 +12,8 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -148,6 +150,51 @@ export class AuthService {
     } catch {
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
+  }
+
+  // ── Forgot password ────────────────────────────────────────
+  async forgotPassword(dto: ForgotPasswordDto) {
+    // Always return success to prevent email enumeration
+    const user = await this.prisma.user.findUnique({
+      where: { email: dto.email },
+    });
+    if (!user) return { message: 'If the email exists, a reset link has been sent.' };
+
+    const resetToken = this.jwtService.sign(
+      { sub: user.id, type: 'reset' },
+      { expiresIn: '30m' },
+    );
+    const resetTokenExp = new Date(Date.now() + 30 * 60 * 1000);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: { resetToken, resetTokenExp },
+    });
+
+    // In production, send email here. For dev, return token in response.
+    return { message: 'If the email exists, a reset link has been sent.', token: resetToken };
+  }
+
+  // ── Reset password ─────────────────────────────────────────
+  async resetPassword(dto: ResetPasswordDto) {
+    const user = await this.prisma.user.findUnique({
+      where: { resetToken: dto.token },
+    });
+    if (!user || !user.resetTokenExp || user.resetTokenExp < new Date()) {
+      throw new BadRequestException('Invalid or expired reset token');
+    }
+
+    const hashed = await bcrypt.hash(dto.password, 12);
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashed,
+        resetToken: null,
+        resetTokenExp: null,
+      },
+    });
+
+    return { message: 'Password reset successfully' };
   }
 
   // ── Helpers ───────────────────────────────────────────────

@@ -116,10 +116,15 @@ export function getAdminBreadcrumbs(pathname: string): BreadcrumbEntry[] {
   return [root, { label: 'Trang' }];
 }
 
+function isPathActive(path: string, pathname: string) {
+  if (path === '/') return pathname === '/';
+  return pathname === path || pathname.startsWith(`${path}/`);
+}
+
 export function AdminSidebarNav() {
   const { pathname } = useLocation();
   function itemGroupActive(item: AdminNavItem, p: string) {
-    return item.children?.some(c => p === c.path || p.startsWith(`${c.path}/`)) || p === item.path || p.startsWith(`${item.path}/`);
+    return item.children?.some(c => isPathActive(c.path, p)) || isPathActive(item.path, p);
   }
   return (
     <>
@@ -153,7 +158,7 @@ export function AdminSidebarNav() {
                 </Collapsible>
               ) : (
                 <SidebarMenuItem key={item.path}>
-                  <SidebarMenuButton asChild tooltip={item.title} isActive={item.path === pathname || (item.path !== '/' && pathname.startsWith(`${item.path}/`))}>
+                  <SidebarMenuButton asChild tooltip={item.title} isActive={isPathActive(item.path, pathname)}>
                     <NavLink to={item.path} end={item.path === '/'}>
                       <item.icon className={item.iconClassName} />
                       <span>{item.title}</span>

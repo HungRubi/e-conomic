@@ -41,7 +41,9 @@ export declare class UsersService {
         name: string;
         password: string;
         id: string;
+        resetToken: string | null;
         role: string;
+        resetTokenExp: Date | null;
         createdAt: Date;
         updatedAt: Date;
     }>;

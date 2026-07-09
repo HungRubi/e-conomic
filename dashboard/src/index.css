@@ -27,6 +27,29 @@
 	.scrollbar-thin::-webkit-scrollbar-thumb:hover {
 		background: hsl(var(--muted-foreground) / 0.4);
 	}
+
+	.sidebar-scrollbar {
+		scrollbar-width: thin;
+		scrollbar-color: hsl(var(--muted-foreground) / 0.16) transparent;
+	}
+
+	.sidebar-scrollbar::-webkit-scrollbar {
+		width: 3px;
+		height: 3px;
+	}
+
+	.sidebar-scrollbar::-webkit-scrollbar-track {
+		background: transparent;
+	}
+
+	.sidebar-scrollbar::-webkit-scrollbar-thumb {
+		border-radius: 999px;
+		background: hsl(var(--muted-foreground) / 0.12);
+	}
+
+	.sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+		background: hsl(var(--muted-foreground) / 0.24);
+	}
 }
 
 @custom-variant dark (&:is(.dark *));

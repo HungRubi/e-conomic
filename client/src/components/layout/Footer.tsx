@@ -34,7 +34,7 @@ const footerSections = [
 export default function Footer() {
   return (
     <footer className="border-t border-border bg-surface">
-      <div className="max-w-[90rem] mx-auto px-3 md:px-4 py-12">
+      <div className="max-w-[90rem] mx-auto px-3 md:px-4 py-5">
         {/* Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}

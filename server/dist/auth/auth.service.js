@@ -163,6 +163,38 @@ let AuthService = class AuthService {
             throw new common_1.UnauthorizedException('Invalid or expired refresh token');
         }
     }
+    async forgotPassword(dto) {
+        const user = await this.prisma.user.findUnique({
+            where: { email: dto.email },
+        });
+        if (!user)
+            return { message: 'If the email exists, a reset link has been sent.' };
+        const resetToken = this.jwtService.sign({ sub: user.id, type: 'reset' }, { expiresIn: '30m' });
+        const resetTokenExp = new Date(Date.now() + 30 * 60 * 1000);
+        await this.prisma.user.update({
+            where: { id: user.id },
+            data: { resetToken, resetTokenExp },
+        });
+        return { message: 'If the email exists, a reset link has been sent.', token: resetToken };
+    }
+    async resetPassword(dto) {
+        const user = await this.prisma.user.findUnique({
+            where: { resetToken: dto.token },
+        });
+        if (!user || !user.resetTokenExp || user.resetTokenExp < new Date()) {
+            throw new common_1.BadRequestException('Invalid or expired reset token');
+        }
+        const hashed = await bcrypt.hash(dto.password, 12);
+        await this.prisma.user.update({
+            where: { id: user.id },
+            data: {
+                password: hashed,
+                resetToken: null,
+                resetTokenExp: null,
+            },
+        });
+        return { message: 'Password reset successfully' };
+    }
     generateTokens(user) {
         const payload = { sub: user.id, email: user.email };
         const token = this.jwtService.sign(payload);

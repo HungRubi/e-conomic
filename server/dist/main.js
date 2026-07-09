@@ -9,8 +9,8 @@ async function bootstrap() {
     app.setGlobalPrefix('api');
     app.enableCors();
     app.useGlobalPipes(new common_1.ValidationPipe({
-        whitelist: false,
-        forbidNonWhitelisted: false,
+        whitelist: true,
+        forbidNonWhitelisted: true,
         transform: true,
         validationError: { target: false },
     }));

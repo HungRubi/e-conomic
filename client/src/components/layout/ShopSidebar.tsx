@@ -144,7 +144,7 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
       {/* ── Quick services ── */}
       <div className="space-y-1 px-0">
         <p className="text-[11px] font-semibold text-text2 uppercase tracking-wider px-1 mb-1">Tiện ích</p>
-        <Link href="/orders" onClick={onLinkClick} className={`${linkBase} text-text2 hover:text-text hover:bg-surface2`}>
+        <Link href="/don-hang-cua-ban" onClick={onLinkClick} className={`${linkBase} text-text2 hover:text-text hover:bg-surface2`}>
           <Truck className="w-4 h-4" /> Tra cứu đơn hàng
         </Link>
         <Link href="/?sort=rating" onClick={onLinkClick} className={`${linkBase} text-text2 hover:text-text hover:bg-surface2`}>
@@ -269,7 +269,7 @@ export default function ShopSidebar() {
   return (
     <>
       <aside className="hidden md:block w-56 lg:w-64 shrink-0 self-stretch">
-        <div className="sticky top-20 mb-4">
+        <div className="sticky top-20 mb-6">
           <div className="bg-surface border border-border rounded-xl px-3 py-4 overflow-y-auto scrollbar-hover max-h-[calc(100vh-5.5rem)]">
             <SidebarContent />
           </div>

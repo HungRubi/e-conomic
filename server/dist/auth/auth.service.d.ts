@@ -5,6 +5,8 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 export declare class AuthService {
     private readonly prisma;
     private readonly jwtService;
@@ -59,6 +61,16 @@ export declare class AuthService {
             name: string;
             role: string;
         };
+    }>;
+    forgotPassword(dto: ForgotPasswordDto): Promise<{
+        message: string;
+        token?: undefined;
+    } | {
+        message: string;
+        token: string;
+    }>;
+    resetPassword(dto: ResetPasswordDto): Promise<{
+        message: string;
     }>;
     private generateTokens;
     private buildAuthResponse;

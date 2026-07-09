@@ -7,10 +7,14 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronLeft, ChevronRight, PackageSearch } from 'lucide-react';
 import ProductCard from '@/components/product/ProductCard';
+import BlogSection from '@/components/blog/BlogSection';
+import AdBanner from '@/components/ads/AdBanner';
 import { Select } from '@/components';
 import { ProductCardSkeleton, ProductGridSkeleton } from '@/components/ui/Skeleton';
-import { type Product } from '@/types';
+import { type Product, type BlogPost } from '@/types';
 import { getProducts, getFeaturedProducts, getNewArrivals } from '@/lib/products';
+import { getRecentBlogPosts } from '@/lib/blog';
+import { ads } from '@/lib/ads';
 import { categories } from '@/lib/categories';
 
 const slides = [
@@ -41,6 +45,8 @@ function HomeContent() {
 
   const [featured, setFeatured] = useState<Product[]>([]);
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [blogLoading, setBlogLoading] = useState(true);
   const [loading, setLoading] = useState(true);
   const [slideIdx, setSlideIdx] = useState(0);
 
@@ -72,6 +78,13 @@ function HomeContent() {
       setLoading(false);
     }
     load();
+
+    async function loadBlog() {
+      const posts = await getRecentBlogPosts(3);
+      setBlogPosts(posts);
+      setBlogLoading(false);
+    }
+    loadBlog();
   }, []);
 
   // Load category/sort products
@@ -124,6 +137,11 @@ function HomeContent() {
     ? categories.find((c) => c.slug === selectedCategory)?.name || 'Danh mục'
     : '';
 
+  // Scroll to top when category changes
+  useEffect(() => {
+    if (selectedCategory) window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [selectedCategory]);
+
   return (
     <div>
       {/* ─── HERO ─── */}
@@ -164,6 +182,42 @@ function HomeContent() {
               aria-label={`Slide ${i + 1}`}
             />
           ))}
+        </div>
+      </section>
+
+      {/* ─── CATEGORIES — always visible ─── */}
+      <section className="py-5">
+        <div className="grid grid-flow-col grid-rows-2 gap-x-4 gap-y-3 overflow-x-auto overflow-y-hidden pb-2 scrollbar-hover md:flex md:gap-4 md:overflow-x-auto md:overflow-y-hidden md:flex-nowrap md:pb-0 md:scrollbar-hover">
+          {categories.map((cat, i) => {
+            const isActive = cat.slug === selectedCategory;
+            return (
+            <motion.div
+              key={cat.id}
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.04, duration: 0.3 }}
+            >
+              <Link
+                href={`/${cat.slug}`}
+                className="flex flex-col items-center gap-2 group w-[76px]"
+              >
+                <div className={`w-[60px] h-[60px] rounded-full overflow-hidden border bg-surface shadow-sm group-hover:border-border group-hover:shadow-md transition-all ${isActive ? 'border-accent/50' : 'border-border'}`}>
+                  <Image
+                    src={cat.image!}
+                    alt={cat.name}
+                    width={60}
+                    height={60}
+                    className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+                <span className={`min-h-[2rem] text-xs font-medium text-center leading-tight line-clamp-2 transition-colors ${isActive ? 'text-text' : 'text-text2 group-hover:text-text'}`}>
+                  {cat.name}
+                </span>
+              </Link>
+            </motion.div>
+            );
+          })}
         </div>
       </section>
 
@@ -244,42 +298,8 @@ function HomeContent() {
       ) : (
         /* ─── HOME SECTIONS ─── */
         <>
-          {/* CATEGORIES */}
-          <section className="py-8">
-            <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hover">
-              {categories.map((cat, i) => (
-                <motion.div
-                  key={cat.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.04, duration: 0.3 }}
-                  className="shrink-0"
-                >
-                  <Link
-                    href={`/${cat.slug}`}
-                    className="flex w-[76px] flex-col items-center gap-2 group"
-                  >
-                    <div className="w-[60px] h-[60px] rounded-full overflow-hidden border border-border bg-surface shadow-sm group-hover:border-border group-hover:shadow-md transition-all">
-                      <Image
-                        src={cat.image!}
-                        alt={cat.name}
-                        width={60}
-                        height={60}
-                        className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-500"
-                      />
-                    </div>
-                    <span className="min-h-[2rem] text-xs font-medium text-text2 group-hover:text-text text-center leading-tight line-clamp-2">
-                      {cat.name}
-                    </span>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </section>
-
           {/* FEATURED */}
-          <section className="py-10">
+          <section className="py-5">
             <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex items-center justify-between mb-5">
               <h2 className="text-xl font-bold text-text">Sản phẩm bán chạy</h2>
               <Link href="/?sort=rating" className="text-sm text-accent hover:text-accent/80 transition-colors flex items-center gap-1">
@@ -296,7 +316,7 @@ function HomeContent() {
           </section>
 
           {/* NEW ARRIVALS */}
-          <section>
+          <section className="py-5">
             <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="flex items-center justify-between mb-5">
               <h2 className="text-xl font-bold text-text">Hàng mới về</h2>
               <Link href="/?sort=newest" className="text-sm text-accent hover:text-accent/80 transition-colors flex items-center gap-1">
@@ -308,6 +328,19 @@ function HomeContent() {
                 ? Array.from({ length: 4 }).map((_, i) => <ProductCardSkeleton key={i} />)
                 : newArrivals.map((product, i) => <ProductCard key={product.id} product={product} index={i} />)}
             </div>
+          </section>
+
+          {/* AD BANNER 1 */}
+          <section className="py-5">
+            <AdBanner ad={ads[0]} index={0} />
+          </section>
+
+          {/* BLOG SECTION */}
+          <BlogSection posts={blogPosts} loading={blogLoading} />
+
+          {/* AD BANNER 2 */}
+          <section className="py-5">
+            <AdBanner ad={ads[1]} index={1} />
           </section>
         </>
       )}

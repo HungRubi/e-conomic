@@ -37,7 +37,8 @@ export default function ProfilePage() {
 		if (!user || !nameDirty) return;
 		setSavingName(true);
 		try {
-			await updateMyProfile(user.id, { name: name.trim() || null });
+			await updateMyProfile({ name: name.trim() || undefined });
+			await refreshUser();
 			toast.success('đã cập nhật tên hiển thị');
 		} catch (e) {
 			toast.error(e instanceof AuthApiError ? e.message : 'Cập nhật thất bại');
@@ -63,7 +64,7 @@ export default function ProfilePage() {
 		}
 		setSavingPassword(true);
 		try {
-			await changeMyPassword({ currentPassword, newPassword });
+			await changeMyPassword(currentPassword, newPassword);
 			toast.success('Đổi mật khẩu thành công');
 			setCurrentPassword('');
 			setNewPassword('');

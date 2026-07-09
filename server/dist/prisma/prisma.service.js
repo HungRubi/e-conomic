@@ -26,7 +26,8 @@ let PrismaService = PrismaService_1 = class PrismaService extends client_1.Prism
                 this.logger.log('Connected to database');
             }
             catch (error) {
-                this.logger.warn('Database not available — server running without DB. Set DATABASE_URL in .env');
+                this.logger.warn(`Database not available — ${error instanceof Error ? error.message : 'Unknown error'}`);
+                this.logger.warn('Set DATABASE_URL in .env');
             }
         }
         return this;

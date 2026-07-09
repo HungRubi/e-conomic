@@ -70,5 +70,18 @@ export interface ChatMessage {
   createdAt: string;
 }
 
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  image: string;
+  author: string;
+  category: string;
+  tags: string[];
+  createdAt: string;
+}
+
 export type ConvStatus = 'OPEN' | 'ASSIGNED' | 'CLOSED';
 export type MsgRole = 'user' | 'ai' | 'staff';

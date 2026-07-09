@@ -4,9 +4,8 @@ import Link from 'next/link';
 import { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAppTheme } from '@/providers/theme-provider';
-import {
-  Search, ShoppingBag, Menu, User, Sun, Moon, X,
-  ChevronDown, Package, Heart, Settings, LogOut,
+import { Search, ShoppingBag, Menu, User, Sun, Moon, X,
+  ChevronDown, Package, Heart, Settings, LogOut, BookOpen,
 } from 'lucide-react';
 import { useUIStore } from '@/stores/ui-store';
 import { useCartStore } from '@/stores/cart-store';
@@ -18,8 +17,9 @@ const user = {
 };
 
 const accountLinks = [
-  { href: '/orders', icon: Package, label: 'Đơn hàng của tôi' },
+  { href: '/don-hang-cua-ban', icon: Package, label: 'Đơn hàng của tôi' },
   { href: '/wishlist', icon: Heart, label: 'Sản phẩm yêu thích' },
+  { href: '/blog', icon: BookOpen, label: 'Bài viết & Hướng dẫn' },
   { href: '/settings', icon: Settings, label: 'Cài đặt tài khoản' },
 ];
 
