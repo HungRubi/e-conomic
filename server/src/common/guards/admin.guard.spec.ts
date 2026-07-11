@@ -21,10 +21,14 @@ describe('AdminGuard', () => {
   });
 
   it('rejects staff role', () => {
-    expect(() => guard.canActivate(contextWithRole('staff'))).toThrow(ForbiddenException);
+    expect(() => guard.canActivate(contextWithRole('staff'))).toThrow(
+      ForbiddenException,
+    );
   });
 
   it('rejects anonymous requests', () => {
-    expect(() => guard.canActivate(contextWithRole(undefined))).toThrow(ForbiddenException);
+    expect(() => guard.canActivate(contextWithRole(undefined))).toThrow(
+      ForbiddenException,
+    );
   });
 });

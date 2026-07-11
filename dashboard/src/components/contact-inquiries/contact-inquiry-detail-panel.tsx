@@ -101,13 +101,7 @@ export function ContactInquiryDetailPanel() {
 	return <DetailContent inquiry={data} onChanged={() => void refetch()} />;
 }
 
-function DetailContent({
-	inquiry,
-	onChanged,
-}: {
-	inquiry: AdminContactInquiryRow;
-	onChanged: () => void;
-}) {
+function DetailContent({ inquiry, onChanged }: { inquiry: AdminContactInquiryRow; onChanged: () => void }) {
 	const navigate = useNavigate();
 	const crud = useEntityCrud('contactInquiries');
 
@@ -192,9 +186,7 @@ function DetailContent({
 					</div>
 				</div>
 				<div className='flex flex-wrap items-center gap-2'>
-					<Badge variant={STATUS_BADGE[inquiry.status]}>
-						{CONTACT_INQUIRY_STATUS_LABEL[inquiry.status]}
-					</Badge>
+					<Badge variant={STATUS_BADGE[inquiry.status]}>{CONTACT_INQUIRY_STATUS_LABEL[inquiry.status]}</Badge>
 				</div>
 			</header>
 
@@ -316,13 +308,7 @@ function DetailContent({
 	);
 }
 
-function SectionHeading({
-	icon: Icon,
-	title,
-}: {
-	icon: React.ComponentType<{ className?: string }>;
-	title: string;
-}) {
+function SectionHeading({ icon: Icon, title }: { icon: React.ComponentType<{ className?: string }>; title: string }) {
 	return (
 		<div className='flex items-start gap-2'>
 			<Icon className='mt-0.5 size-4 shrink-0 text-muted-foreground' aria-hidden />

@@ -4,14 +4,7 @@ import { toast } from 'sonner';
 
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 type SelectOption = { value: string; label: string };
@@ -56,11 +49,7 @@ type SelectEditableProps = CommonProps<string> & {
 	options: SelectOption[];
 };
 
-export type EditableFieldProps =
-	| TextEditableProps
-	| TextareaEditableProps
-	| NumberEditableProps
-	| SelectEditableProps;
+export type EditableFieldProps = TextEditableProps | TextareaEditableProps | NumberEditableProps | SelectEditableProps;
 
 export function EditableField(props: EditableFieldProps) {
 	const [editing, setEditing] = React.useState(false);
@@ -122,8 +111,7 @@ export function EditableField(props: EditableFieldProps) {
 				await props.onSave(parsed.value as never);
 				setEditing(false);
 				if (props.successToast !== false) {
-					const label =
-						typeof props.successToast === 'string' ? props.successToast : 'đã cập nhật';
+					const label = typeof props.successToast === 'string' ? props.successToast : 'đã cập nhật';
 					toast.success(label);
 				}
 			} catch (e) {
@@ -176,7 +164,7 @@ export function EditableField(props: EditableFieldProps) {
 				role={isDisabled ? undefined : 'button'}
 				tabIndex={isDisabled ? -1 : 0}
 				onClick={startEditing}
-				onKeyDown={(e) => {
+				onKeyDown={e => {
 					if (e.key === 'Enter' || e.key === ' ') {
 						e.preventDefault();
 						startEditing();
@@ -188,15 +176,13 @@ export function EditableField(props: EditableFieldProps) {
 						{props.label}
 					</p>
 				) : null}
-				<div
-					className={cn(
-						'mt-0.5 flex min-h-6 items-center gap-1.5 text-sm',
-						props.displayClassName
-					)}
-				>
+				<div className={cn('mt-0.5 flex min-h-6 items-center gap-1.5 text-sm', props.displayClassName)}>
 					<DisplayValue {...props} />
 					{busy ? (
-						<Loader2Icon className='ml-auto size-3.5 shrink-0 animate-spin text-muted-foreground' aria-hidden />
+						<Loader2Icon
+							className='ml-auto size-3.5 shrink-0 animate-spin text-muted-foreground'
+							aria-hidden
+						/>
 					) : !isDisabled ? (
 						<PencilIcon
 							className='ml-auto size-3.5 shrink-0 text-muted-foreground/0 transition-colors group-hover/editable:text-muted-foreground/70 group-focus-within/editable:text-muted-foreground/70'
@@ -209,16 +195,9 @@ export function EditableField(props: EditableFieldProps) {
 	}
 
 	return (
-		<div
-			className={cn(
-				'-mx-2 space-y-1.5 rounded-md px-2 py-1.5',
-				props.containerClassName
-			)}
-		>
+		<div className={cn('-mx-2 space-y-1.5 rounded-md px-2 py-1.5', props.containerClassName)}>
 			{props.label ? (
-				<p className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground'>
-					{props.label}
-				</p>
+				<p className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground'>{props.label}</p>
 			) : null}
 			<EditInput
 				props={props}
@@ -226,11 +205,11 @@ export function EditableField(props: EditableFieldProps) {
 				setDraft={setDraft}
 				onKeyDown={onKey}
 				onBlur={onBlur}
-				onSelectCommit={(v) => {
+				onSelectCommit={v => {
 					setDraft(v);
 					void commit(v);
 				}}
-				onSelectOpenChange={(open) => {
+				onSelectOpenChange={open => {
 					if (!open) {
 						// Đóng dropdown mà không đổi -> thoát edit.
 						if (!committedRef.current) {
@@ -251,11 +230,7 @@ function DisplayValue(props: EditableFieldProps) {
 		case 'textarea': {
 			const v = (props.value ?? '').toString().trim();
 			if (!v) return <EmptyHint hint={props.emptyHint} />;
-			return (
-				<span className={cn(props.type === 'textarea' && 'whitespace-pre-wrap leading-relaxed')}>
-					{v}
-				</span>
-			);
+			return <span className={cn(props.type === 'textarea' && 'whitespace-pre-wrap leading-relaxed')}>{v}</span>;
 		}
 		case 'number': {
 			if (props.value == null) return <EmptyHint hint={props.emptyHint} />;
@@ -268,7 +243,7 @@ function DisplayValue(props: EditableFieldProps) {
 			);
 		}
 		case 'select': {
-			const opt = props.options.find((o) => o.value === props.value);
+			const opt = props.options.find(o => o.value === props.value);
 			if (!opt) return <EmptyHint hint={props.emptyHint} />;
 			return <span>{opt.label}</span>;
 		}
@@ -305,7 +280,7 @@ function EditInput({
 				<Input
 					autoFocus
 					value={draft}
-					onChange={(e) => setDraft(e.target.value)}
+					onChange={e => setDraft(e.target.value)}
 					onKeyDown={onKeyDown}
 					onBlur={onBlur}
 					placeholder={props.placeholder}
@@ -318,7 +293,7 @@ function EditInput({
 				<Textarea
 					autoFocus
 					value={draft}
-					onChange={(e) => setDraft(e.target.value)}
+					onChange={e => setDraft(e.target.value)}
 					onKeyDown={onKeyDown}
 					onBlur={onBlur}
 					placeholder={props.placeholder}
@@ -333,7 +308,7 @@ function EditInput({
 					autoFocus
 					inputMode='numeric'
 					value={draft}
-					onChange={(e) => setDraft(e.target.value.replace(/[^\d-]/g, ''))}
+					onChange={e => setDraft(e.target.value.replace(/[^\d-]/g, ''))}
 					onKeyDown={onKeyDown}
 					onBlur={onBlur}
 					placeholder={props.placeholder}
@@ -342,18 +317,13 @@ function EditInput({
 			);
 		case 'select':
 			return (
-				<Select
-					defaultOpen
-					value={draft}
-					onValueChange={onSelectCommit}
-					onOpenChange={onSelectOpenChange}
-				>
+				<Select defaultOpen value={draft} onValueChange={onSelectCommit} onOpenChange={onSelectOpenChange}>
 					<SelectTrigger className={cn('h-8 w-full', errorClass)}>
 						<SelectValue placeholder={props.placeholder} />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectGroup>
-							{props.options.map((o) => (
+							{props.options.map(o => (
 								<SelectItem key={o.value} value={o.value}>
 									{o.label}
 								</SelectItem>
@@ -377,9 +347,7 @@ function toRawString(props: EditableFieldProps): string {
 	}
 }
 
-type Parsed =
-	| { kind: 'ok'; value: string | number | null }
-	| { kind: 'error'; message: string };
+type Parsed = { kind: 'ok'; value: string | number | null } | { kind: 'error'; message: string };
 
 function parseDraft(props: EditableFieldProps, draft: string): Parsed {
 	switch (props.type) {
@@ -392,10 +360,8 @@ function parseDraft(props: EditableFieldProps, draft: string): Parsed {
 			const n = Number(t);
 			if (!Number.isFinite(n)) return { kind: 'error', message: 'Phải là số hợp lệ' };
 			const intVal = Math.trunc(n);
-			if (props.min != null && intVal < props.min)
-				return { kind: 'error', message: `Tối thiểu ${props.min}` };
-			if (props.max != null && intVal > props.max)
-				return { kind: 'error', message: `Tối đa ${props.max}` };
+			if (props.min != null && intVal < props.min) return { kind: 'error', message: `Tối thiểu ${props.min}` };
+			if (props.max != null && intVal > props.max) return { kind: 'error', message: `Tối đa ${props.max}` };
 			return { kind: 'ok', value: intVal };
 		}
 		case 'select':

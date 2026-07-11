@@ -150,7 +150,7 @@ export function CampaignFormDrawer({
 											onFieldErrorStrip('camp-banner');
 										}}
 										disabled={formBusy}
-										onUploadFile={async (file) => {
+										onUploadFile={async file => {
 											try {
 												const formData = new FormData();
 												formData.append('file', file);
@@ -159,7 +159,9 @@ export function CampaignFormDrawer({
 													body: formData,
 												});
 												if (!response.ok) {
-													const errorData = await response.json().catch(() => ({ message: 'Upload failed' }));
+													const errorData = await response
+														.json()
+														.catch(() => ({ message: 'Upload failed' }));
 													throw new Error(errorData.message || 'Upload failed');
 												}
 												const data = await response.json();

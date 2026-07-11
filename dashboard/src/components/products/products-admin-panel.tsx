@@ -62,14 +62,24 @@ import {
 import { ProductImagesEditor, type ProductImageEntry } from '@/components/products/product-images-editor';
 import { MaterialPickerDialog } from '@/components/products/material-picker-dialog';
 import { MultiSelectCombobox } from '@/components/ui/multi-select-combobox';
-import {
-	digitsOnly,
-	type FieldErrorMap,
-	scrollToFirstFieldError,
-	stripFieldError,
-} from '@/lib/form-field-ui';
+import { digitsOnly, type FieldErrorMap, scrollToFirstFieldError, stripFieldError } from '@/lib/form-field-ui';
 import { cn } from '@/lib/utils';
-import { GripVerticalIcon, Archive, AlertCircleIcon, CheckIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon, ImageIcon, PencilLine, PlusIcon, Send, Trash2, XIcon } from 'lucide-react';
+import {
+	GripVerticalIcon,
+	Archive,
+	AlertCircleIcon,
+	CheckIcon,
+	ChevronDownIcon,
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	EllipsisVerticalIcon,
+	ImageIcon,
+	PencilLine,
+	PlusIcon,
+	Send,
+	Trash2,
+	XIcon,
+} from 'lucide-react';
 import { toast } from 'sonner';
 
 const listProducts = (params: Parameters<typeof fetchProducts>[0]) => fetchProducts(params);
@@ -171,7 +181,7 @@ export function ProductsAdminPanel() {
 	const [formDescription, setFormDescription] = React.useState('');
 	const [formDetailTitle, setFormDetailTitle] = React.useState('');
 	const [formPrice, setFormPrice] = React.useState('');
-	
+
 	const [formSortOrder, setFormSortOrder] = React.useState('0');
 	const [formMedia, setFormMedia] = React.useState<ProductImageEntry[]>([]);
 	const [formStatus, setFormStatus] = React.useState<AdminProductRow['status']>('DRAFT');
@@ -259,7 +269,8 @@ export function ProductsAdminPanel() {
 		const priceVal = formPrice.trim() && Number(formPrice) >= 0;
 		const beadsOk = !formCustom || selectedMaterialIds.length >= MIN_BEAD_COUNT;
 		const pricingOk = hasVariants
-			? variantDrafts.length > 0 && variantDrafts.every(v => {
+			? variantDrafts.length > 0 &&
+				variantDrafts.every(v => {
 					const p = Number(v.priceVnd);
 					return v.priceVnd.trim() !== '' && Number.isFinite(p) && p >= 0;
 				})
@@ -271,7 +282,17 @@ export function ProductsAdminPanel() {
 			content: Boolean(formDescription.trim()),
 			variants: beadsOk,
 		};
-	}, [formName, formCategoryIds, formMedia, formPrice, formDescription, formCustom, selectedMaterialIds, hasVariants, variantDrafts]);
+	}, [
+		formName,
+		formCategoryIds,
+		formMedia,
+		formPrice,
+		formDescription,
+		formCustom,
+		selectedMaterialIds,
+		hasVariants,
+		variantDrafts,
+	]);
 
 	const missingCount = Object.values(stepStatus).filter(v => !v).length;
 
@@ -344,7 +365,7 @@ export function ProductsAdminPanel() {
 				err['pf-price'] = 'Nhập giá (số, VND)';
 			}
 		}
-		
+
 		const sortOrder = parseOptionalInt(formSortOrder);
 		if (sortOrder == null || sortOrder < 0) err['pf-sort'] = 'Nhập thứ tự (số ≥ 0)';
 
@@ -352,9 +373,9 @@ export function ProductsAdminPanel() {
 			err['pf-materials'] = `Sản phẩm custom cần đt nhạt ${MIN_BEAD_COUNT} hạt`;
 		}
 
-			if (!formAccent.trim()) err['pf-accent'] = 'Nhập điểm nhấn';
-			if (formAccent.includes('\n')) err['pf-accent'] = 'Không được xuống dòng';
-			if (Object.keys(err).length > 0) {
+		if (!formAccent.trim()) err['pf-accent'] = 'Nhập điểm nhấn';
+		if (formAccent.includes('\n')) err['pf-accent'] = 'Không được xuống dòng';
+		if (Object.keys(err).length > 0) {
 			setFieldErrors(err);
 			setFormBusy(false);
 			scrollToFirstFieldError(PRODUCT_FORM_SCROLL_ORDER, err);
@@ -419,17 +440,17 @@ export function ProductsAdminPanel() {
 				components: formCustom ? components : [],
 				...(hasVariants
 					? {
-						variants: variantDrafts.map((v, idx) => ({
-							name: v.name.trim() || null,
-							color: v.color.trim() || null,
-							colorHex: v.colorHex.trim() || null,
-							image: v.image.trim() || null,
-							priceVnd: Math.trunc(Number(v.priceVnd)),
-							stockQuantity: parseOptionalInt(v.stockQuantity) ?? undefined,
-							sortOrder: idx,
-						})),
-					}
-				: {}),
+							variants: variantDrafts.map((v, idx) => ({
+								name: v.name.trim() || null,
+								color: v.color.trim() || null,
+								colorHex: v.colorHex.trim() || null,
+								image: v.image.trim() || null,
+								priceVnd: Math.trunc(Number(v.priceVnd)),
+								stockQuantity: parseOptionalInt(v.stockQuantity) ?? undefined,
+								sortOrder: idx,
+							})),
+						}
+					: {}),
 			});
 			toast.success('Tạo sản phẩm thành công');
 			upsertRow(created, { prependOnInsert: page === 0 });
@@ -607,7 +628,10 @@ export function ProductsAdminPanel() {
 									}}
 								>
 									<TableCell>
-										<div className='flex items-center justify-center' onClick={e => e.stopPropagation()}>
+										<div
+											className='flex items-center justify-center'
+											onClick={e => e.stopPropagation()}
+										>
 											<GripVerticalIcon className='text-muted-foreground size-4' />
 										</div>
 									</TableCell>
@@ -619,21 +643,28 @@ export function ProductsAdminPanel() {
 											loading='lazy'
 										/>
 									</TableCell>
-									<TableCell className='max-w-0 truncate font-medium' title={row.name}>{row.name}</TableCell>
+									<TableCell className='max-w-0 truncate font-medium' title={row.name}>
+										{row.name}
+									</TableCell>
 									<TableCell className='text-muted-foreground text-sm'>
-											{row.categories && row.categories.length > 0 ? (
-												<div className='flex items-center gap-1 min-w-0'>
-													<Badge variant='secondary' className='max-w-[140px] truncate font-normal sm:max-w-[200px]'>
-														{(row.categories[0] as any).name}
-													</Badge>
-													{row.categories.length > 1 ? (
-														<span className='text-muted-foreground shrink-0 text-[11px]'>+{row.categories.length - 1}</span>
-													) : null}
-												</div>
-											) : (
-												<span className='truncate text-xs text-muted-foreground'>
-													{row.parent} / {row.child}
-												</span>
+										{row.categories && row.categories.length > 0 ? (
+											<div className='flex items-center gap-1 min-w-0'>
+												<Badge
+													variant='secondary'
+													className='max-w-[140px] truncate font-normal sm:max-w-[200px]'
+												>
+													{(row.categories[0] as any).name}
+												</Badge>
+												{row.categories.length > 1 ? (
+													<span className='text-muted-foreground shrink-0 text-[11px]'>
+														+{row.categories.length - 1}
+													</span>
+												) : null}
+											</div>
+										) : (
+											<span className='truncate text-xs text-muted-foreground'>
+												{row.parent} / {row.child}
+											</span>
 										)}
 									</TableCell>
 									<TableCell className='text-sm'>{row.priceLabel}</TableCell>
@@ -651,7 +682,9 @@ export function ProductsAdminPanel() {
 										)}
 									</TableCell>
 									<TableCell>
-										<Badge variant={CONTENT_STATUS_BADGE[row.status]}>{STATUS_LABEL[row.status]}</Badge>
+										<Badge variant={CONTENT_STATUS_BADGE[row.status]}>
+											{STATUS_LABEL[row.status]}
+										</Badge>
 									</TableCell>
 									<TableCell className='text-muted-foreground hidden text-sm md:table-cell'>
 										{fmtUserDate(row.updatedAt)}
@@ -737,7 +770,8 @@ export function ProductsAdminPanel() {
 
 			<div className='text-muted-foreground flex flex-col gap-2 text-sm sm:flex-row sm:items-center sm:justify-between'>
 				<span>
-					Hiển thị {total === 0 ? 0 : page * pageSize + 1} – {Math.min((page + 1) * pageSize, total)} / {total}
+					Hiển thị {total === 0 ? 0 : page * pageSize + 1} – {Math.min((page + 1) * pageSize, total)} /{' '}
+					{total}
 				</span>
 				<div className='flex items-center gap-2'>
 					<Button
@@ -826,11 +860,12 @@ export function ProductsAdminPanel() {
 							) : null}
 
 							<FieldGroup className='flex flex-col divide-y divide-border/60'>
-								<section
-									id='sec-basics'
-									className='scroll-mt-4 space-y-4 pb-8'
-								>
-									<SectionHeader index={1} title='Cơ bản' hint='Tên + danh mục là 2 trường bắt buộc đầu tiên.' />
+								<section id='sec-basics' className='scroll-mt-4 space-y-4 pb-8'>
+									<SectionHeader
+										index={1}
+										title='Cơ bản'
+										hint='Tên + danh mục là 2 trường bắt buộc đầu tiên.'
+									/>
 									<div className='grid gap-4 lg:grid-cols-2'>
 										<Field>
 											<FieldLabel htmlFor='pf-name'>Tên sản phẩm</FieldLabel>
@@ -847,7 +882,9 @@ export function ProductsAdminPanel() {
 												placeholder='Vòng tay thạch anh hồng'
 											/>
 											{fieldErrors['pf-name'] ? (
-												<p className='text-destructive mt-1 text-xs'>{fieldErrors['pf-name']}</p>
+												<p className='text-destructive mt-1 text-xs'>
+													{fieldErrors['pf-name']}
+												</p>
 											) : (
 												<p className='mt-1 text-[11px] text-muted-foreground'>
 													Slug tự sinh: <span className='font-mono'>{slugPreview}</span>{' '}
@@ -883,27 +920,39 @@ export function ProductsAdminPanel() {
 													}}
 													placeholder='Chọn danh mục'
 													searchPlaceholder='Tìm danh mục'
-													emptyText={leafChoices.length === 0 ? 'Chưa có danh mục lá khô dùng.' : 'Không tìm thấy danh mục phù hợp.'}
+													emptyText={
+														leafChoices.length === 0
+															? 'Chưa có danh mục lá khô dùng.'
+															: 'Không tìm thấy danh mục phù hợp.'
+													}
 													disabled={formBusy}
 												/>
 											</div>
 											{fieldErrors['pf-category'] ? (
-												<p className='text-destructive mt-1 text-xs'>{fieldErrors['pf-category']}</p>
+												<p className='text-destructive mt-1 text-xs'>
+													{fieldErrors['pf-category']}
+												</p>
 											) : primaryLeaf ? (
 												<p className='mt-1 text-[11px] text-muted-foreground'>
-													Hiển thị web: <span className='font-medium text-foreground'>{resolvedParentChild.parent} đ {resolvedParentChild.child}</span>
-													{selectedLeaves.length > 1 ? <span className='ml-1'>({selectedLeaves.length} danh mục)</span> : null}
+													Hiển thị web:{' '}
+													<span className='font-medium text-foreground'>
+														{resolvedParentChild.parent} đ {resolvedParentChild.child}
+													</span>
+													{selectedLeaves.length > 1 ? (
+														<span className='ml-1'>({selectedLeaves.length} danh mục)</span>
+													) : null}
 												</p>
 											) : null}
 										</Field>
 									</div>
 								</section>
 
-								<section
-									id='sec-images'
-									className='scroll-mt-4 space-y-4 py-8'
-								>
-									<SectionHeader index={2} title='Ảnh sản phẩm' hint='Ảnh đầu tiên hiển thị trên thẻ sản phẩm.' />
+								<section id='sec-images' className='scroll-mt-4 space-y-4 py-8'>
+									<SectionHeader
+										index={2}
+										title='Ảnh sản phẩm'
+										hint='Ảnh đầu tiên hiển thị trên thẻ sản phẩm.'
+									/>
 									<ProductImagesEditor
 										entries={formMedia}
 										onEntriesChange={next => {
@@ -915,13 +964,12 @@ export function ProductsAdminPanel() {
 									/>
 								</section>
 
-								<section
-									id='sec-pricing'
-									className='scroll-mt-4 space-y-4 py-8'
-								>
+								<section id='sec-pricing' className='scroll-mt-4 space-y-4 py-8'>
 									<div className='grid gap-4 lg:grid-cols-1'>
 										<Field>
-											<FieldLabel htmlFor='pf-has-variants'>Có biến thể (nhiều màu sắc/kích thước)</FieldLabel>
+											<FieldLabel htmlFor='pf-has-variants'>
+												Có biến thể (nhiều màu sắc/kích thước)
+											</FieldLabel>
 											<div className='flex items-center gap-3'>
 												<button
 													id='pf-has-variants'
@@ -955,7 +1003,9 @@ export function ProductsAdminPanel() {
 												</span>
 											</div>
 											<p className='mt-1 text-[11px] text-muted-foreground'>
-												Bật để thêm các biến thể màu sắc/kích thước với giá riêng. Khi có biến thể, giá sản phẩm sẽ hiển thị dạng khoảng (vd. 35.000₫ - 89.000₫). Có thể nhập tồn kho riêng cho từng biến thể.
+												Bật để thêm các biến thể màu sắc/kích thước với giá riêng. Khi có biến
+												thể, giá sản phẩm sẽ hiển thị dạng khoảng (vd. 35.000₫ - 89.000₫). Có
+												thể nhập tồn kho riêng cho từng biến thể.
 											</p>
 										</Field>
 									</div>
@@ -970,7 +1020,9 @@ export function ProductsAdminPanel() {
 													inputMode='numeric'
 													pattern='[0-9]*'
 													value={formPrice}
-													onChange={e => { setFormPrice(digitsOnly(e.target.value)); stripFieldError(setFieldErrors, 'pf-price');
+													onChange={e => {
+														setFormPrice(digitsOnly(e.target.value));
+														stripFieldError(setFieldErrors, 'pf-price');
 													}}
 													disabled={formBusy}
 													aria-invalid={Boolean(fieldErrors['pf-price'])}
@@ -978,7 +1030,9 @@ export function ProductsAdminPanel() {
 													placeholder='0'
 												/>
 												{fieldErrors['pf-price'] ? (
-													<p className='text-destructive mt-1 text-xs'>{fieldErrors['pf-price']}</p>
+													<p className='text-destructive mt-1 text-xs'>
+														{fieldErrors['pf-price']}
+													</p>
 												) : null}
 											</Field>
 											<Field>
@@ -1011,7 +1065,12 @@ export function ProductsAdminPanel() {
 														variant='outline'
 														size='sm'
 														className='h-7 gap-1 px-2 text-xs'
-														onClick={() => setVariantDrafts(prev => [...prev, createEmptyVariantDraft(prev.length)])}
+														onClick={() =>
+															setVariantDrafts(prev => [
+																...prev,
+																createEmptyVariantDraft(prev.length),
+															])
+														}
 														disabled={formBusy}
 													>
 														<PlusIcon className='size-3.5' />
@@ -1024,16 +1083,22 @@ export function ProductsAdminPanel() {
 													</p>
 												) : (
 													<div className='divide-y divide-border/60'>
-														{variantDrafts.map((draft) => (
+														{variantDrafts.map(draft => (
 															<CreateVariantRow
 																key={draft.key}
 																draft={draft}
-																onUpdate={patch => setVariantDrafts(prev =>
-																	prev.map(d => d.key === draft.key ? { ...d, ...patch } : d)
-																)}
-																onRemove={() => setVariantDrafts(prev =>
-																	prev.filter(d => d.key !== draft.key)
-																)}
+																onUpdate={patch =>
+																	setVariantDrafts(prev =>
+																		prev.map(d =>
+																			d.key === draft.key ? { ...d, ...patch } : d
+																		)
+																	)
+																}
+																onRemove={() =>
+																	setVariantDrafts(prev =>
+																		prev.filter(d => d.key !== draft.key)
+																	)
+																}
 																canRemove={variantDrafts.length > 1}
 																disabled={formBusy}
 															/>
@@ -1049,9 +1114,7 @@ export function ProductsAdminPanel() {
 
 									<div className='grid gap-4 lg:grid-cols-1'>
 										<Field>
-											<FieldLabel htmlFor='pf-custom'>
-												Sản phẩm custom
-											</FieldLabel>
+											<FieldLabel htmlFor='pf-custom'>Sản phẩm custom</FieldLabel>
 											<div className='flex items-center gap-3'>
 												<button
 													id='pf-custom'
@@ -1080,22 +1143,23 @@ export function ProductsAdminPanel() {
 												<span className='text-sm text-muted-foreground'>
 													{formCustom
 														? 'Bật - shop tạo mẫu, khách có thể yêu cầu thiết kế riêng'
-														: 'Tắt - sản phẩm bán sẵn'
-													}
+														: 'Tắt - sản phẩm bán sẵn'}
 												</span>
 											</div>
 											<p className='mt-1 text-[11px] text-muted-foreground'>
-												Bật: shop tạo sản phẩm mẫu - khách mua sẵn hoặc yêu cầu thiết kế riêng theo ý thích. Kết hợp mục "Hạt" để chọn chất liệu.
+												Bật: shop tạo sản phẩm mẫu - khách mua sẵn hoặc yêu cầu thiết kế riêng
+												theo ý thích. Kết hợp mục "Hạt" để chọn chất liệu.
 											</p>
 										</Field>
 									</div>
 								</section>
 
-								<section
-									id='sec-content'
-									className='scroll-mt-4 space-y-4 py-8'
-								>
-									<SectionHeader index={4} title='Nội dung & chăm sóc' hint='Mô tả ngắn hiển thị ở trang chi tiết, mẹo chăm sóc xuất hiện dưới ảnh.' />
+								<section id='sec-content' className='scroll-mt-4 space-y-4 py-8'>
+									<SectionHeader
+										index={4}
+										title='Nội dung & chăm sóc'
+										hint='Mô tả ngắn hiển thị ở trang chi tiết, mẹo chăm sóc xuất hiện dưới ảnh.'
+									/>
 									<Field>
 										<FieldLabel htmlFor='pf-detail'>Tiêu đề chi tiết</FieldLabel>
 										<Input
@@ -1133,10 +1197,7 @@ export function ProductsAdminPanel() {
 								</section>
 
 								{formCustom ? (
-									<section
-										id='sec-variants'
-										className='scroll-mt-4 space-y-4 py-8'
-									>
+									<section id='sec-variants' className='scroll-mt-4 space-y-4 py-8'>
 										<SectionHeader
 											index={5}
 											title={`Hạt cho sản phẩm custom`}
@@ -1163,10 +1224,7 @@ export function ProductsAdminPanel() {
 									</section>
 								) : null}
 
-								<section
-									id='sec-advanced'
-									className='scroll-mt-4 space-y-3 pt-8'
-								>
+								<section id='sec-advanced' className='scroll-mt-4 space-y-3 pt-8'>
 									<button
 										type='button'
 										onClick={() => setAdvancedOpen(prev => !prev)}
@@ -1181,7 +1239,9 @@ export function ProductsAdminPanel() {
 											aria-hidden
 										/>
 										<span className='font-medium tracking-tight'>Cài đặt nâng cao</span>
-										<span className='text-[11px] text-muted-foreground'>Slug, accent, thứ tự, trạng thái</span>
+										<span className='text-[11px] text-muted-foreground'>
+											Slug, accent, thứ tự, trạng thái
+										</span>
 									</button>
 									{advancedOpen ? (
 										<div className='space-y-4 pt-2'>
@@ -1210,7 +1270,9 @@ export function ProductsAdminPanel() {
 														className={cn(fieldErrors['pf-accent'] && 'border-destructive')}
 													/>
 													{fieldErrors['pf-accent'] ? (
-														<p className='text-destructive mt-1 text-sm'>{fieldErrors['pf-accent']}</p>
+														<p className='text-destructive mt-1 text-sm'>
+															{fieldErrors['pf-accent']}
+														</p>
 													) : null}
 												</Field>
 											</div>
@@ -1219,14 +1281,18 @@ export function ProductsAdminPanel() {
 													<FieldLabel htmlFor='pf-status'>Trạng thái khi tạo</FieldLabel>
 													<Select
 														value={formStatus}
-														onValueChange={v => setFormStatus(v as AdminProductRow['status'])}
+														onValueChange={v =>
+															setFormStatus(v as AdminProductRow['status'])
+														}
 														disabled={formBusy}
 													>
 														<SelectTrigger id='pf-status'>
 															<SelectValue />
 														</SelectTrigger>
 														<SelectContent>
-															<SelectItem value='DRAFT'>Nháp để chưa hiển thị trên web</SelectItem>
+															<SelectItem value='DRAFT'>
+																Nháp để chưa hiển thị trên web
+															</SelectItem>
 															<SelectItem value='ACTIVE'>Đang bán</SelectItem>
 															<SelectItem value='ARCHIVED'>Lưu trữ</SelectItem>
 														</SelectContent>
@@ -1249,7 +1315,9 @@ export function ProductsAdminPanel() {
 														placeholder='0'
 													/>
 													{fieldErrors['pf-sort'] ? (
-														<p className='text-destructive mt-1 text-xs'>{fieldErrors['pf-sort']}</p>
+														<p className='text-destructive mt-1 text-xs'>
+															{fieldErrors['pf-sort']}
+														</p>
 													) : (
 														<p className='mt-1 text-[11px] text-muted-foreground'>
 															Số nhỏ hơn hiển thị trước trong danh mục.
@@ -1276,7 +1344,12 @@ export function ProductsAdminPanel() {
 								) : null}
 							</div>
 							<div className='flex items-center gap-2'>
-								<Button type='button' variant='outline' onClick={() => setDrawerOpen(false)} disabled={formBusy}>
+								<Button
+									type='button'
+									variant='outline'
+									onClick={() => setDrawerOpen(false)}
+									disabled={formBusy}
+								>
 									Hủy
 								</Button>
 								<Button type='button' onClick={() => void submitForm()} disabled={formBusy}>
@@ -1325,22 +1398,11 @@ export function ProductsAdminPanel() {
 	);
 }
 
-function SectionHeader({
-	index,
-	title,
-	hint,
-}: {
-	index?: number;
-	title: string;
-	hint?: string;
-}) {
+function SectionHeader({ index, title, hint }: { index?: number; title: string; hint?: string }) {
 	return (
 		<div className='flex items-baseline gap-2'>
 			{index != null ? (
-				<span
-					aria-hidden
-					className='text-[11px] font-semibold tabular-nums text-muted-foreground/70'
-				>
+				<span aria-hidden className='text-[11px] font-semibold tabular-nums text-muted-foreground/70'>
 					{String(index).padStart(2, '0')}
 				</span>
 			) : null}
@@ -1402,9 +1464,7 @@ function SectionLink({
 				/>
 			</span>
 			<span className='text-xs font-medium tracking-tight'>{label}</span>
-			{optional ? (
-				<span className='text-[10px] font-normal text-muted-foreground/60'>đ Tùy chọn</span>
-			) : null}
+			{optional ? <span className='text-[10px] font-normal text-muted-foreground/60'>đ Tùy chọn</span> : null}
 		</a>
 	);
 }
@@ -1455,7 +1515,12 @@ function CreateVariantRow({
 	return (
 		<div className='flex flex-wrap items-end gap-2 px-3 py-2 sm:flex-nowrap'>
 			<div className='shrink-0'>
-				<button type='button' onClick={() => inputRef.current?.click()} disabled={disabled || uploading} className='flex size-10 items-center justify-center overflow-hidden rounded-md border border-border/60 bg-muted/30 hover:bg-muted/60 disabled:opacity-50'>
+				<button
+					type='button'
+					onClick={() => inputRef.current?.click()}
+					disabled={disabled || uploading}
+					className='flex size-10 items-center justify-center overflow-hidden rounded-md border border-border/60 bg-muted/30 hover:bg-muted/60 disabled:opacity-50'
+				>
 					{uploading ? (
 						<span className='size-4 animate-spin rounded-full border-2 border-muted-foreground border-t-transparent' />
 					) : draft.image ? (
@@ -1466,17 +1531,61 @@ function CreateVariantRow({
 				</button>
 				<input ref={inputRef} type='file' accept='image/*' className='hidden' onChange={handleFilePick} />
 			</div>
-			<Input placeholder='Ten (VD: Size M)' value={draft.name} onChange={e => onUpdate({ name: e.target.value })} disabled={disabled} className='h-9 min-w-0 flex-1 text-xs' />
-			<Input placeholder='Mau (VD: Hong)' value={draft.color} onChange={e => onUpdate({ color: e.target.value })} disabled={disabled} className='h-9 min-w-0 flex-1 text-xs' />
+			<Input
+				placeholder='Ten (VD: Size M)'
+				value={draft.name}
+				onChange={e => onUpdate({ name: e.target.value })}
+				disabled={disabled}
+				className='h-9 min-w-0 flex-1 text-xs'
+			/>
+			<Input
+				placeholder='Mau (VD: Hong)'
+				value={draft.color}
+				onChange={e => onUpdate({ color: e.target.value })}
+				disabled={disabled}
+				className='h-9 min-w-0 flex-1 text-xs'
+			/>
 			<div className='flex items-center gap-1'>
-				<Input placeholder='#hex' value={draft.colorHex} onChange={e => onUpdate({ colorHex: e.target.value })} disabled={disabled} className='h-9 w-24 font-mono text-xs' />
+				<Input
+					placeholder='#hex'
+					value={draft.colorHex}
+					onChange={e => onUpdate({ colorHex: e.target.value })}
+					disabled={disabled}
+					className='h-9 w-24 font-mono text-xs'
+				/>
 				{draft.colorHex && /^#[0-9a-f]{6}$/i.test(draft.colorHex) && (
-					<span className='inline-block size-5 shrink-0 rounded border' style={{ backgroundColor: draft.colorHex }} />
+					<span
+						className='inline-block size-5 shrink-0 rounded border'
+						style={{ backgroundColor: draft.colorHex }}
+					/>
 				)}
 			</div>
-			<Input placeholder='Gia VND' inputMode='numeric' pattern='[0-9]*' value={draft.priceVnd} onChange={e => onUpdate({ priceVnd: digitsOnly(e.target.value) })} disabled={disabled} className='h-9 w-28 text-xs' />
-			<Input placeholder='Ton kho' inputMode='numeric' pattern='[0-9]*' value={draft.stockQuantity} onChange={e => onUpdate({ stockQuantity: digitsOnly(e.target.value) })} disabled={disabled} className='h-9 w-20 text-xs' />
-			<Button type='button' variant='ghost' size='icon' className='size-9 shrink-0' onClick={onRemove} disabled={disabled || !canRemove}>
+			<Input
+				placeholder='Gia VND'
+				inputMode='numeric'
+				pattern='[0-9]*'
+				value={draft.priceVnd}
+				onChange={e => onUpdate({ priceVnd: digitsOnly(e.target.value) })}
+				disabled={disabled}
+				className='h-9 w-28 text-xs'
+			/>
+			<Input
+				placeholder='Ton kho'
+				inputMode='numeric'
+				pattern='[0-9]*'
+				value={draft.stockQuantity}
+				onChange={e => onUpdate({ stockQuantity: digitsOnly(e.target.value) })}
+				disabled={disabled}
+				className='h-9 w-20 text-xs'
+			/>
+			<Button
+				type='button'
+				variant='ghost'
+				size='icon'
+				className='size-9 shrink-0'
+				onClick={onRemove}
+				disabled={disabled || !canRemove}
+			>
 				<Trash2 className='size-4 text-destructive' />
 			</Button>
 		</div>
@@ -1510,23 +1619,18 @@ function MaterialPickerSummary({
 	return (
 		<div
 			id='pf-materials'
-			className={cn(
-				'rounded-md border bg-background',
-				hasError ? 'border-destructive' : 'border-border/60'
-			)}
+			className={cn('rounded-md border bg-background', hasError ? 'border-destructive' : 'border-border/60')}
 			aria-invalid={hasError}
 		>
 			<div className='flex flex-wrap items-center justify-between gap-3 border-b border-border/60 px-3 py-2'>
 				<div className='flex items-center gap-2 text-xs'>
-					<Badge
-						variant={selected.length >= min ? 'success' : 'outline'}
-						className='tabular-nums'
-					>
+					<Badge variant={selected.length >= min ? 'success' : 'outline'} className='tabular-nums'>
 						{selected.length}/{min}
 					</Badge>
 					{selected.length > 0 ? (
 						<span className='text-muted-foreground tabular-nums'>
-							Tổng: <span className='font-medium text-foreground'>{totalVnd.toLocaleString('vi-VN')}đ</span>
+							Tổng:{' '}
+							<span className='font-medium text-foreground'>{totalVnd.toLocaleString('vi-VN')}đ</span>
 						</span>
 					) : (
 						<span className='text-muted-foreground'>Chưa chọn hạt nào</span>
@@ -1613,4 +1717,3 @@ function MaterialPickerSummary({
 		</div>
 	);
 }
-

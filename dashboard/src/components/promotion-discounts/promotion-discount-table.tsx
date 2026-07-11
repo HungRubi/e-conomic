@@ -54,7 +54,6 @@ export function PromotionDiscountTable({
 	onRetry,
 	canDelete,
 }: PromotionDiscountTableProps) {
-
 	return (
 		<div className='overflow-hidden rounded-lg border bg-background'>
 			<Table>
@@ -97,7 +96,10 @@ export function PromotionDiscountTable({
 								}}
 							>
 								<TableCell>
-									<div className='flex items-center justify-center' onClick={e => e.stopPropagation()}>
+									<div
+										className='flex items-center justify-center'
+										onClick={e => e.stopPropagation()}
+									>
 										<GripVerticalIcon className='text-muted-foreground size-4' />
 									</div>
 								</TableCell>
@@ -107,7 +109,11 @@ export function PromotionDiscountTable({
 								<TableCell>
 									<Badge
 										variant={
-											row.status === 'ACTIVE' ? 'success' : row.status === 'DRAFT' ? 'secondary' : 'muted'
+											row.status === 'ACTIVE'
+												? 'success'
+												: row.status === 'DRAFT'
+													? 'secondary'
+													: 'muted'
 										}
 									>
 										{STATUS_LABEL[row.status]}
@@ -131,7 +137,11 @@ export function PromotionDiscountTable({
 												<EllipsisVerticalIcon className='size-4' />
 											</Button>
 										</DropdownMenuTrigger>
-										<DropdownMenuContent align='end' className='w-44' onClick={e => e.stopPropagation()}>
+										<DropdownMenuContent
+											align='end'
+											className='w-44'
+											onClick={e => e.stopPropagation()}
+										>
 											<DropdownMenuItem onClick={() => onOpenDetail(row)}>
 												<ArrowUpRight className='size-4' />
 												Mở chi tiết
@@ -139,7 +149,10 @@ export function PromotionDiscountTable({
 											{canDelete ? (
 												<>
 													<DropdownMenuSeparator />
-													<DropdownMenuItem variant='destructive' onClick={() => onDelete(row)}>
+													<DropdownMenuItem
+														variant='destructive'
+														onClick={() => onDelete(row)}
+													>
 														<Trash2 className='size-4' />
 														Xóa
 													</DropdownMenuItem>

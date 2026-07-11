@@ -231,7 +231,7 @@ export function PromotionDiscountFormDrawer({
 											onFieldErrorStrip('pd-banner');
 										}}
 										disabled={formBusy}
-										onUploadFile={async (file) => {
+										onUploadFile={async file => {
 											try {
 												const formData = new FormData();
 												formData.append('file', file);
@@ -240,7 +240,9 @@ export function PromotionDiscountFormDrawer({
 													body: formData,
 												});
 												if (!response.ok) {
-													const errorData = await response.json().catch(() => ({ message: 'Upload failed' }));
+													const errorData = await response
+														.json()
+														.catch(() => ({ message: 'Upload failed' }));
 													throw new Error(errorData.message || 'Upload failed');
 												}
 												const data = await response.json();
@@ -313,7 +315,9 @@ export function PromotionDiscountFormDrawer({
 								</div>
 								<div className='grid gap-4 lg:grid-cols-2'>
 									<Field>
-										<FieldLabel htmlFor='pd-min-order'>Đơn hàng tối thiểu (VND, tuỳ chọn)</FieldLabel>
+										<FieldLabel htmlFor='pd-min-order'>
+											Đơn hàng tối thiểu (VND, tuỳ chọn)
+										</FieldLabel>
 										<Input
 											id='pd-min-order'
 											inputMode='numeric'
@@ -473,7 +477,9 @@ export function PromotionDiscountFormDrawer({
 										<FieldLabel htmlFor='pd-status'>Trạng thái</FieldLabel>
 										<Select
 											value={formStatus}
-											onValueChange={v => onFormStatusChange(v as AdminPromotionDiscountRow['status'])}
+											onValueChange={v =>
+												onFormStatusChange(v as AdminPromotionDiscountRow['status'])
+											}
 											disabled={formBusy}
 										>
 											<SelectTrigger id='pd-status'>

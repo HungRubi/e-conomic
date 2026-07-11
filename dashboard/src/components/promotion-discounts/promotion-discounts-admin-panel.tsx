@@ -38,14 +38,7 @@ import { toast } from 'sonner';
 const listPromotionDiscounts = (params: Parameters<typeof fetchPromotionDiscounts>[0]) =>
 	fetchPromotionDiscounts(params);
 
-const FORM_SCROLL_ORDER = [
-	'pd-title',
-	'pd-code',
-	'pd-banner',
-	'pd-type',
-	'pd-value',
-	'pd-applies-to',
-] as const;
+const FORM_SCROLL_ORDER = ['pd-title', 'pd-code', 'pd-banner', 'pd-type', 'pd-value', 'pd-applies-to'] as const;
 
 function parseOptionalInt(raw: string): number | null {
 	const t = raw.trim();
@@ -65,14 +58,7 @@ export function PromotionDiscountsAdminPanel() {
 	const [statusFilter, setStatusFilter] = React.useState<'all' | AdminPromotionDiscountRow['status']>('all');
 
 	const { rows, total, loading, error, page, setPage, refetch, upsertRow, removeRow } =
-		usePaginatedPromotionDiscountList(
-			listPromotionDiscounts,
-			qInput,
-			sortBy,
-			sortOrder,
-			pageSize,
-			statusFilter
-		);
+		usePaginatedPromotionDiscountList(listPromotionDiscounts, qInput, sortBy, sortOrder, pageSize, statusFilter);
 
 	const [drawerOpen, setDrawerOpen] = React.useState(false);
 	const [formTitle, setFormTitle] = React.useState('');
@@ -115,9 +101,11 @@ export function PromotionDiscountsAdminPanel() {
 		void fetchAllProductCategories({ status: 'all', sortBy: 'name', sortOrder: 'asc' }).then(res => {
 			setCategoryOptions(res.map(c => ({ value: c.id, label: c.name })));
 		});
-		void fetchCampaigns({ limit: 100, offset: 0, status: 'all', sortBy: 'createdAt', sortOrder: 'desc' }).then(res => {
-			setCampaignOptions(res.items.map(c => ({ value: c.id, label: c.title })));
-		});
+		void fetchCampaigns({ limit: 100, offset: 0, status: 'all', sortBy: 'createdAt', sortOrder: 'desc' }).then(
+			res => {
+				setCampaignOptions(res.items.map(c => ({ value: c.id, label: c.title })));
+			}
+		);
 	}, []);
 
 	function openCreate() {
@@ -255,9 +243,7 @@ export function PromotionDiscountsAdminPanel() {
 			<div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
 				<div>
 					<h1 className='text-lg font-semibold tracking-tight'>Khuyến mãi & Mã giảm giá</h1>
-					<p className='text-muted-foreground text-sm'>
-						Click một dòng để mở chi tiết và chỉnh sửa.
-					</p>
+					<p className='text-muted-foreground text-sm'>Click một dòng để mở chi tiết và chỉnh sửa.</p>
 				</div>
 				{crud.canCreate ? (
 					<Button type='button' size='sm' className='gap-1.5' onClick={openCreate}>
@@ -446,7 +432,8 @@ export function PromotionDiscountsAdminPanel() {
 						<AlertDialogTitle>Xóa khuyến mãi?</AlertDialogTitle>
 						<AlertDialogDescription>
 							Hành động này không thể hoàn tác. Khuyến mãi{' '}
-							<span className='font-medium text-foreground'>{deleteTarget?.title}</span> sẽ bị xóa vĩnh viễn.
+							<span className='font-medium text-foreground'>{deleteTarget?.title}</span> sẽ bị xóa vĩnh
+							viễn.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>

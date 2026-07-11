@@ -53,12 +53,7 @@ import {
 	usePaginatedProductMaterialList,
 	type ProductMaterialListSortKey,
 } from '@/hooks/use-paginated-product-material-list';
-import {
-	digitsOnly,
-	type FieldErrorMap,
-	scrollToFirstFieldError,
-	stripFieldError,
-} from '@/lib/form-field-ui';
+import { digitsOnly, type FieldErrorMap, scrollToFirstFieldError, stripFieldError } from '@/lib/form-field-ui';
 import { fmtUserDate } from '@/components/users/user-table-shared';
 import {
 	Archive,
@@ -83,15 +78,8 @@ export function ProductMaterialsAdminPanel() {
 	const [statusFilter, setStatusFilter] = React.useState<'all' | AdminProductMaterialRow['status']>('all');
 	const [kindFilter, setKindFilter] = React.useState<'all' | AdminProductMaterialRow['kind']>('all');
 
-	const { rows, total, loading, error, page, setPage, refetch, upsertRow, removeRow } = usePaginatedProductMaterialList(
-		listMaterials,
-		qInput,
-		sortBy,
-		sortOrder,
-		pageSize,
-		statusFilter,
-		kindFilter
-	);
+	const { rows, total, loading, error, page, setPage, refetch, upsertRow, removeRow } =
+		usePaginatedProductMaterialList(listMaterials, qInput, sortBy, sortOrder, pageSize, statusFilter, kindFilter);
 
 	// Drawer chỉ dành cho TẠO MỚI — sửa đã chuyển sang trang detail.
 	const [createOpen, setCreateOpen] = React.useState(false);
@@ -134,7 +122,8 @@ export function ProductMaterialsAdminPanel() {
 		const err: FieldErrorMap = {};
 		if (!formName.trim()) err['mf-name'] = 'Nhập tên đá/hạt';
 		const priceN = Number(formPriceVnd.trim());
-		if (formPriceVnd.trim() === '' || !Number.isFinite(priceN) || priceN < 0) err['mf-price'] = 'Nhập giá (VND ≥ 0)';
+		if (formPriceVnd.trim() === '' || !Number.isFinite(priceN) || priceN < 0)
+			err['mf-price'] = 'Nhập giá (VND ≥ 0)';
 		const sizeN = formSizeMm.trim() ? Number(formSizeMm.trim()) : null;
 		if (formSizeMm.trim() !== '' && (sizeN == null || !Number.isFinite(sizeN) || sizeN < 0))
 			err['mf-size'] = 'Kích thước (mm) không hợp lệ';
@@ -278,9 +267,7 @@ export function ProductMaterialsAdminPanel() {
 			<div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
 				<div>
 					<h1 className='text-lg font-semibold tracking-tight'>Đá trang trí</h1>
-					<p className='text-muted-foreground text-sm'>
-						Click một đá để mở chi tiết và chỉnh sửa.
-					</p>
+					<p className='text-muted-foreground text-sm'>Click một đá để mở chi tiết và chỉnh sửa.</p>
 				</div>
 				{crud.canCreate ? (
 					<Button type='button' size='sm' className='gap-1.5' onClick={openCreate}>
@@ -376,12 +363,7 @@ export function ProductMaterialsAdminPanel() {
 						Đã chọn <span className='text-destructive font-semibold'>{selectedIds.size}</span> đá
 					</span>
 					<div className='ml-auto flex items-center gap-2'>
-						<Button
-							type='button'
-							variant='outline'
-							size='sm'
-							onClick={() => setSelectedIds(new Set())}
-						>
+						<Button type='button' variant='outline' size='sm' onClick={() => setSelectedIds(new Set())}>
 							Bỏ chọn
 						</Button>
 						<Button
@@ -444,7 +426,10 @@ export function ProductMaterialsAdminPanel() {
 									}}
 								>
 									<TableCell>
-										<div className='flex items-center justify-center' onClick={e => e.stopPropagation()}>
+										<div
+											className='flex items-center justify-center'
+											onClick={e => e.stopPropagation()}
+										>
 											<Checkbox
 												checked={selectedIds.has(row.id)}
 												onCheckedChange={v => toggleRowSelection(row.id, Boolean(v))}
@@ -460,13 +445,17 @@ export function ProductMaterialsAdminPanel() {
 											loading='lazy'
 										/>
 									</TableCell>
-									<TableCell className='max-w-0 truncate font-medium' title={row.name}>{row.name}</TableCell>
+									<TableCell className='max-w-0 truncate font-medium' title={row.name}>
+										{row.name}
+									</TableCell>
 									<TableCell className='text-muted-foreground text-sm'>{row.kind}</TableCell>
 									<TableCell className='text-muted-foreground text-sm'>
 										{row.displaySize ?? (row.sizeMm ? `${row.sizeMm}mm` : '—')}
 									</TableCell>
 									<TableCell className='text-sm'>{row.priceVnd.toLocaleString('vi-VN')}₫</TableCell>
-									<TableCell className='text-muted-foreground text-sm'>{row.designerCode ?? '—'}</TableCell>
+									<TableCell className='text-muted-foreground text-sm'>
+										{row.designerCode ?? '—'}
+									</TableCell>
 									<TableCell className='text-muted-foreground hidden text-sm md:table-cell'>
 										{fmtUserDate(row.updatedAt)}
 									</TableCell>
@@ -484,7 +473,11 @@ export function ProductMaterialsAdminPanel() {
 													<EllipsisVerticalIcon className='size-4' />
 												</Button>
 											</DropdownMenuTrigger>
-											<DropdownMenuContent align='end' className='w-48' onClick={e => e.stopPropagation()}>
+											<DropdownMenuContent
+												align='end'
+												className='w-48'
+												onClick={e => e.stopPropagation()}
+											>
 												<DropdownMenuItem onClick={() => openDetail(row)}>
 													<ArrowUpRight className='size-4' />
 													Mở chi tiết
@@ -493,11 +486,15 @@ export function ProductMaterialsAdminPanel() {
 													<DropdownMenuItem
 														onClick={async () => {
 															try {
-																const r = await updateProductMaterial(row.id, { status: 'ARCHIVED' });
+																const r = await updateProductMaterial(row.id, {
+																	status: 'ARCHIVED',
+																});
 																upsertRow(r);
 																toast.success('đã lưu trữ');
 															} catch (e) {
-																toast.error(e instanceof AuthApiError ? e.message : 'Thất bại');
+																toast.error(
+																	e instanceof AuthApiError ? e.message : 'Thất bại'
+																);
 															}
 														}}
 													>
@@ -508,7 +505,10 @@ export function ProductMaterialsAdminPanel() {
 												{crud.canDelete ? (
 													<>
 														<DropdownMenuSeparator />
-														<DropdownMenuItem variant='destructive' onClick={() => setDeleteTarget(row)}>
+														<DropdownMenuItem
+															variant='destructive'
+															onClick={() => setDeleteTarget(row)}
+														>
 															<Trash2 className='size-4' />
 															Xóa
 														</DropdownMenuItem>
@@ -555,7 +555,12 @@ export function ProductMaterialsAdminPanel() {
 				</div>
 			</div>
 
-			<Drawer open={createOpen} onOpenChange={open => !formBusy && setCreateOpen(open)} modal shouldScaleBackground={false}>
+			<Drawer
+				open={createOpen}
+				onOpenChange={open => !formBusy && setCreateOpen(open)}
+				modal
+				shouldScaleBackground={false}
+			>
 				<DrawerPageContent className='flex flex-col gap-0 p-0' showCloseButton>
 					<DrawerHeader className='shrink-0 border-b px-6 py-5 pr-16 text-left'>
 						<DrawerTitle>Thêm đá trang trí</DrawerTitle>
@@ -585,7 +590,9 @@ export function ProductMaterialsAdminPanel() {
 												className={cn(fieldErrors['mf-name'] && 'border-destructive')}
 											/>
 											{fieldErrors['mf-name'] ? (
-												<p className='text-destructive mt-1 text-xs'>{fieldErrors['mf-name']}</p>
+												<p className='text-destructive mt-1 text-xs'>
+													{fieldErrors['mf-name']}
+												</p>
 											) : null}
 										</Field>
 										<Field>
@@ -604,7 +611,9 @@ export function ProductMaterialsAdminPanel() {
 												className={cn(fieldErrors['mf-price'] && 'border-destructive')}
 											/>
 											{fieldErrors['mf-price'] ? (
-												<p className='text-destructive mt-1 text-xs'>{fieldErrors['mf-price']}</p>
+												<p className='text-destructive mt-1 text-xs'>
+													{fieldErrors['mf-price']}
+												</p>
 											) : null}
 										</Field>
 									</div>
@@ -631,7 +640,9 @@ export function ProductMaterialsAdminPanel() {
 											<FieldLabel htmlFor='pm-status'>Trạng thái</FieldLabel>
 											<Select
 												value={formStatus}
-												onValueChange={v => setFormStatus(v as AdminProductMaterialRow['status'])}
+												onValueChange={v =>
+													setFormStatus(v as AdminProductMaterialRow['status'])
+												}
 												disabled={formBusy}
 											>
 												<SelectTrigger id='pm-status'>
@@ -662,7 +673,9 @@ export function ProductMaterialsAdminPanel() {
 												className={cn(fieldErrors['mf-size'] && 'border-destructive')}
 											/>
 											{fieldErrors['mf-size'] ? (
-												<p className='text-destructive mt-1 text-xs'>{fieldErrors['mf-size']}</p>
+												<p className='text-destructive mt-1 text-xs'>
+													{fieldErrors['mf-size']}
+												</p>
 											) : null}
 										</Field>
 										<Field>
@@ -696,7 +709,9 @@ export function ProductMaterialsAdminPanel() {
 														setFormImage(url);
 														toast.success('đã tải ảnh lên');
 													} catch (e) {
-														toast.error(e instanceof AuthApiError ? e.message : 'Tải ảnh thất bại');
+														toast.error(
+															e instanceof AuthApiError ? e.message : 'Tải ảnh thất bại'
+														);
 													} finally {
 														setUploadBusy(false);
 													}
@@ -732,7 +747,12 @@ export function ProductMaterialsAdminPanel() {
 
 					<DrawerFooter className='mt-auto shrink-0 border-t px-0 py-0'>
 						<div className='mx-auto flex w-full max-w-4xl flex-col gap-2 px-6 py-4 sm:flex-row sm:justify-end'>
-							<Button type='button' variant='outline' onClick={() => setCreateOpen(false)} disabled={formBusy}>
+							<Button
+								type='button'
+								variant='outline'
+								onClick={() => setCreateOpen(false)}
+								disabled={formBusy}
+							>
 								Hủy
 							</Button>
 							<Button type='button' onClick={() => void submitCreate()} disabled={formBusy}>
@@ -743,13 +763,17 @@ export function ProductMaterialsAdminPanel() {
 				</DrawerPageContent>
 			</Drawer>
 
-			<AlertDialog open={Boolean(deleteTarget)} onOpenChange={open => !open && !deleteBusy && setDeleteTarget(null)}>
+			<AlertDialog
+				open={Boolean(deleteTarget)}
+				onOpenChange={open => !open && !deleteBusy && setDeleteTarget(null)}
+			>
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>Xóa đá trang trí?</AlertDialogTitle>
 						<AlertDialogDescription>
 							Hành động này không thể hoàn tác.{' '}
-							<span className='font-medium text-foreground'>{deleteTarget?.name}</span> sẽ bị xóa vĩnh viễn.
+							<span className='font-medium text-foreground'>{deleteTarget?.name}</span> sẽ bị xóa vĩnh
+							viễn.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -770,21 +794,21 @@ export function ProductMaterialsAdminPanel() {
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<div className='max-h-48 space-y-1 overflow-y-auto rounded-md bg-muted/30 px-3 py-2 text-sm'>
-						{selectedRows.length > 0 ? (
-							selectedRows.slice(0, 20).map(r => (
-								<div key={r.id} className='flex items-center gap-2 py-0.5'>
-									<span className='text-muted-foreground'>•</span>
-									<span className='font-medium'>{r.name}</span>
-									{r.designerCode ? (
-										<span className='ml-auto font-mono text-xs text-muted-foreground'>{r.designerCode}</span>
-									) : null}
-								</div>
-							))
-						) : null}
+						{selectedRows.length > 0
+							? selectedRows.slice(0, 20).map(r => (
+									<div key={r.id} className='flex items-center gap-2 py-0.5'>
+										<span className='text-muted-foreground'>•</span>
+										<span className='font-medium'>{r.name}</span>
+										{r.designerCode ? (
+											<span className='ml-auto font-mono text-xs text-muted-foreground'>
+												{r.designerCode}
+											</span>
+										) : null}
+									</div>
+								))
+							: null}
 						{selectedIds.size > 20 ? (
-							<p className='text-muted-foreground pt-1 text-xs'>
-								...và {selectedIds.size - 20} đá khác
-							</p>
+							<p className='text-muted-foreground pt-1 text-xs'>...và {selectedIds.size - 20} đá khác</p>
 						) : null}
 					</div>
 					<AlertDialogFooter>

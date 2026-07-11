@@ -53,9 +53,7 @@ export function LoginForm({ className, ...props }: ComponentProps<'div'>) {
 						<span className='text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-foreground sm:text-xs sm:tracking-[0.18em] md:text-sm md:tracking-[0.2em]'>
 							MIUE HEALING
 						</span>
-						<p className='text-muted-foreground text-center text-xs'>
-							Đăng nhập quản trị
-						</p>
+						<p className='text-muted-foreground text-center text-xs'>Đăng nhập quản trị</p>
 					</div>
 				</CardHeader>
 				<CardContent>
@@ -70,7 +68,7 @@ export function LoginForm({ className, ...props }: ComponentProps<'div'>) {
 									placeholder='admin@example.com'
 									required
 									value={email}
-									onChange={(e) => setEmail(e.target.value)}
+									onChange={e => setEmail(e.target.value)}
 									disabled={pending || !ready}
 								/>
 							</Field>
@@ -90,7 +88,7 @@ export function LoginForm({ className, ...props }: ComponentProps<'div'>) {
 									autoComplete='current-password'
 									required
 									value={password}
-									onChange={(e) => setPassword(e.target.value)}
+									onChange={e => setPassword(e.target.value)}
 									disabled={pending || !ready}
 								/>
 							</Field>

@@ -20,7 +20,7 @@ export default function ForgotPasswordPage() {
 
 	React.useEffect(() => {
 		if (cooldown <= 0) return;
-		const timer = window.setTimeout(() => setCooldown((c) => Math.max(0, c - 1)), 1_000);
+		const timer = window.setTimeout(() => setCooldown(c => Math.max(0, c - 1)), 1_000);
 		return () => window.clearTimeout(timer);
 	}, [cooldown]);
 
@@ -75,17 +75,23 @@ export default function ForgotPasswordPage() {
 						{done ? (
 							<div className='space-y-3 text-sm'>
 								<p>
-									Nếu địa chỉ <strong>{email}</strong> tồn tại trong hệ thống, chúng tôi đã gửi hướng dẫn đặt
-									lại mật khẩu qua email.
+									Nếu địa chỉ <strong>{email}</strong> tồn tại trong hệ thống, chúng tôi đã gửi hướng
+									dẫn đặt lại mật khẩu qua email.
 								</p>
 								<p className='text-xs text-muted-foreground'>
-									Liên kết có hiệu lực 30 phút. Nếu không nhận được email, kiểm tra hộp thư rác hoặc thử lại sau.
+									Liên kết có hiệu lực 30 phút. Nếu không nhận được email, kiểm tra hộp thư rác hoặc
+									thử lại sau.
 								</p>
 								{devToken ? (
 									<div className='rounded-md border border-amber-300/50 bg-amber-50/50 p-2 text-xs dark:bg-amber-500/10'>
-										<p className='font-medium text-amber-900 dark:text-amber-200'>Dev token (chỉ hiển thị ở môi trường non-production):</p>
+										<p className='font-medium text-amber-900 dark:text-amber-200'>
+											Dev token (chỉ hiển thị ở môi trường non-production):
+										</p>
 										<code className='mt-1 block break-all'>{devToken}</code>
-										<Link to={`/reset-password/${devToken}`} className='mt-1 inline-block text-amber-900 underline dark:text-amber-200'>
+										<Link
+											to={`/reset-password/${devToken}`}
+											className='mt-1 inline-block text-amber-900 underline dark:text-amber-200'
+										>
 											Mở trang reset →
 										</Link>
 									</div>
@@ -104,7 +110,11 @@ export default function ForgotPasswordPage() {
 										<Link to='/login'>Về đăng nhập</Link>
 									</Button>
 								</div>
-								{error ? <p className='text-destructive text-xs' role='alert'>{error}</p> : null}
+								{error ? (
+									<p className='text-destructive text-xs' role='alert'>
+										{error}
+									</p>
+								) : null}
 							</div>
 						) : (
 							<form onSubmit={onSubmit}>
@@ -117,18 +127,24 @@ export default function ForgotPasswordPage() {
 											autoComplete='email'
 											required
 											value={email}
-											onChange={(e) => setEmail(e.target.value)}
+											onChange={e => setEmail(e.target.value)}
 											disabled={pending}
 										/>
 									</Field>
-									{error ? <p className='text-destructive text-xs' role='alert'>{error}</p> : null}
+									{error ? (
+										<p className='text-destructive text-xs' role='alert'>
+											{error}
+										</p>
+									) : null}
 									<Field>
 										<Button type='submit' className='w-full' disabled={pending}>
 											{pending ? 'Đang xử lý…' : 'Gửi link đặt lại'}
 										</Button>
 									</Field>
 									<p className='text-center text-xs text-muted-foreground'>
-										<Link to='/login' className='underline'>Quay lại đăng nhập</Link>
+										<Link to='/login' className='underline'>
+											Quay lại đăng nhập
+										</Link>
 									</p>
 								</FieldGroup>
 							</form>

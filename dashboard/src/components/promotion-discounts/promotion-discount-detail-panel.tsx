@@ -46,14 +46,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { MultiSelectCombobox, type ComboboxOption } from '@/components/ui/multi-select-combobox';
-import {
-	Sheet,
-	SheetContent,
-	SheetDescription,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle,
-} from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useEntityCrud } from '@/hooks/use-permission';
 import { CONTENT_STATUS_BADGE } from '@/lib/status-styles';
@@ -143,13 +136,7 @@ export function PromotionDiscountDetailPanel() {
 	return <DetailContent promotion={data} onChanged={() => void refetch()} />;
 }
 
-function DetailContent({
-	promotion,
-	onChanged,
-}: {
-	promotion: AdminPromotionDiscountRow;
-	onChanged: () => void;
-}) {
+function DetailContent({ promotion, onChanged }: { promotion: AdminPromotionDiscountRow; onChanged: () => void }) {
 	const navigate = useNavigate();
 	const crud = useEntityCrud('promotions');
 
@@ -159,9 +146,11 @@ function DetailContent({
 	const [campaignOptions, setCampaignOptions] = React.useState<ComboboxOption[]>([]);
 
 	React.useEffect(() => {
-		void fetchCampaigns({ limit: 100, offset: 0, status: 'all', sortBy: 'createdAt', sortOrder: 'desc' }).then(res => {
-			setCampaignOptions(res.items.map(c => ({ value: c.id, label: c.title })));
-		});
+		void fetchCampaigns({ limit: 100, offset: 0, status: 'all', sortBy: 'createdAt', sortOrder: 'desc' }).then(
+			res => {
+				setCampaignOptions(res.items.map(c => ({ value: c.id, label: c.title })));
+			}
+		);
 	}, []);
 
 	async function patch(body: Parameters<typeof updatePromotionDiscount>[1]) {
@@ -291,10 +280,7 @@ function DetailContent({
 								label='Chiến dịch'
 								type='select'
 								value={promotion.campaignId ?? ''}
-								options={[
-									{ value: '', label: 'Không thuộc chiến dịch' },
-									...campaignOptions,
-								]}
+								options={[{ value: '', label: 'Không thuộc chiến dịch' }, ...campaignOptions]}
 								disabled={!crud.canUpdate}
 								onSave={v => patch({ campaignId: v || null })}
 								emptyHint='Không thuộc chiến dịch'
@@ -543,7 +529,9 @@ function DetailContent({
 							<dl className='mt-2 space-y-2 text-sm'>
 								<div className='flex items-center justify-between'>
 									<dt className='text-muted-foreground'>Loại</dt>
-									<dd className='font-semibold'>{promotion.type === 'PERCENT' ? 'Phần trăm' : 'Cố định'}</dd>
+									<dd className='font-semibold'>
+										{promotion.type === 'PERCENT' ? 'Phần trăm' : 'Cố định'}
+									</dd>
 								</div>
 								<div className='flex items-center justify-between'>
 									<dt className='text-muted-foreground'>Giá trị</dt>
@@ -625,7 +613,9 @@ function BannerSection({
 			<SectionHeading icon={ImageIcon} title='Banner khuyến mãi' />
 			<div className='mt-3'>
 				<SingleImageUrlDropzone
-					label={promotion.bannerImageUrl ? 'Kéo thả hoặc bấm để thay banner' : 'Kéo thả hoặc bấm để chọn banner'}
+					label={
+						promotion.bannerImageUrl ? 'Kéo thả hoặc bấm để thay banner' : 'Kéo thả hoặc bấm để chọn banner'
+					}
 					hint='JPEG, PNG, WebP'
 					url={promotion.bannerImageUrl ?? ''}
 					disabled={busy || !canUpdate}
@@ -724,29 +714,29 @@ function AdvancedSheet({
 						</div>
 					</Field>
 					{appliesTo === 'PRODUCTS' ? (
-					<Field>
-						<FieldLabel>Sản phẩm áp dụng</FieldLabel>
-						<MultiSelectCombobox
-							options={productOptions}
-							selectedValues={productIds}
-							onSelectedChange={setProductIds}
-							placeholder='Chọn sản phẩm…'
-							disabled={disabled || busy}
-						/>
-					</Field>
-				) : null}
-				{appliesTo === 'CATEGORIES' ? (
-					<Field>
-						<FieldLabel>Danh mục áp dụng</FieldLabel>
-						<MultiSelectCombobox
-							options={categoryOptions}
-							selectedValues={categoryIds}
-							onSelectedChange={setCategoryIds}
-							placeholder='Chọn danh mục…'
-							disabled={disabled || busy}
-						/>
-					</Field>
-				) : null}
+						<Field>
+							<FieldLabel>Sản phẩm áp dụng</FieldLabel>
+							<MultiSelectCombobox
+								options={productOptions}
+								selectedValues={productIds}
+								onSelectedChange={setProductIds}
+								placeholder='Chọn sản phẩm…'
+								disabled={disabled || busy}
+							/>
+						</Field>
+					) : null}
+					{appliesTo === 'CATEGORIES' ? (
+						<Field>
+							<FieldLabel>Danh mục áp dụng</FieldLabel>
+							<MultiSelectCombobox
+								options={categoryOptions}
+								selectedValues={categoryIds}
+								onSelectedChange={setCategoryIds}
+								placeholder='Chọn danh mục…'
+								disabled={disabled || busy}
+							/>
+						</Field>
+					) : null}
 				</FieldGroup>
 				<SheetFooter className='gap-2 border-t px-6 py-4 sm:justify-end'>
 					<Button type='button' variant='outline' onClick={() => onOpenChange(false)} disabled={busy}>

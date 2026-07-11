@@ -3,12 +3,7 @@ import { CheckIcon, CircleDashedIcon, CircleIcon, XIcon } from 'lucide-react';
 import type { OrderStatus, OrderStatusHistory } from '@/api/admin-orders';
 import { cn } from '@/lib/utils';
 
-import {
-	ORDER_PROGRESS_STEPS,
-	ORDER_STATUS_LABEL,
-	isOrderTerminal,
-	progressIndex,
-} from './order-status-helpers';
+import { ORDER_PROGRESS_STEPS, ORDER_STATUS_LABEL, isOrderTerminal, progressIndex } from './order-status-helpers';
 
 type OrderTimelineProps = {
 	status: OrderStatus;
@@ -58,7 +53,8 @@ export function OrderTimeline({ status, history }: OrderTimelineProps) {
 								className={cn(
 									'flex size-5 shrink-0 items-center justify-center rounded-full text-[0]',
 									isPast && 'bg-emerald-500 text-white',
-									isCurrent && 'bg-foreground text-background ring-2 ring-foreground/15 ring-offset-2 ring-offset-background',
+									isCurrent &&
+										'bg-foreground text-background ring-2 ring-foreground/15 ring-offset-2 ring-offset-background',
 									!reached && 'border border-border bg-background'
 								)}
 								aria-hidden
@@ -106,9 +102,7 @@ export function OrderTimeline({ status, history }: OrderTimelineProps) {
 					<span
 						className={cn(
 							'flex size-5 shrink-0 items-center justify-center rounded-full text-[0]',
-							status === 'CANCELLED'
-								? 'bg-destructive text-white'
-								: 'bg-amber-500 text-white'
+							status === 'CANCELLED' ? 'bg-destructive text-white' : 'bg-amber-500 text-white'
 						)}
 						aria-hidden
 					>
@@ -119,7 +113,9 @@ export function OrderTimeline({ status, history }: OrderTimelineProps) {
 						)}
 					</span>
 					<div className='min-w-0 flex-1'>
-						<p className='text-sm font-medium leading-tight'>{TERMINAL_LABEL[status] ?? ORDER_STATUS_LABEL[status]}</p>
+						<p className='text-sm font-medium leading-tight'>
+							{TERMINAL_LABEL[status] ?? ORDER_STATUS_LABEL[status]}
+						</p>
 						{stepEvents.get(status) ? (
 							<p className='mt-0.5 text-xs text-muted-foreground tabular-nums'>
 								{formatDateTime(stepEvents.get(status)!.createdAt)}

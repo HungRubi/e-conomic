@@ -1,8 +1,5 @@
 import * as React from 'react';
-import {
-	type AdminPromotionDiscountRow,
-	type ListPromotionDiscountsParams,
-} from '@/api/admin-promotion-discounts';
+import { type AdminPromotionDiscountRow, type ListPromotionDiscountsParams } from '@/api/admin-promotion-discounts';
 import { AuthApiError } from '@/auth/auth-api';
 
 export type PromotionDiscountListSortKey = 'createdAt' | 'title' | 'code' | 'sortOrder';
@@ -64,21 +61,18 @@ export function usePaginatedPromotionDiscountList(
 		void load();
 	}, [load]);
 
-	const upsertRow = React.useCallback(
-		(updated: AdminPromotionDiscountRow, opts?: { prependOnInsert?: boolean }) => {
-			setRows(prev => {
-				const idx = prev.findIndex(r => r.id === updated.id);
-				if (idx >= 0) {
-					const next = [...prev];
-					next[idx] = updated;
-					return next;
-				}
-				if (opts?.prependOnInsert) return [updated, ...prev];
-				return prev;
-			});
-		},
-		[]
-	);
+	const upsertRow = React.useCallback((updated: AdminPromotionDiscountRow, opts?: { prependOnInsert?: boolean }) => {
+		setRows(prev => {
+			const idx = prev.findIndex(r => r.id === updated.id);
+			if (idx >= 0) {
+				const next = [...prev];
+				next[idx] = updated;
+				return next;
+			}
+			if (opts?.prependOnInsert) return [updated, ...prev];
+			return prev;
+		});
+	}, []);
 
 	const removeRow = React.useCallback((id: string) => {
 		setRows(prev => prev.filter(r => r.id !== id));

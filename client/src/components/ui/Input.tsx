@@ -3,30 +3,26 @@
 import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-  error?: string;
-  iconLeft?: ReactNode;
-  iconRight?: ReactNode;
+	label?: string;
+	error?: string;
+	iconLeft?: ReactNode;
+	iconRight?: ReactNode;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, iconLeft, iconRight, className = '', ...props }, ref) => {
-    return (
-      <div className="w-full">
-        {label && (
-          <label className="block text-[13px] font-medium text-text mb-1.5">
-            {label}
-          </label>
-        )}
-        <div className="relative">
-          {iconLeft && (
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-text2 pointer-events-none">
-              {iconLeft}
-            </div>
-          )}
-          <input
-            ref={ref}
-            className={`
+	({ label, error, iconLeft, iconRight, className = '', ...props }, ref) => {
+		return (
+			<div className='w-full'>
+				{label && <label className='block text-[13px] font-medium text-text mb-1.5'>{label}</label>}
+				<div className='relative'>
+					{iconLeft && (
+						<div className='absolute left-3 top-1/2 -translate-y-1/2 text-text2 pointer-events-none'>
+							{iconLeft}
+						</div>
+					)}
+					<input
+						ref={ref}
+						className={`
               w-full h-9 text-[13px] rounded-full bg-surface2 border
               text-text placeholder:text-text2/60
               transition-all duration-200
@@ -37,20 +33,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               ${error ? 'border-red' : 'border-border'}
               ${className}
             `.trim()}
-            {...props}
-          />
-          {iconRight && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-text2">
-              {iconRight}
-            </div>
-          )}
-        </div>
-        {error && (
-          <p className="mt-1 text-[11px] text-red">{error}</p>
-        )}
-      </div>
-    );
-  },
+						{...props}
+					/>
+					{iconRight && (
+						<div className='absolute right-3 top-1/2 -translate-y-1/2 text-text2'>{iconRight}</div>
+					)}
+				</div>
+				{error && <p className='mt-1 text-[11px] text-red'>{error}</p>}
+			</div>
+		);
+	}
 );
 
 Input.displayName = 'Input';

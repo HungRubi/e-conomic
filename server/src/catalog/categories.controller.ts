@@ -1,9 +1,23 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AdminGuard } from '../common/guards/admin.guard';
 import { CategoriesService } from './categories.service';
-import { CreateCategoryAttributeDto, CreateCategoryDto, UpdateCategoryDto } from './dto/category.dto';
+import {
+  CreateCategoryAttributeDto,
+  CreateCategoryDto,
+  UpdateCategoryDto,
+} from './dto/category.dto';
 
 @ApiTags('Admin Product Categories')
 @ApiBearerAuth()
@@ -38,7 +52,10 @@ export class CategoriesController {
   }
 
   @Post(':id/attributes')
-  createAttribute(@Param('id') id: string, @Body() dto: CreateCategoryAttributeDto) {
+  createAttribute(
+    @Param('id') id: string,
+    @Body() dto: CreateCategoryAttributeDto,
+  ) {
     return this.categories.createAttribute(id, dto);
   }
 

@@ -206,7 +206,7 @@ function Sidebar({
 					'group-data-[side=right]:rotate-180',
 					variant === 'floating' || variant === 'inset'
 						? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]'
-						: 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
+						: 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)'
 				)}
 			/>
 			<div
@@ -218,7 +218,7 @@ function Sidebar({
 					variant === 'floating' || variant === 'inset'
 						? 'p-2 group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4))+2px)]'
 						: 'group-data-[collapsible=icon]:w-(--sidebar-width-icon) group-data-[side=left]:border-r group-data-[side=right]:border-l',
-					className,
+					className
 				)}
 				{...props}
 			>
@@ -274,7 +274,7 @@ function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
 				'group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full hover:group-data-[collapsible=offcanvas]:bg-sidebar',
 				'[[data-side=left][data-collapsible=offcanvas]_&]:-right-2',
 				'[[data-side=right][data-collapsible=offcanvas]_&]:-left-2',
-				className,
+				className
 			)}
 			{...props}
 		/>

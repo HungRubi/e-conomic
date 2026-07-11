@@ -1,10 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowRightIcon, MailIcon } from 'lucide-react';
 
-import {
-	CONTACT_INQUIRY_SOURCE_LABEL,
-	type AdminContactInquiryRow,
-} from '@/api/admin-contact-inquiries';
+import { CONTACT_INQUIRY_SOURCE_LABEL, type AdminContactInquiryRow } from '@/api/admin-contact-inquiries';
 import { cn } from '@/lib/utils';
 
 function fmtRel(iso: string): string {
@@ -48,7 +45,7 @@ export function ContactNotificationList({
 								onClick={() => onMarkSeen(item.id)}
 								className={cn(
 									'group flex items-start gap-3 rounded-md px-2 py-2 transition-colors hover:bg-muted/40',
-									unseen && 'bg-primary/5',
+									unseen && 'bg-primary/5'
 								)}
 							>
 								<div className='mt-0.5 flex size-8 items-center justify-center rounded-full bg-muted ring-1 ring-border'>
@@ -57,14 +54,21 @@ export function ContactNotificationList({
 								<div className='min-w-0 flex-1'>
 									<div className='flex items-center justify-between gap-2'>
 										<span className='truncate text-sm font-medium'>{item.name}</span>
-										<span className='text-[11px] text-muted-foreground'>{fmtRel(item.createdAt)}</span>
+										<span className='text-[11px] text-muted-foreground'>
+											{fmtRel(item.createdAt)}
+										</span>
 									</div>
-									<p className='truncate text-xs text-muted-foreground'>{item.email ?? item.phone ?? '—'}</p>
+									<p className='truncate text-xs text-muted-foreground'>
+										{item.email ?? item.phone ?? '—'}
+									</p>
 									<p className='mt-0.5 truncate text-xs text-muted-foreground'>
 										{CONTACT_INQUIRY_SOURCE_LABEL[item.source] ?? item.source}
 									</p>
 									{unseen ? (
-										<span className='mt-1 inline-block size-1.5 rounded-full bg-destructive' aria-hidden />
+										<span
+											className='mt-1 inline-block size-1.5 rounded-full bg-destructive'
+											aria-hidden
+										/>
 									) : null}
 								</div>
 								<ArrowRightIcon className='mt-1 size-3.5 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5' />

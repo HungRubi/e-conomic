@@ -105,7 +105,7 @@ export default function ProfilePage() {
 						<Input
 							id='profile-name'
 							value={name}
-							onChange={(e) => setName(e.target.value)}
+							onChange={e => setName(e.target.value)}
 							placeholder='Họ và tên'
 							disabled={savingName}
 						/>
@@ -136,7 +136,7 @@ export default function ProfilePage() {
 							type='password'
 							autoComplete='current-password'
 							value={currentPassword}
-							onChange={(e) => setCurrentPassword(e.target.value)}
+							onChange={e => setCurrentPassword(e.target.value)}
 							disabled={savingPassword}
 						/>
 					</Field>
@@ -147,7 +147,7 @@ export default function ProfilePage() {
 							type='password'
 							autoComplete='new-password'
 							value={newPassword}
-							onChange={(e) => setNewPassword(e.target.value)}
+							onChange={e => setNewPassword(e.target.value)}
 							disabled={savingPassword}
 						/>
 					</Field>
@@ -158,7 +158,7 @@ export default function ProfilePage() {
 							type='password'
 							autoComplete='new-password'
 							value={confirmPassword}
-							onChange={(e) => setConfirmPassword(e.target.value)}
+							onChange={e => setConfirmPassword(e.target.value)}
 							disabled={savingPassword}
 						/>
 					</Field>

@@ -111,9 +111,7 @@ function MaterialPickerBody({
 	}
 
 	return (
-		<DialogContent
-			className='flex h-[min(85vh,720px)] max-h-[85vh] w-[min(96vw,960px)] max-w-none flex-col gap-0 overflow-hidden p-0 sm:max-w-none'
-		>
+		<DialogContent className='flex h-[min(85vh,720px)] max-h-[85vh] w-[min(96vw,960px)] max-w-none flex-col gap-0 overflow-hidden p-0 sm:max-w-none'>
 			<DialogHeader className='shrink-0 border-b border-border/60 px-5 py-4'>
 				<DialogTitle className='text-base'>Chọn hạt cho sản phẩm custom</DialogTitle>
 				<DialogDescription className='text-xs'>
@@ -204,7 +202,9 @@ function MaterialPickerBody({
 											{selected ? (
 												<span className='absolute right-2 top-2 inline-flex size-6 items-center justify-center rounded-full bg-foreground text-background shadow-sm'>
 													{order != null ? (
-														<span className='text-[10px] font-semibold tabular-nums'>{order}</span>
+														<span className='text-[10px] font-semibold tabular-nums'>
+															{order}
+														</span>
 													) : (
 														<CheckIcon className='size-3.5' />
 													)}
@@ -212,9 +212,13 @@ function MaterialPickerBody({
 											) : null}
 										</div>
 										<div className='space-y-0.5 px-2.5 py-2'>
-											<p className='line-clamp-1 text-xs font-medium tracking-tight'>{material.name}</p>
+											<p className='line-clamp-1 text-xs font-medium tracking-tight'>
+												{material.name}
+											</p>
 											<div className='flex items-center justify-between gap-1.5 text-[11px] text-muted-foreground'>
-												<span className='tabular-nums'>{material.priceVnd.toLocaleString('vi-VN')}₫</span>
+												<span className='tabular-nums'>
+													{material.priceVnd.toLocaleString('vi-VN')}₫
+												</span>
 												{material.displaySize || material.sizeMm != null ? (
 													<span className='shrink-0'>
 														{material.displaySize ?? `${material.sizeMm}mm`}
@@ -271,18 +275,11 @@ function KindChip({
 			onClick={onClick}
 			className={cn(
 				'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium transition',
-				active
-					? 'bg-foreground text-background'
-					: 'text-muted-foreground hover:bg-muted'
+				active ? 'bg-foreground text-background' : 'text-muted-foreground hover:bg-muted'
 			)}
 		>
 			{label}
-			<span
-				className={cn(
-					'tabular-nums',
-					active ? 'text-background/80' : 'text-muted-foreground/70'
-				)}
-			>
+			<span className={cn('tabular-nums', active ? 'text-background/80' : 'text-muted-foreground/70')}>
 				{count}
 			</span>
 		</button>

@@ -60,7 +60,12 @@ export type ProductCategoryListResponse = {
 	totalPages: number;
 };
 
-export type ProductCategoryBody = Partial<Omit<AdminProductCategoryRow, 'id' | 'children' | 'parent' | 'products' | 'attributes' | 'createdAt' | 'updatedAt' | 'deletedAt'>> & {
+export type ProductCategoryBody = Partial<
+	Omit<
+		AdminProductCategoryRow,
+		'id' | 'children' | 'parent' | 'products' | 'attributes' | 'createdAt' | 'updatedAt' | 'deletedAt'
+	>
+> & {
 	name: string;
 };
 
@@ -82,7 +87,9 @@ export function listProductCategories(params?: ListProductCategoriesParams): Pro
 	return fetchProductCategories(params);
 }
 
-export function fetchAllProductCategories(params?: Omit<ListProductCategoriesParams, 'page' | 'pageSize'>): Promise<AdminProductCategoryRow[]> {
+export function fetchAllProductCategories(
+	params?: Omit<ListProductCategoriesParams, 'page' | 'pageSize'>
+): Promise<AdminProductCategoryRow[]> {
 	return api.get(`/admin/product-categories/all${qs(params)}`);
 }
 
@@ -94,8 +101,14 @@ export function createProductCategory(data: ProductCategoryBody): Promise<AdminP
 	return api.post('/admin/product-categories', data);
 }
 
-export function updateProductCategory(id: string, data: Partial<ProductCategoryBody>): Promise<AdminProductCategoryRow> {
-	return apiFetch<AdminProductCategoryRow>(`/admin/product-categories/${id}`, { method: 'PATCH', body: JSON.stringify(data) });
+export function updateProductCategory(
+	id: string,
+	data: Partial<ProductCategoryBody>
+): Promise<AdminProductCategoryRow> {
+	return apiFetch<AdminProductCategoryRow>(`/admin/product-categories/${id}`, {
+		method: 'PATCH',
+		body: JSON.stringify(data),
+	});
 }
 
 export function publishProductCategory(id: string): Promise<AdminProductCategoryRow> {

@@ -268,7 +268,7 @@ function DetailContent({
 								label='TĂªn tiáº¿ng Anh'
 								type='text'
 								value={category.name ?? ''}
-onSave={v => patch({ name: v.trim() ? v : null })}
+								onSave={v => patch({ name: v.trim() ? v : null })}
 								emptyHint='ChÆ°a cĂ³ â€” click Ä‘á»ƒ thĂªm'
 							/>
 							<EditableField
@@ -277,7 +277,9 @@ onSave={v => patch({ name: v.trim() ? v : null })}
 								value={category.slug}
 								onSave={v => patch({ slug: v })}
 								validate={v =>
-									/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim()) ? null : 'Slug chá»‰ gá»“m a-z, 0-9 vĂ  dáº¥u -'
+									/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim())
+										? null
+										: 'Slug chá»‰ gá»“m a-z, 0-9 vĂ  dáº¥u -'
 								}
 								displayClassName='font-mono text-xs'
 							/>
@@ -388,7 +390,9 @@ onSave={v => patch({ name: v.trim() ? v : null })}
 										<LayersIcon className='size-3.5' aria-hidden />
 										Cáº¥p Ä‘á»™
 									</dt>
-									<dd className='font-semibold tabular-nums'>{LEVEL_LABEL[category.level] ?? category.level}</dd>
+									<dd className='font-semibold tabular-nums'>
+										{LEVEL_LABEL[category.level] ?? category.level}
+									</dd>
 								</div>
 								<div className='flex items-center justify-between'>
 									<dt className='inline-flex items-center gap-1.5 text-muted-foreground'>
@@ -402,7 +406,9 @@ onSave={v => patch({ name: v.trim() ? v : null })}
 										<BoxIcon className='size-3.5' aria-hidden />
 										Sáº£n pháº©m trong cĂ¢y
 									</dt>
-									<dd className='font-semibold tabular-nums'>{(category as any).productCount ?? 'â€”'}</dd>
+									<dd className='font-semibold tabular-nums'>
+										{(category as any).productCount ?? 'â€”'}
+									</dd>
 								</div>
 							</dl>
 						</section>
@@ -416,7 +422,8 @@ onSave={v => patch({ name: v.trim() ? v : null })}
 						<AlertDialogTitle>XoĂ¡ danh má»¥c nĂ y?</AlertDialogTitle>
 						<AlertDialogDescription>
 							Chá»‰ xoĂ¡ Ä‘Æ°á»£c khi danh má»¥c khĂ´ng cĂ²n con.{' '}
-							<span className='font-medium text-foreground'>{category.name}</span> sáº½ bá»‹ xoĂ¡ vÄ©nh viá»…n.
+							<span className='font-medium text-foreground'>{category.name}</span> sáº½ bá»‹ xoĂ¡ vÄ©nh
+							viá»…n.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -450,7 +457,8 @@ function HeroBanner({
 			<div
 				className={cn(
 					'relative h-48 w-full sm:h-56 lg:h-64',
-					!hasImage && 'bg-gradient-to-br from-amber-100 via-rose-50 to-sky-100 dark:from-amber-950/40 dark:via-rose-950/30 dark:to-sky-950/40'
+					!hasImage &&
+						'bg-gradient-to-br from-amber-100 via-rose-50 to-sky-100 dark:from-amber-950/40 dark:via-rose-950/30 dark:to-sky-950/40'
 				)}
 			>
 				{hasImage ? (
@@ -489,13 +497,7 @@ function HeroBanner({
 	);
 }
 
-function CoverImageSection({
-	category,
-	onChanged,
-}: {
-	category: AdminProductCategoryRow;
-	onChanged: () => void;
-}) {
+function CoverImageSection({ category, onChanged }: { category: AdminProductCategoryRow; onChanged: () => void }) {
 	const [busy, setBusy] = React.useState(false);
 	const [uploadBusy, setUploadBusy] = React.useState(false);
 
@@ -572,7 +574,9 @@ function CategoryProductsSection({ category }: { category: AdminProductCategoryR
 				status: 'all',
 			}).then(res => ({
 				...res,
-				items: res.items.filter(p => (p.categories ?? []).some((c: any) => c.slug === category.slug || c.id === category.id)),
+				items: res.items.filter(p =>
+					(p.categories ?? []).some((c: any) => c.slug === category.slug || c.id === category.id)
+				),
 			})),
 	});
 
@@ -646,7 +650,11 @@ function ProductMiniCard({ product }: { product: AdminProductRow }) {
 						{product.name}
 					</p>
 					<Badge variant={CONTENT_STATUS_BADGE[product.status]} className='shrink-0 text-[10px]'>
-						{product.status === 'ACTIVE' ? 'Äang bĂ¡n' : product.status === 'DRAFT' ? 'NhĂ¡p' : 'LÆ°u trá»¯'}
+						{product.status === 'ACTIVE'
+							? 'Äang bĂ¡n'
+							: product.status === 'DRAFT'
+								? 'NhĂ¡p'
+								: 'LÆ°u trá»¯'}
 					</Badge>
 				</div>
 				<p className='mt-1 truncate text-xs text-muted-foreground'>

@@ -12,7 +12,7 @@ import {
 	HashIcon,
 	HeartIcon,
 	HistoryIcon,
-		InboxIcon,
+	InboxIcon,
 	ImageIcon,
 	LayersIcon,
 	ListOrderedIcon,
@@ -44,9 +44,9 @@ import {
 	type InventoryTransaction,
 } from '@/api/admin-products';
 import {
-  previewCustomProductStock,
-  batchReceiveVariants,
-  type CustomProductPreviewResponse,
+	previewCustomProductStock,
+	batchReceiveVariants,
+	type CustomProductPreviewResponse,
 } from '@/api/admin-inventory';
 import { fetchAllProductCategories, type AdminProductCategoryRow } from '@/api/admin-product-categories';
 import { EditableField } from '@/components/common/editable-field';
@@ -88,7 +88,7 @@ const TYPE_LABEL: Record<AdminProductRow['type'], string> = {
 	DIGITAL: 'Sản phẩm số',
 };
 
-const TYPE_OPTIONS = (Object.keys(TYPE_LABEL) as AdminProductRow['type'][]).map((t) => ({
+const TYPE_OPTIONS = (Object.keys(TYPE_LABEL) as AdminProductRow['type'][]).map(t => ({
 	value: t,
 	label: TYPE_LABEL[t],
 }));
@@ -103,8 +103,6 @@ function formatDateTime(iso: string | null): string {
 		minute: '2-digit',
 	}).format(new Date(iso));
 }
-
-
 
 async function copyToClipboard(value: string, message: string) {
 	try {
@@ -152,13 +150,7 @@ export function ProductDetailPanel() {
 	return <ProductDetailContent product={data} onChanged={() => void refetch()} />;
 }
 
-function ProductDetailContent({
-	product,
-	onChanged,
-}: {
-	product: AdminProductRow;
-	onChanged: () => void;
-}) {
+function ProductDetailContent({ product, onChanged }: { product: AdminProductRow; onChanged: () => void }) {
 	const navigate = useNavigate();
 	const [confirmDelete, setConfirmDelete] = React.useState(false);
 	const [actionBusy, setActionBusy] = React.useState<'publish' | 'archive' | 'delete' | null>(null);
@@ -177,9 +169,15 @@ function ProductDetailContent({
 
 	// Live preview for custom products
 	React.useEffect(() => {
-		if (!product.custom || !receiveOpen || !receiveQty) { setPreview(null); return; }
+		if (!product.custom || !receiveOpen || !receiveQty) {
+			setPreview(null);
+			return;
+		}
 		const qty = Number(receiveQty);
-		if (!qty || qty <= 0) { setPreview(null); return; }
+		if (!qty || qty <= 0) {
+			setPreview(null);
+			return;
+		}
 		if (prevQtyRef.current === receiveQty && preview) return;
 		prevQtyRef.current = receiveQty;
 		setPreviewLoading(true);
@@ -200,7 +198,7 @@ function ProductDetailContent({
 		setHistoryError(null);
 		try {
 			const res = await fetchInventoryTransactions('PRODUCT', product.id);
-			setHistoryItems(Array.isArray(res) ? res : (res as any)?.items ?? []);
+			setHistoryItems(Array.isArray(res) ? res : ((res as any)?.items ?? []));
 		} catch (e) {
 			setHistoryError(e instanceof Error ? e.message : 'Không tải được lịch sử');
 		} finally {
@@ -216,16 +214,19 @@ function ProductDetailContent({
 			const entries = Object.entries(receiveVariantQtys)
 				.map(([variantId, qtyStr]) => ({ variantId, qty: Number(qtyStr) }))
 				.filter(e => e.qty > 0);
-			if (entries.length === 0) { toast.error('Nhập số lượng cho ít nhất một biến thể'); return; }
+			if (entries.length === 0) {
+				toast.error('Nhập số lượng cho ít nhất một biến thể');
+				return;
+			}
 			setReceiveBusy(true);
 			try {
 				const result = await batchReceiveVariants(
 					entries.map(e => ({ id: e.variantId, quantity: e.qty })),
-					note,
+					note
 				);
 				const resultErr = result as { errors?: { error: string }[] } | undefined;
-					if (resultErr?.errors?.length) {
-						toast.error(`${resultErr.errors.length} biến thể lỗi: ${resultErr.errors[0].error}`);
+				if (resultErr?.errors?.length) {
+					toast.error(`${resultErr.errors.length} biến thể lỗi: ${resultErr.errors[0].error}`);
 				} else {
 					toast.success('Đã nhập ' + entries.length + ' biến thể');
 				}
@@ -311,7 +312,12 @@ function ProductDetailContent({
 				<div className='flex items-start justify-between gap-4'>
 					<div className='min-w-0 flex-1'>
 						<div className='flex items-center gap-1'>
-							<h1 className='min-w-0 flex-1 truncate text-lg font-semibold tracking-tight' title={product.name}>{product.name}</h1>
+							<h1
+								className='min-w-0 flex-1 truncate text-lg font-semibold tracking-tight'
+								title={product.name}
+							>
+								{product.name}
+							</h1>
 							<Button
 								type='button'
 								variant='ghost'
@@ -339,12 +345,12 @@ function ProductDetailContent({
 									<span>Cập nhật {formatDateTime(product.updatedAt)}</span>
 								</>
 							) : null}
+						</div>
 					</div>
-				</div>
-				<div className='flex shrink-0 flex-wrap items-center gap-2'>
-					<Badge variant={CONTENT_STATUS_BADGE[product.status]}>{STATUS_LABEL[product.status]}</Badge>
-					<Badge variant='outline'>{TYPE_LABEL[product.type]}</Badge>
-				</div>
+					<div className='flex shrink-0 flex-wrap items-center gap-2'>
+						<Badge variant={CONTENT_STATUS_BADGE[product.status]}>{STATUS_LABEL[product.status]}</Badge>
+						<Badge variant='outline'>{TYPE_LABEL[product.type]}</Badge>
+					</div>
 				</div>
 			</header>
 
@@ -354,19 +360,35 @@ function ProductDetailContent({
 
 					{product.custom && product.priceDetailGems?.length ? (
 						<section className='rounded-xl bg-card p-4 ring-1 ring-foreground/10'>
-							<SectionHeading icon={ImageIcon} title='Nguyên liệu cấu thành' hint='Đây là ảnh nguyên liệu (đá / hạt), không phải ảnh phụ của sản phẩm.' />
+							<SectionHeading
+								icon={ImageIcon}
+								title='Nguyên liệu cấu thành'
+								hint='Đây là ảnh nguyên liệu (đá / hạt), không phải ảnh phụ của sản phẩm.'
+							/>
 							<div className='mt-3 grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4'>
 								{product.priceDetailGems.map((gem, i) => (
-									<div key={i} className='flex flex-col items-center gap-1.5 rounded-md border border-border/60 p-2 text-center'>
+									<div
+										key={i}
+										className='flex flex-col items-center gap-1.5 rounded-md border border-border/60 p-2 text-center'
+									>
 										{gem.image ? (
-											<img src={publicAssetUrl(gem.image)} alt='' className='size-16 rounded-md border border-border object-cover' loading='lazy' />
+											<img
+												src={publicAssetUrl(gem.image)}
+												alt=''
+												className='size-16 rounded-md border border-border object-cover'
+												loading='lazy'
+											/>
 										) : (
 											<div className='size-16 rounded-md bg-muted' />
 										)}
 										<div className='min-w-0'>
 											<p className='truncate text-xs font-medium'>{gem.name}</p>
-											<p className='text-[10px] text-muted-foreground'>{(gem.amountVnd).toLocaleString('vi-VN')}₫</p>
-											{gem.quantity ? <p className='text-[10px] text-muted-foreground'>x{gem.quantity}/sp</p> : null}
+											<p className='text-[10px] text-muted-foreground'>
+												{gem.amountVnd.toLocaleString('vi-VN')}₫
+											</p>
+											{gem.quantity ? (
+												<p className='text-[10px] text-muted-foreground'>x{gem.quantity}/sp</p>
+											) : null}
 										</div>
 									</div>
 								))}
@@ -381,16 +403,18 @@ function ProductDetailContent({
 								label='Tên sản phẩm'
 								type='text'
 								value={product.name}
-								onSave={(v) => patch({ name: v })}
-								validate={(v) => (v.trim() ? null : 'Tên không được trống')}
+								onSave={v => patch({ name: v })}
+								validate={v => (v.trim() ? null : 'Tên không được trống')}
 							/>
 							<EditableField
 								label='Slug (URL)'
 								type='text'
 								value={product.slug}
-								onSave={(v) => patch({ slug: v })}
-								validate={(v) =>
-									/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim()) ? null : 'Slug chỉ gồm a-z, 0-9 và dấu -'
+								onSave={v => patch({ slug: v })}
+								validate={v =>
+									/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim())
+										? null
+										: 'Slug chỉ gồm a-z, 0-9 và dấu -'
 								}
 								displayClassName='font-mono text-xs'
 							/>
@@ -398,14 +422,15 @@ function ProductDetailContent({
 								label='Tiêu đề chi tiết'
 								type='text'
 								value={product.detailTitle}
-								onSave={(v) => patch({ detailTitle: v })}
+								onSave={v => patch({ detailTitle: v })}
 								emptyHint='Chưa có tiêu đề trang chi tiết'
 							/>
 							<EditableField
 								label='Câu nhấn (accent)'
 								type='text'
 								value={product.accent}
-								onSave={(v) => patch({ accent: v })} validate={v => !v.trim() ? 'Không được để trống' : null}
+								onSave={v => patch({ accent: v })}
+								validate={v => (!v.trim() ? 'Không được để trống' : null)}
 								emptyHint='Câu giới thiệu ngắn ở thẻ sản phẩm'
 							/>
 							<EditableField
@@ -413,7 +438,7 @@ function ProductDetailContent({
 								type='textarea'
 								rows={5}
 								value={product.description}
-								onSave={(v) => patch({ description: v })}
+								onSave={v => patch({ description: v })}
 								emptyHint='Chưa có mô tả'
 							/>
 						</div>
@@ -427,26 +452,32 @@ function ProductDetailContent({
 								type='number'
 								value={product.stockQuantity ?? null}
 								disabled={product.custom}
-								onSave={(v) => patch({ stockQuantity: v ?? 0 })}
+								onSave={v => patch({ stockQuantity: v ?? 0 })}
 								min={0}
-								validate={(v) => (v != null && v >= 0 ? null : 'Phải là số >= 0')}
+								validate={v => (v != null && v >= 0 ? null : 'Phải là số >= 0')}
 							/>
 							<EditableField
 								label='Ngưỡng báo hết hàng'
 								type='number'
 								value={product.lowStockThreshold ?? null}
-								onSave={(v) => patch({ lowStockThreshold: v ?? 5 })}
+								onSave={v => patch({ lowStockThreshold: v ?? 5 })}
 								min={0}
-								validate={(v) => (v != null && v >= 0 ? null : 'Phải là số >= 0')}
+								validate={v => (v != null && v >= 0 ? null : 'Phải là số >= 0')}
 							/>
 						</div>
 						{product.custom ? (
 							<div className='mt-3 space-y-3'>
 								<p className='rounded-md bg-muted/30 p-3 text-xs text-muted-foreground'>
-									Tồn kho sản phẩm custom thể hiện số lượng đã sản xuất. Nhập kho sẽ tự động trừ nguyên liệu tương ứng.
+									Tồn kho sản phẩm custom thể hiện số lượng đã sản xuất. Nhập kho sẽ tự động trừ
+									nguyên liệu tương ứng.
 								</p>
 								<div className='flex gap-2'>
-									<Button variant='outline' size='sm' className='gap-1.5' onClick={() => setReceiveOpen(true)}>
+									<Button
+										variant='outline'
+										size='sm'
+										className='gap-1.5'
+										onClick={() => setReceiveOpen(true)}
+									>
 										<InboxIcon className='size-3.5' />
 										Nhập kho
 									</Button>
@@ -457,19 +488,34 @@ function ProductDetailContent({
 										</Link>
 									</Button>
 									{product.stockQuantity !== undefined ? (
-										<Badge variant={product.stockQuantity === 0 ? 'destructive' : 'success'} className='ml-auto'>
-											{product.stockQuantity === 0 ? 'Chưa sản xuất' : `Đã SX: ${product.stockQuantity}`}
+										<Badge
+											variant={product.stockQuantity === 0 ? 'destructive' : 'success'}
+											className='ml-auto'
+										>
+											{product.stockQuantity === 0
+												? 'Chưa sản xuất'
+												: `Đã SX: ${product.stockQuantity}`}
 										</Badge>
 									) : null}
 								</div>
 							</div>
 						) : (
 							<div className='mt-3 flex gap-2'>
-								<Button variant='outline' size='sm' className='gap-1.5' onClick={() => setReceiveOpen(true)}>
+								<Button
+									variant='outline'
+									size='sm'
+									className='gap-1.5'
+									onClick={() => setReceiveOpen(true)}
+								>
 									<InboxIcon className='size-3.5' />
 									Nhập kho
 								</Button>
-								<Button variant='outline' size='sm' className='gap-1.5' onClick={() => void openHistory()}>
+								<Button
+									variant='outline'
+									size='sm'
+									className='gap-1.5'
+									onClick={() => void openHistory()}
+								>
 									<HistoryIcon className='size-3.5' />
 									Lịch sử
 								</Button>
@@ -504,11 +550,11 @@ function ProductDetailContent({
 								type='textarea'
 								rows={6}
 								value={(product as any).careTips.join('\n')}
-								onSave={(v) =>
+								onSave={v =>
 									patch({
 										careTips: v
 											.split('\n')
-											.map((s) => s.trim())
+											.map(s => s.trim())
 											.filter(Boolean),
 									})
 								}
@@ -516,9 +562,12 @@ function ProductDetailContent({
 							/>
 							{(product as any).careTips.length > 0 ? (
 								<ul className='mt-3 space-y-1.5'>
-									{ (product as any).careTips.map((tip, i) => (
+									{(product as any).careTips.map((tip, i) => (
 										<li key={i} className='flex items-start gap-2 text-sm text-muted-foreground'>
-											<SparklesIcon className='mt-0.5 size-3.5 shrink-0 text-amber-500' aria-hidden />
+											<SparklesIcon
+												className='mt-0.5 size-3.5 shrink-0 text-amber-500'
+												aria-hidden
+											/>
 											<span>{tip}</span>
 										</li>
 									))}
@@ -528,15 +577,29 @@ function ProductDetailContent({
 					</section>
 
 					{product.custom ? (
-						<section className="rounded-xl bg-card p-4 ring-1 ring-foreground/10">
-							<div className="flex items-center gap-3">
-								<div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted">
-									<svg className="size-5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42" /></svg>
-							</div>
-							<div>
-								<p className="text-sm font-semibold">Sản phẩm thiết kế riêng</p>
-								<p className="text-xs text-muted-foreground mt-1">Sản phẩm này không hỗ trợ biến thể (thêm size/màu).</p>
-							</div>
+						<section className='rounded-xl bg-card p-4 ring-1 ring-foreground/10'>
+							<div className='flex items-center gap-3'>
+								<div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted'>
+									<svg
+										className='size-5 text-muted-foreground'
+										fill='none'
+										viewBox='0 0 24 24'
+										stroke='currentColor'
+										strokeWidth={1.5}
+									>
+										<path
+											strokeLinecap='round'
+											strokeLinejoin='round'
+											d='M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.4 2.245 4.5 4.5 0 008.4-2.245c0-.399-.078-.78-.22-1.128zm0 0a15.998 15.998 0 003.388-1.62m-5.043-.025a15.994 15.994 0 011.622-3.395m3.42 3.42a15.995 15.995 0 004.764-4.648l3.876-5.814a1.151 1.151 0 00-1.597-1.597L14.146 6.32a15.996 15.996 0 00-4.649 4.763m3.42 3.42a6.776 6.776 0 00-3.42-3.42'
+										/>
+									</svg>
+								</div>
+								<div>
+									<p className='text-sm font-semibold'>Sản phẩm thiết kế riêng</p>
+									<p className='text-xs text-muted-foreground mt-1'>
+										Sản phẩm này không hỗ trợ biến thể (thêm size/màu).
+									</p>
+								</div>
 							</div>
 						</section>
 					) : (
@@ -594,26 +657,24 @@ function ProductDetailContent({
 						<section className='rounded-xl bg-card p-4 ring-1 ring-foreground/10'>
 							<SectionHeading icon={TagIcon} title='Giá & phân loại' />
 							<div className='mt-3 space-y-1'>
-								{(!product.variants || product.variants.length === 0) ? (
+								{!product.variants || product.variants.length === 0 ? (
 									<EditableField
 										label='Giá (VND)'
 										type='number'
 										value={product.priceVnd}
-										onSave={(v) => patch({ priceVnd: v ?? 0 })}
+										onSave={v => patch({ priceVnd: v ?? 0 })}
 										min={0}
-										validate={(v) => (v != null && v >= 0 ? null : 'Phải là số >= 0')}
+										validate={v => (v != null && v >= 0 ? null : 'Phải là số >= 0')}
 									/>
 								) : null}
-																<EditableField
+								<EditableField
 									label='Giảm giá (%)'
 									type='number'
 									value={product.discountPercent ?? null}
-									onSave={(v) => patch({ discountPercent: v })}
+									onSave={v => patch({ discountPercent: v })}
 									min={0}
 									max={100}
-									validate={(v) =>
-										v != null && (v < 0 || v > 100) ? 'Phải từ 0 đến 100' : null
-									}
+									validate={v => (v != null && (v < 0 || v > 100) ? 'Phải từ 0 đến 100' : null)}
 									emptyHint='Không giảm giá'
 								/>
 								<EditableField
@@ -621,9 +682,9 @@ function ProductDetailContent({
 									type='select'
 									value={product.type}
 									options={TYPE_OPTIONS}
-									onSave={(v) => patch({ type: v as AdminProductRow['type'] })}
+									onSave={v => patch({ type: v as AdminProductRow['type'] })}
 								/>
-								
+
 								<EditableField
 									label='Sản phẩm custom?'
 									type='select'
@@ -632,13 +693,13 @@ function ProductDetailContent({
 										{ value: 'yes', label: 'Có' },
 										{ value: 'no', label: 'Không' },
 									]}
-									onSave={(v) => patch({ custom: v === 'yes' })}
+									onSave={v => patch({ custom: v === 'yes' })}
 								/>
 								<EditableField
 									label='Thứ tự hiển thị'
 									type='number'
 									value={product.sortOrder}
-									onSave={(v) => patch({ sortOrder: v ?? 0 })}
+									onSave={v => patch({ sortOrder: v ?? 0 })}
 									min={0}
 								/>
 							</div>
@@ -682,14 +743,22 @@ function ProductDetailContent({
 				</aside>
 			</div>
 
-			<AlertDialog open={receiveOpen} onOpenChange={o => { if (!o) setReceiveVariantQtys({}); setReceiveOpen(o); }}>
-				<AlertDialogContent className={(() => {
-					const vc = product.variants?.length ?? 0;
-					if (!product.custom && vc > 5) return 'max-w-2xl';
-					if (!product.custom && vc > 0) return 'max-w-lg';
-					if (product.custom) return 'max-w-xl';
-					return undefined;
-				})()}>
+			<AlertDialog
+				open={receiveOpen}
+				onOpenChange={o => {
+					if (!o) setReceiveVariantQtys({});
+					setReceiveOpen(o);
+				}}
+			>
+				<AlertDialogContent
+					className={(() => {
+						const vc = product.variants?.length ?? 0;
+						if (!product.custom && vc > 5) return 'max-w-2xl';
+						if (!product.custom && vc > 0) return 'max-w-lg';
+						if (product.custom) return 'max-w-xl';
+						return undefined;
+					})()}
+				>
 					<AlertDialogHeader>
 						<AlertDialogTitle>Nhập kho</AlertDialogTitle>
 						<AlertDialogDescription>
@@ -704,7 +773,9 @@ function ProductDetailContent({
 					<div className='space-y-3 py-2'>
 						{!product.custom && (product.variants?.length ?? 0) > 0 ? (
 							<div className='space-y-1.5'>
-								<label className='text-xs font-medium text-muted-foreground'>Số lượng nhập theo biến thể</label>
+								<label className='text-xs font-medium text-muted-foreground'>
+									Số lượng nhập theo biến thể
+								</label>
 								<VariantStockInputs
 									variants={product.variants!}
 									values={receiveVariantQtys}
@@ -719,7 +790,7 @@ function ProductDetailContent({
 									<Input
 										inputMode='numeric'
 										value={receiveQty}
-										onChange={(e) => setReceiveQty(e.target.value.replace(/[^0-9]/g, ''))}
+										onChange={e => setReceiveQty(e.target.value.replace(/[^0-9]/g, ''))}
 										placeholder='0'
 										disabled={receiveBusy}
 									/>
@@ -727,30 +798,61 @@ function ProductDetailContent({
 
 								{product.custom && preview ? (
 									<div className='space-y-1.5'>
-										<label className='text-xs font-medium text-muted-foreground'>Nguyên liệu sẽ trừ</label>
+										<label className='text-xs font-medium text-muted-foreground'>
+											Nguyên liệu sẽ trừ
+										</label>
 										<div className='grid grid-cols-2 gap-2 max-h-[280px] overflow-y-auto rounded-lg border p-2'>
 											{preview.requirements.map((r, i) => (
 												<div key={i} className='flex items-center gap-3 px-3 py-2.5'>
 													{r.componentImage ? (
-														<img src={publicAssetUrl(r.componentImage)} alt='' className='size-9 shrink-0 rounded border border-border object-cover' loading='lazy' />
+														<img
+															src={publicAssetUrl(r.componentImage)}
+															alt=''
+															className='size-9 shrink-0 rounded border border-border object-cover'
+															loading='lazy'
+														/>
 													) : (
 														<div className='size-9 shrink-0 rounded bg-muted' />
 													)}
 													<div className='min-w-0 flex-1'>
-														<p className='text-sm font-medium truncate'>{r.componentName}</p>
-														<p className='text-xs text-muted-foreground'>{(r.amountVnd).toLocaleString('vi-VN')}₫ × {r.quantityPerUnit} viên/sp</p>
+														<p className='text-sm font-medium truncate'>
+															{r.componentName}
+														</p>
+														<p className='text-xs text-muted-foreground'>
+															{r.amountVnd.toLocaleString('vi-VN')}₫ × {r.quantityPerUnit}{' '}
+															viên/sp
+														</p>
 													</div>
 													<div className='text-right text-sm tabular-nums'>
-														<p className={r.materialStock.sufficient ? 'text-destructive' : 'text-destructive font-semibold'}>-{r.totalDeducted}</p>
-														<p className={'text-xs ' + (r.materialStock.sufficient ? 'text-muted-foreground' : 'text-destructive')}>
-															{r.materialStock.sufficient ? `Còn ${r.materialStock.remaining}` : `Thiếu ${Math.abs(r.materialStock.remaining)} (có ${r.materialStock.current})`}
+														<p
+															className={
+																r.materialStock.sufficient
+																	? 'text-destructive'
+																	: 'text-destructive font-semibold'
+															}
+														>
+															-{r.totalDeducted}
+														</p>
+														<p
+															className={
+																'text-xs ' +
+																(r.materialStock.sufficient
+																	? 'text-muted-foreground'
+																	: 'text-destructive')
+															}
+														>
+															{r.materialStock.sufficient
+																? `Còn ${r.materialStock.remaining}`
+																: `Thiếu ${Math.abs(r.materialStock.remaining)} (có ${r.materialStock.current})`}
 														</p>
 													</div>
 												</div>
 											))}
 										</div>
 										{!preview.sufficient ? (
-											<p className='text-xs font-medium text-destructive'>⚠ Không đủ nguyên liệu! Vui lòng nhập kho nguyên liệu trước.</p>
+											<p className='text-xs font-medium text-destructive'>
+												⚠ Không đủ nguyên liệu! Vui lòng nhập kho nguyên liệu trước.
+											</p>
 										) : null}
 									</div>
 								) : product.custom && previewLoading ? (
@@ -767,7 +869,7 @@ function ProductDetailContent({
 							<label className='text-xs font-medium text-muted-foreground'>Ghi chú (tùy chọn)</label>
 							<Input
 								value={receiveNote}
-								onChange={(e) => setReceiveNote(e.target.value)}
+								onChange={e => setReceiveNote(e.target.value)}
 								placeholder='Nhập kho lần 1'
 								disabled={receiveBusy}
 							/>
@@ -790,15 +892,13 @@ function ProductDetailContent({
 				</AlertDialogContent>
 			</AlertDialog>
 
-
-
 			<AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>Xóa sản phẩm này?</AlertDialogTitle>
 						<AlertDialogDescription>
-							Hành động này không thể hoàn tác. Sản phẩm <strong>{product.name}</strong> sẽ bị xóa khỏi
-							hệ thống.
+							Hành động này không thể hoàn tác. Sản phẩm <strong>{product.name}</strong> sẽ bị xóa khỏi hệ
+							thống.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -819,24 +919,22 @@ function ProductDetailContent({
 
 function ImagesSection({ product, onChanged }: { product: AdminProductRow; onChanged: () => void }) {
 	const initial = React.useMemo<ProductImageEntry[]>(() => {
-		const urls = (product.images?.length ? product.images : [product.image])
-			.map((u) => u.trim())
-			.filter(Boolean);
-		return urls.map((url) => ({ id: generateId(), url }));
+		const urls = (product.images?.length ? product.images : [product.image]).map(u => u.trim()).filter(Boolean);
+		return urls.map(url => ({ id: generateId(), url }));
 	}, [product.images, product.image]);
 
 	const [media, setMedia] = React.useState<ProductImageEntry[]>(initial);
 	const [busy, setBusy] = React.useState(false);
 
 	const dirty = React.useMemo(() => {
-		const a = media.map((m) => m.url.trim()).filter(Boolean);
-		const b = initial.map((m) => m.url.trim()).filter(Boolean);
+		const a = media.map(m => m.url.trim()).filter(Boolean);
+		const b = initial.map(m => m.url.trim()).filter(Boolean);
 		if (a.length !== b.length) return true;
 		return a.some((u, i) => u !== b[i]);
 	}, [media, initial]);
 
 	async function save() {
-		const urls = media.map((m) => m.url.trim()).filter(Boolean);
+		const urls = media.map(m => m.url.trim()).filter(Boolean);
 		if (urls.length === 0) {
 			toast.error('Cần ít nhất một ảnh');
 			return;
@@ -864,7 +962,15 @@ function ImagesSection({ product, onChanged }: { product: AdminProductRow; onCha
 				action={
 					dirty ? (
 						<div className='flex gap-1.5'>
-							<Button type='button' variant='ghost' size='sm' onClick={() => setMedia(initial)} disabled={busy}>Hủy</Button>
+							<Button
+								type='button'
+								variant='ghost'
+								size='sm'
+								onClick={() => setMedia(initial)}
+								disabled={busy}
+							>
+								Hủy
+							</Button>
 							<Button type='button' size='sm' onClick={() => void save()} disabled={busy}>
 								{busy ? 'Đang lưu...' : 'Lưu thay đổi'}
 							</Button>
@@ -893,7 +999,10 @@ function CategorySection({ product, onChanged }: { product: AdminProductRow; onC
 	/** Giữ nguyên thứ tự link từ API (index 0 = danh m?c chọnh). */
 	const linkedIds = React.useMemo(() => ((product.categories ?? []) as any[]).map(c => c.id), [product.categories]);
 	const linkedRows = React.useMemo(
-		() => linkedIds.map(id => categories.find(c => c.id === id)).filter((c): c is AdminProductCategoryRow => Boolean(c)),
+		() =>
+			linkedIds
+				.map(id => categories.find(c => c.id === id))
+				.filter((c): c is AdminProductCategoryRow => Boolean(c)),
 		[linkedIds, categories]
 	);
 
@@ -953,7 +1062,9 @@ function CategorySection({ product, onChanged }: { product: AdminProductRow; onC
 							{linkedRows.map((cat, index) => (
 								<li key={cat.id} className='flex items-center gap-2'>
 									<div className='min-w-0'>
-										<p className='truncate text-sm font-medium'>{categoryBreadcrumb(cat, categories)}</p>
+										<p className='truncate text-sm font-medium'>
+											{categoryBreadcrumb(cat, categories)}
+										</p>
 										<p className='font-mono text-xs text-muted-foreground' translate='no'>
 											{cat.slug}
 										</p>
@@ -1012,7 +1123,12 @@ function CategorySection({ product, onChanged }: { product: AdminProductRow; onC
 						>
 							Hủy
 						</Button>
-						<Button type='button' size='sm' onClick={() => void save()} disabled={busy || draftIds.length === 0}>
+						<Button
+							type='button'
+							size='sm'
+							onClick={() => void save()}
+							disabled={busy || draftIds.length === 0}
+						>
 							{busy ? 'Đang lưu...' : 'Lưu'}
 						</Button>
 					</div>
@@ -1046,7 +1162,9 @@ function variantsToDrafts(variants: AdminProductRow['variants']): VariantDraft[]
 	}));
 }
 
-function draftsToInputs(drafts: VariantDraft[]): { ok: true; inputs: AdminProductVariantInput[] } | { ok: false; error: string } {
+function draftsToInputs(
+	drafts: VariantDraft[]
+): { ok: true; inputs: AdminProductVariantInput[] } | { ok: false; error: string } {
 	const inputs: AdminProductVariantInput[] = [];
 	for (let index = 0; index < drafts.length; index += 1) {
 		const draft = drafts[index];
@@ -1092,7 +1210,7 @@ function VariantsSection({ product, onChanged }: { product: AdminProductRow; onC
 	}, [drafts, initial]);
 
 	function addDraft() {
-		setDrafts((prev) => [
+		setDrafts(prev => [
 			...prev,
 			{
 				rowId: generateId(),
@@ -1107,11 +1225,11 @@ function VariantsSection({ product, onChanged }: { product: AdminProductRow; onC
 	}
 
 	function updateDraft(rowId: string, patch: Partial<VariantDraft>) {
-		setDrafts((prev) => prev.map((draft) => (draft.rowId === rowId ? { ...draft, ...patch } : draft)));
+		setDrafts(prev => prev.map(draft => (draft.rowId === rowId ? { ...draft, ...patch } : draft)));
 	}
 
 	function removeDraft(rowId: string) {
-		setDrafts((prev) => prev.filter((draft) => draft.rowId !== rowId));
+		setDrafts(prev => prev.filter(draft => draft.rowId !== rowId));
 	}
 
 	async function save() {
@@ -1140,7 +1258,13 @@ function VariantsSection({ product, onChanged }: { product: AdminProductRow; onC
 				action={
 					<div className='flex items-center gap-1.5'>
 						{dirty ? (
-							<Button type='button' variant='ghost' size='sm' onClick={() => setDrafts(initial)} disabled={busy}>
+							<Button
+								type='button'
+								variant='ghost'
+								size='sm'
+								onClick={() => setDrafts(initial)}
+								disabled={busy}
+							>
 								Hủy
 							</Button>
 						) : null}
@@ -1180,16 +1304,17 @@ function VariantsSection({ product, onChanged }: { product: AdminProductRow; onC
 								{drafts.map((draft, index) => {
 									const variantSource = product.variants?.find(v => v.id === draft.id);
 									return (
-									<VariantTableRow
-										key={draft.rowId}
-										index={index}
-										draft={draft}
-										busy={busy}
-										fallbackImage={product.image}
-										stockQuantity={variantSource?.stockQuantity}
-										onChange={(patch) => updateDraft(draft.rowId, patch)}
-										onRemove={() => removeDraft(draft.rowId)}
-									/>);
+										<VariantTableRow
+											key={draft.rowId}
+											index={index}
+											draft={draft}
+											busy={busy}
+											fallbackImage={product.image}
+											stockQuantity={variantSource?.stockQuantity}
+											onChange={patch => updateDraft(draft.rowId, patch)}
+											onRemove={() => removeDraft(draft.rowId)}
+										/>
+									);
 								})}
 							</tbody>
 						</table>
@@ -1247,38 +1372,97 @@ function VariantTableRow({
 						className='group relative block size-10 shrink-0 overflow-hidden rounded-md border border-border bg-muted transition hover:border-foreground/40 disabled:cursor-not-allowed disabled:opacity-60'
 					>
 						{previewUrl ? (
-							<img src={publicAssetUrl(previewUrl)} alt='' className='size-full object-cover' loading='lazy' />
+							<img
+								src={publicAssetUrl(previewUrl)}
+								alt=''
+								className='size-full object-cover'
+								loading='lazy'
+							/>
 						) : (
-							<span className='flex size-full items-center justify-center text-[10px] text-muted-foreground'>?</span>
+							<span className='flex size-full items-center justify-center text-[10px] text-muted-foreground'>
+								?
+							</span>
 						)}
 					</button>
-					<input ref={inputRef} type='file' accept='image/*' className='hidden' onChange={(e) => { const f = e.target.files?.[0]; if (f) void handlePick(f); }} />
+					<input
+						ref={inputRef}
+						type='file'
+						accept='image/*'
+						className='hidden'
+						onChange={e => {
+							const f = e.target.files?.[0];
+							if (f) void handlePick(f);
+						}}
+					/>
 					{!usingFallback ? (
-						<button type='button' onClick={() => onChange({ image: '' })} disabled={busy} className='text-[10px] text-muted-foreground underline-offset-2 hover:underline disabled:opacity-60'>
+						<button
+							type='button'
+							onClick={() => onChange({ image: '' })}
+							disabled={busy}
+							className='text-[10px] text-muted-foreground underline-offset-2 hover:underline disabled:opacity-60'
+						>
 							Xóa ảnh
 						</button>
 					) : null}
 				</div>
 			</td>
 			<td className='p-2'>
-				<Input value={draft.name} onChange={(e) => onChange({ name: e.target.value })} placeholder='VD: Size M' disabled={busy} className='h-8 text-xs' />
+				<Input
+					value={draft.name}
+					onChange={e => onChange({ name: e.target.value })}
+					placeholder='VD: Size M'
+					disabled={busy}
+					className='h-8 text-xs'
+				/>
 			</td>
 			<td className='p-2'>
-				<Input value={draft.color} onChange={(e) => onChange({ color: e.target.value })} placeholder='VD: Hồng' disabled={busy} className='h-8 text-xs' />
+				<Input
+					value={draft.color}
+					onChange={e => onChange({ color: e.target.value })}
+					placeholder='VD: Hồng'
+					disabled={busy}
+					className='h-8 text-xs'
+				/>
 			</td>
 			<td className='p-2'>
-				<Input value={draft.colorHex} onChange={(e) => onChange({ colorHex: e.target.value })} placeholder='#f8c1cf' disabled={busy} className='h-8 text-xs font-mono' />
+				<Input
+					value={draft.colorHex}
+					onChange={e => onChange({ colorHex: e.target.value })}
+					placeholder='#f8c1cf'
+					disabled={busy}
+					className='h-8 text-xs font-mono'
+				/>
 			</td>
 			<td className='p-2'>
-				<Input inputMode='numeric' pattern='[0-9]*' value={draft.priceVnd} onChange={(e) => onChange({ priceVnd: e.target.value.replace(/[^0-9]/g, '') })} placeholder='0' disabled={busy} className='h-8 text-xs' />
+				<Input
+					inputMode='numeric'
+					pattern='[0-9]*'
+					value={draft.priceVnd}
+					onChange={e => onChange({ priceVnd: e.target.value.replace(/[^0-9]/g, '') })}
+					placeholder='0'
+					disabled={busy}
+					className='h-8 text-xs'
+				/>
 			</td>
 			<td className='p-2 tabular-nums text-xs'>
 				{stockQuantity !== undefined ? (
-					<Badge variant={stockQuantity === 0 ? 'destructive' : stockQuantity <= 5 ? 'warning' : 'success'}>{stockQuantity}</Badge>
-				) : '—'}
+					<Badge variant={stockQuantity === 0 ? 'destructive' : stockQuantity <= 5 ? 'warning' : 'success'}>
+						{stockQuantity}
+					</Badge>
+				) : (
+					'—'
+				)}
 			</td>
 			<td className='p-2 pr-3 text-right'>
-				<Button type='button' variant='ghost' size='icon' className='size-7 text-destructive hover:bg-destructive/10' onClick={onRemove} disabled={busy} aria-label='Xóa biến thể'>
+				<Button
+					type='button'
+					variant='ghost'
+					size='icon'
+					className='size-7 text-destructive hover:bg-destructive/10'
+					onClick={onRemove}
+					disabled={busy}
+					aria-label='Xóa biến thể'
+				>
 					<Trash2Icon className='size-3.5' />
 				</Button>
 			</td>

@@ -1,6 +1,6 @@
 export const NAV_LINKS = [
-  { href: '/', label: 'Trang chủ' },
-  { href: '/products', label: 'Sản phẩm' },
+	{ href: '/', label: 'Trang chủ' },
+	{ href: '/products', label: 'Sản phẩm' },
 ];
 
 export const SITE_NAME = 'e-conomic';

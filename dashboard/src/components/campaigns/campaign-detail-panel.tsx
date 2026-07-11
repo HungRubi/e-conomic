@@ -92,13 +92,7 @@ export function CampaignDetailPanel() {
 	return <DetailContent campaign={data} onChanged={() => void refetch()} />;
 }
 
-function DetailContent({
-	campaign,
-	onChanged,
-}: {
-	campaign: AdminCampaignRow;
-	onChanged: () => void;
-}) {
+function DetailContent({ campaign, onChanged }: { campaign: AdminCampaignRow; onChanged: () => void }) {
 	const navigate = useNavigate();
 	const crud = useEntityCrud('campaigns');
 
@@ -155,7 +149,12 @@ function DetailContent({
 				<div className='flex items-start justify-between gap-4'>
 					<div className='min-w-0 flex-1'>
 						<div className='flex items-center gap-1'>
-							<h1 className='min-w-0 flex-1 truncate text-lg font-semibold tracking-tight' title={campaign.title}>{campaign.title}</h1>
+							<h1
+								className='min-w-0 flex-1 truncate text-lg font-semibold tracking-tight'
+								title={campaign.title}
+							>
+								{campaign.title}
+							</h1>
 						</div>
 						<div className='mt-1 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-muted-foreground tabular-nums'>
 							<span className='inline-flex items-center gap-1 font-mono' translate='no'>
@@ -382,7 +381,9 @@ function BannerSection({
 			<SectionHeading icon={ImageIcon} title='Banner chiến dịch' />
 			<div className='mt-3'>
 				<SingleImageUrlDropzone
-					label={campaign.bannerImageUrl ? 'Kéo thả hoặc bấm để thay banner' : 'Kéo thả hoặc bấm để chọn banner'}
+					label={
+						campaign.bannerImageUrl ? 'Kéo thả hoặc bấm để thay banner' : 'Kéo thả hoặc bấm để chọn banner'
+					}
 					hint='JPEG, PNG, WebP'
 					url={campaign.bannerImageUrl ?? ''}
 					disabled={busy || !canUpdate}

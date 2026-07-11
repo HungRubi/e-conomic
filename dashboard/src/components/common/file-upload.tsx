@@ -105,7 +105,12 @@ export function FileUpload({
 				{previewSrc ? (
 					<>
 						<div className='bg-muted relative w-full max-w-sm overflow-hidden rounded-md border'>
-							<img src={previewSrc} alt='' className='mx-auto max-h-40 w-full object-contain' loading='lazy' />
+							<img
+								src={previewSrc}
+								alt=''
+								className='mx-auto max-h-40 w-full object-contain'
+								loading='lazy'
+							/>
 						</div>
 						<div className='text-muted-foreground flex flex-col items-center gap-1 text-center'>
 							<span className='text-sm font-medium text-foreground'>{label}</span>
@@ -119,7 +124,9 @@ export function FileUpload({
 							<span className='text-sm font-medium'>{label}</span>
 						</div>
 						{hint ? (
-							<span className='text-muted-foreground max-w-md text-center text-xs leading-relaxed'>{hint}</span>
+							<span className='text-muted-foreground max-w-md text-center text-xs leading-relaxed'>
+								{hint}
+							</span>
 						) : null}
 					</>
 				)}

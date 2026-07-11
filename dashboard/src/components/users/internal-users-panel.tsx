@@ -37,7 +37,15 @@ import { useEntityCrud } from '@/hooks/use-permission';
 import { type FieldErrorMap, scrollToFirstFieldError, stripFieldError } from '@/lib/form-field-ui';
 import { PASSWORD_MIN_LENGTH } from '@/lib/password-policy';
 import { cn } from '@/lib/utils';
-import { GripVerticalIcon, ArrowUpRight, ChevronLeftIcon, ChevronRightIcon, EllipsisVerticalIcon, PlusIcon, Trash2 } from 'lucide-react';
+import {
+	GripVerticalIcon,
+	ArrowUpRight,
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	EllipsisVerticalIcon,
+	PlusIcon,
+	Trash2,
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
@@ -155,15 +163,12 @@ export function InternalUsersPanel() {
 
 	const pageCount = Math.max(1, Math.ceil(total / pageSize));
 
-
 	return (
 		<div className='dashboard-fade-in flex min-h-0 flex-1 flex-col gap-4'>
 			<div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
 				<div>
 					<h1 className='text-lg font-semibold tracking-tight'>Tài khoản nội bộ</h1>
-					<p className='text-muted-foreground text-sm'>
-						Click một dòng để mở chi tiết và chỉnh sửa.
-					</p>
+					<p className='text-muted-foreground text-sm'>Click một dòng để mở chi tiết và chỉnh sửa.</p>
 				</div>
 				{crud.canCreate ? (
 					<Button type='button' size='sm' className='gap-1.5' onClick={openCreate}>
@@ -369,9 +374,7 @@ export function InternalUsersPanel() {
 				<SheetContent className='flex flex-col gap-0 p-0 sm:max-w-137'>
 					<SheetHeader className='border-b px-6 py-5 pr-16'>
 						<SheetTitle>Tài khoản mới</SheetTitle>
-						<SheetDescription>
-							Mật khẩu tối thiểu {PASSWORD_MIN_LENGTH} ký tự (theo API).
-						</SheetDescription>
+						<SheetDescription>Mật khẩu tối thiểu {PASSWORD_MIN_LENGTH} ký tự (theo API).</SheetDescription>
 					</SheetHeader>
 					<FieldGroup className='flex-1 overflow-y-auto px-6 py-5'>
 						{formError ? (

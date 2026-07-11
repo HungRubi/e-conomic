@@ -1,6 +1,18 @@
 import { PartialType } from '@nestjs/swagger';
-import { CategoryDisplayType, CategoryStatus, AttributeType } from '@prisma/client';
-import { IsArray, IsBoolean, IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
+import {
+  CategoryDisplayType,
+  CategoryStatus,
+  AttributeType,
+} from '@prisma/client';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class CreateCategoryDto {
   @IsString() name!: string;

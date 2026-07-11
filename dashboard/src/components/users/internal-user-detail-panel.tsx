@@ -33,14 +33,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import {
-	Sheet,
-	SheetContent,
-	SheetDescription,
-	SheetFooter,
-	SheetHeader,
-	SheetTitle,
-} from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ROLE_LABEL, fmtUserDate } from '@/components/users/user-table-shared';
 import { useEntityCrud } from '@/hooks/use-permission';
@@ -377,8 +370,7 @@ function PasswordSheet({
 				<SheetHeader className='border-b px-6 py-5 pr-16'>
 					<SheetTitle>Đổi mật khẩu</SheetTitle>
 					<SheetDescription>
-						đặt mật khẩu mới cho{' '}
-						<span className='font-medium text-foreground'>{userEmail}</span>. Tối thiểu{' '}
+						đặt mật khẩu mới cho <span className='font-medium text-foreground'>{userEmail}</span>. Tối thiểu{' '}
 						{PASSWORD_MIN_LENGTH} ký tự.
 					</SheetDescription>
 				</SheetHeader>

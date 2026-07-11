@@ -31,13 +31,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from '@/lib/utils';
 
@@ -76,12 +70,7 @@ function statusButtonIcon(target: OrderStatus) {
 
 function SectionLabel({ children, className }: { children: React.ReactNode; className?: string }) {
 	return (
-		<p
-			className={cn(
-				'text-[11px] font-medium uppercase tracking-wider text-muted-foreground',
-				className
-			)}
-		>
+		<p className={cn('text-[11px] font-medium uppercase tracking-wider text-muted-foreground', className)}>
 			{children}
 		</p>
 	);
@@ -99,7 +88,7 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 
 	const mutation = useMutation({
 		mutationFn: (body: UpdateOrderParams) => updateOrder(order.id, body),
-		onSuccess: (next) => {
+		onSuccess: next => {
 			queryClient.setQueryData<OrderRow>(['admin-order', order.id], next);
 			void queryClient.invalidateQueries({ queryKey: ['admin-orders'] });
 		},
@@ -123,7 +112,7 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 					setPendingTransition(null);
 					setTransitionNote('');
 				},
-				onError: (e) => toast.error(e instanceof AuthApiError ? e.message : 'Cập nhật thất bại'),
+				onError: e => toast.error(e instanceof AuthApiError ? e.message : 'Cập nhật thất bại'),
 			}
 		);
 	}
@@ -134,7 +123,7 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 			{ paymentStatus },
 			{
 				onSuccess: () => toast.success('đã cập nhật thanh toán'),
-				onError: (e) => toast.error(e instanceof AuthApiError ? e.message : 'Cập nhật thất bại'),
+				onError: e => toast.error(e instanceof AuthApiError ? e.message : 'Cập nhật thất bại'),
 			}
 		);
 	}
@@ -146,7 +135,7 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 		if (Object.keys(body).length === 0) return;
 		mutation.mutate(body, {
 			onSuccess: () => toast.success('đã lưu thông tin vận chuyển'),
-			onError: (e) => toast.error(e instanceof AuthApiError ? e.message : 'Lưu thất bại'),
+			onError: e => toast.error(e instanceof AuthApiError ? e.message : 'Lưu thất bại'),
 		});
 	}
 
@@ -156,14 +145,13 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 			{ adminNote },
 			{
 				onSuccess: () => toast.success('đã lưu ghi chú'),
-				onError: (e) => toast.error(e instanceof AuthApiError ? e.message : 'Lưu thất bại'),
+				onError: e => toast.error(e instanceof AuthApiError ? e.message : 'Lưu thất bại'),
 			}
 		);
 	}
 
 	const isShippingStage = order.status === 'PROCESSING' || order.status === 'SHIPPED';
-	const trackingDirty =
-		tracking !== (order.trackingNumber ?? '') || provider !== (order.shippingProvider ?? '');
+	const trackingDirty = tracking !== (order.trackingNumber ?? '') || provider !== (order.shippingProvider ?? '');
 	const adminNoteDirty = adminNote !== (order.adminNote ?? '');
 	const paymentDirty = paymentStatus !== order.paymentStatus;
 	const terminal = isOrderTerminal(order.status);
@@ -231,14 +219,14 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 				<div className='flex gap-2'>
 					<Select
 						value={paymentStatus}
-						onValueChange={(v) => setPaymentStatus(v as PaymentStatus)}
+						onValueChange={v => setPaymentStatus(v as PaymentStatus)}
 						disabled={mutation.isPending}
 					>
 						<SelectTrigger id='payment-status' className='flex-1'>
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
-							{ALL_PAYMENT_STATUSES.map((s) => (
+							{ALL_PAYMENT_STATUSES.map(s => (
 								<SelectItem key={s} value={s}>
 									{PAYMENT_STATUS_LABEL[s]}
 								</SelectItem>
@@ -280,7 +268,7 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 					<Input
 						id='order-tracking'
 						value={tracking}
-						onChange={(e) => setTracking(e.target.value)}
+						onChange={e => setTracking(e.target.value)}
 						placeholder='Mã vận đơn (VD: GHN12345678)'
 						disabled={mutation.isPending}
 						autoComplete='off'
@@ -289,7 +277,7 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 					<Input
 						id='order-provider'
 						value={provider}
-						onChange={(e) => setProvider(e.target.value)}
+						onChange={e => setProvider(e.target.value)}
 						placeholder='Đơn vị vận chuyển (VD: Giao Hàng Nhanh)'
 						disabled={mutation.isPending}
 						autoComplete='off'
@@ -326,7 +314,7 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 				</div>
 				<Textarea
 					value={adminNote}
-					onChange={(e) => setAdminNote(e.target.value)}
+					onChange={e => setAdminNote(e.target.value)}
 					rows={3}
 					disabled={mutation.isPending}
 					placeholder='Lưu ý xử lý đơn (không gửi tới khách)…'
@@ -347,7 +335,7 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 
 			<AlertDialog
 				open={pendingTransition !== null}
-				onOpenChange={(open) => {
+				onOpenChange={open => {
 					if (!open) {
 						setPendingTransition(null);
 						setTransitionNote('');
@@ -362,9 +350,12 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 						<AlertDialogDescription asChild>
 							<div className='space-y-3'>
 								<p>
-									Đơn{' '}
-									<span className='font-medium text-foreground'>{order.orderNumber}</span> sẽ chuyển từ{' '}
-									<span className='font-medium text-foreground'>{ORDER_STATUS_LABEL[order.status]}</span> sang{' '}
+									Đơn <span className='font-medium text-foreground'>{order.orderNumber}</span> sẽ
+									chuyển từ{' '}
+									<span className='font-medium text-foreground'>
+										{ORDER_STATUS_LABEL[order.status]}
+									</span>{' '}
+									sang{' '}
 									<span className='font-medium text-foreground'>
 										{pendingTransition ? ORDER_STATUS_LABEL[pendingTransition] : ''}
 									</span>
@@ -372,7 +363,8 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 								</p>
 								{pendingTransition === 'SHIPPED' && !tracking ? (
 									<p className='text-xs text-amber-600 dark:text-amber-400'>
-										Chưa có mã vận đơn. Bạn có thể tiếp tục, nhưng nên nhập ngay sau đó để khách tra cứu.
+										Chưa có mã vận đơn. Bạn có thể tiếp tục, nhưng nên nhập ngay sau đó để khách tra
+										cứu.
 									</p>
 								) : null}
 								{pendingTransition === 'CANCELLED' ? (
@@ -390,31 +382,65 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 											{order.paymentMethod === 'COD' ? (
 												<>
 													<p className='flex items-start gap-2'>
-														<CheckCircle2Icon className='mt-0.5 size-3.5 shrink-0 text-amber-500' aria-hidden />
+														<CheckCircle2Icon
+															className='mt-0.5 size-3.5 shrink-0 text-amber-500'
+															aria-hidden
+														/>
 														<span>
-															<strong className='font-semibold'>COD:</strong> Khách chưa thanh toán — bạn
-															<strong className='font-semibold'> không cần chuyển tiền</strong> cho khách.
-															Đơn vị vận chuyển đã thu tiền hộ và sẽ trả lại cho bạn.
+															<strong className='font-semibold'>COD:</strong> Khách chưa
+															thanh toán — bạn
+															<strong className='font-semibold'>
+																{' '}
+																không cần chuyển tiền
+															</strong>{' '}
+															cho khách. Đơn vị vận chuyển đã thu tiền hộ và sẽ trả lại
+															cho bạn.
 														</span>
 													</p>
 													<p className='flex items-start gap-2'>
-														<InfoIcon className='mt-0.5 size-3.5 shrink-0 text-amber-500' aria-hidden />
-														<span>Bước này chỉ <strong className='font-semibold'>cập nhật trạng thái đơn hàng</strong> trên hệ thống, không ảnh hưởng đến tiền bạc.</span>
+														<InfoIcon
+															className='mt-0.5 size-3.5 shrink-0 text-amber-500'
+															aria-hidden
+														/>
+														<span>
+															Bước này chỉ{' '}
+															<strong className='font-semibold'>
+																cập nhật trạng thái đơn hàng
+															</strong>{' '}
+															trên hệ thống, không ảnh hưởng đến tiền bạc.
+														</span>
 													</p>
 												</>
 											) : (
 												<>
 													<p className='flex items-start gap-2'>
-														<BanknoteIcon className='mt-0.5 size-3.5 shrink-0 text-amber-500' aria-hidden />
+														<BanknoteIcon
+															className='mt-0.5 size-3.5 shrink-0 text-amber-500'
+															aria-hidden
+														/>
 														<span>
-															<strong className='font-semibold'>BANKING:</strong> Khách đã thanh toán{' '}
-															<strong className='font-semibold'>{order.totalVnd.toLocaleString('vi-VN')}₫</strong>.
-															Bạn phải <strong className='font-semibold'>chuyển khoản lại</strong> cho khách trước khi xác nhận.
+															<strong className='font-semibold'>BANKING:</strong> Khách đã
+															thanh toán{' '}
+															<strong className='font-semibold'>
+																{order.totalVnd.toLocaleString('vi-VN')}₫
+															</strong>
+															. Bạn phải{' '}
+															<strong className='font-semibold'>chuyển khoản lại</strong>{' '}
+															cho khách trước khi xác nhận.
 														</span>
 													</p>
 													<p className='flex items-start gap-2'>
-														<AlertTriangleIcon className='mt-0.5 size-3.5 shrink-0 text-amber-500' aria-hidden />
-														<span>Chỉ bấm xác nhận khi <strong className='font-semibold'>đã chuyển tiền xong</strong>. Hành động này không thể hoàn tác.</span>
+														<AlertTriangleIcon
+															className='mt-0.5 size-3.5 shrink-0 text-amber-500'
+															aria-hidden
+														/>
+														<span>
+															Chỉ bấm xác nhận khi{' '}
+															<strong className='font-semibold'>
+																đã chuyển tiền xong
+															</strong>
+															. Hành động này không thể hoàn tác.
+														</span>
 													</p>
 												</>
 											)}
@@ -423,7 +449,7 @@ export function OrderStatusActions({ order }: OrderStatusActionsProps) {
 								) : null}
 								<Textarea
 									value={transitionNote}
-									onChange={(e) => setTransitionNote(e.target.value)}
+									onChange={e => setTransitionNote(e.target.value)}
 									rows={3}
 									placeholder='Ghi chú nội bộ (tuỳ chọn) — sẽ lưu vào lịch sử đơn'
 									aria-label='Ghi chú chuyển trạng thái'

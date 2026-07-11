@@ -1,60 +1,63 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@source "../node_modules/@medusajs/ui";
+@config "@medusajs/ui-preset";
+@import './medusa-tokens.css';
 
 /* ── Design tokens: Apple/Vercel — both themes ── */
 :root {
-  --bg: #fafbfc;
-  --surface: #ffffff;
-  --surface2: #f1f3f5;
-  --border: #dee2e6;
-  --text: #0d1117;
-  --text2: #656d76;
-  --accent: #0d1117;
-  --accent-glow: rgba(13, 17, 23, 0.12);
-  --green: #2da44e;
-  --orange: #bf8700;
-  --star: #f59e0b;
-  --red: #cf222e;
-  --purple: #8250df;
-  --teal: #1b7c83;
-  --radius: 14px;
-  --radius-sm: 8px;
+	--bg: #fafbfc;
+	--surface: #ffffff;
+	--surface2: #f1f3f5;
+	--border: #dee2e6;
+	--text: #0d1117;
+	--text2: #656d76;
+	--accent: #0d1117;
+	--accent-glow: rgba(13, 17, 23, 0.12);
+	--green: #2da44e;
+	--orange: #bf8700;
+	--star: #f59e0b;
+	--red: #cf222e;
+	--purple: #8250df;
+	--teal: #1b7c83;
+	--radius: 14px;
+	--radius-sm: 8px;
 }
 
 .dark {
-  --bg: #0d1117;
-  --surface: #161b22;
-  --surface2: #21262d;
-  --border: #30363d;
-  --text: #e6edf3;
-  --text2: #8b949e;
-  --accent: #e6edf3;
-  --accent-glow: rgba(230, 237, 243, 0.12);
-  --green: #3fb950;
-  --orange: #d29922;
-  --star: #f5b81b;
-  --red: #f85149;
-  --purple: #bc8cff;
-  --teal: #56d4dd;
+	--bg: #0d1117;
+	--surface: #161b22;
+	--surface2: #21262d;
+	--border: #30363d;
+	--text: #e6edf3;
+	--text2: #8b949e;
+	--accent: #e6edf3;
+	--accent-glow: rgba(230, 237, 243, 0.12);
+	--green: #3fb950;
+	--orange: #d29922;
+	--star: #f5b81b;
+	--red: #f85149;
+	--purple: #bc8cff;
+	--teal: #56d4dd;
 }
 
 @theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-surface2: var(--surface2);
-  --color-border: var(--border);
-  --color-text: var(--text);
-  --color-text2: var(--text2);
-  --color-accent: var(--accent);
-  --color-green: var(--green);
-  --color-orange: var(--orange);
-  --color-star: var(--star);
-  --color-red: var(--red);
-  --color-purple: var(--purple);
-  --color-teal: var(--teal);
-  --radius-card: var(--radius);
-  --radius-btn: var(--radius-sm);
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+	--color-bg: var(--bg);
+	--color-surface: var(--surface);
+	--color-surface2: var(--surface2);
+	--color-border: var(--border);
+	--color-text: var(--text);
+	--color-text2: var(--text2);
+	--color-accent: var(--accent);
+	--color-green: var(--green);
+	--color-orange: var(--orange);
+	--color-star: var(--star);
+	--color-red: var(--red);
+	--color-purple: var(--purple);
+	--color-teal: var(--teal);
+	--radius-card: var(--radius);
+	--radius-btn: var(--radius-sm);
+	--font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	--font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
 }
 
 /* Smooth theme transition on key properties only */
@@ -66,7 +69,11 @@ section,
 div,
 span,
 p,
-h1, h2, h3, h4, h5,
+h1,
+h2,
+h3,
+h4,
+h5,
 a,
 button,
 input,
@@ -75,128 +82,136 @@ textarea,
 label,
 svg path,
 .card {
-  transition:
-    background-color 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+	transition:
+		background-color 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+		border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+		color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+		opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+		transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-  }
+	* {
+		scrollbar-width: thin;
+		scrollbar-color: var(--border) transparent;
+	}
 
-  html {
-    background: var(--bg);
-    overflow-y: scroll;
-    scrollbar-gutter: stable;
-  }
+	html {
+		background: var(--bg);
+		overflow-y: scroll;
+		scrollbar-gutter: stable;
+	}
 
-  body {
-    min-height: 100dvh;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+	body {
+		min-height: 100dvh;
+		background: var(--bg);
+		color: var(--text);
+		font-family: var(--font-sans);
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
 
-  ::selection {
-    background: var(--accent);
-    color: #fff;
-  }
+	::selection {
+		background: var(--accent);
+		color: #fff;
+	}
 
-  input, textarea, select {
-    background-color: var(--surface2);
-  }
+	input,
+	textarea,
+	select {
+		background-color: var(--surface2);
+	}
 }
 
 @layer components {
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  }
-  .card:hover {
-    border-color: var(--border);
-    box-shadow: 0 14px 40px var(--accent-glow);
-  }
+	.card {
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	}
+	.card:hover {
+		border-color: var(--border);
+		box-shadow: 0 14px 40px var(--accent-glow);
+	}
 
-  /* overrides for framer-motion elements that should not have CSS transitions */
-  .no-css-transition,
-  .no-css-transition * {
-    transition: none !important;
-  }
+	/* overrides for framer-motion elements that should not have CSS transitions */
+	.no-css-transition,
+	.no-css-transition * {
+		transition: none !important;
+	}
 
-  .skeleton {
-    background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
-    background-size: 200% 100%;
-    animation: skeleton-pulse 1.5s ease-in-out infinite;
-    border-radius: var(--radius-sm);
-  }
-  @keyframes skeleton-pulse {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
+	.skeleton {
+		background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
+		background-size: 200% 100%;
+		animation: skeleton-pulse 1.5s ease-in-out infinite;
+		border-radius: var(--radius-sm);
+	}
+	@keyframes skeleton-pulse {
+		0% {
+			background-position: 200% 0;
+		}
+		100% {
+			background-position: -200% 0;
+		}
+	}
 
-  .scrollbar-none {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .scrollbar-none::-webkit-scrollbar {
-    display: none;
-  }
+	.scrollbar-none {
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+	}
+	.scrollbar-none::-webkit-scrollbar {
+		display: none;
+	}
 
-  .scrollbar-hover {
-    scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
-    transition: scrollbar-color 0.25s ease;
-  }
-  .scrollbar-hover:hover {
-    scrollbar-color: var(--border) transparent;
-  }
-  .scrollbar-hover::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  .scrollbar-hover::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .scrollbar-hover::-webkit-scrollbar-thumb {
-    background: transparent;
-    border-radius: 3px;
-  }
-  .scrollbar-hover:hover::-webkit-scrollbar-thumb {
-    background: var(--border);
-  }
+	.scrollbar-hover {
+		scrollbar-width: thin;
+		scrollbar-color: transparent transparent;
+		transition: scrollbar-color 0.25s ease;
+	}
+	.scrollbar-hover:hover {
+		scrollbar-color: var(--border) transparent;
+	}
+	.scrollbar-hover::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+	}
+	.scrollbar-hover::-webkit-scrollbar-track {
+		background: transparent;
+	}
+	.scrollbar-hover::-webkit-scrollbar-thumb {
+		background: transparent;
+		border-radius: 3px;
+	}
+	.scrollbar-hover:hover::-webkit-scrollbar-thumb {
+		background: var(--border);
+	}
 
-  .product-card-image {
-    object-position: center center;
-    transform: scale(1);
-    transition:
-      opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-      filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-      object-position 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-  }
+	.product-card-image {
+		object-position: center center;
+		transform: scale(1);
+		transition:
+			opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+			filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+			transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+			object-position 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+	}
 
-  .product-card:hover .product-card-image {
-    object-position: center 46%;
-    transform: scale(1.05);
-  }
+	.product-card:hover .product-card-image {
+		object-position: center 46%;
+		transform: scale(1.05);
+	}
 
-  .product-image-sheen {
-    background: linear-gradient(110deg, transparent 0%, rgb(255 255 255 / 0.16) 36%, transparent 68%);
-    transform: translateX(-120%);
-    animation: product-image-sheen 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
+	.product-image-sheen {
+		background: linear-gradient(110deg, transparent 0%, rgb(255 255 255 / 0.16) 36%, transparent 68%);
+		transform: translateX(-120%);
+		animation: product-image-sheen 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	}
 
-  @keyframes product-image-sheen {
-    to { transform: translateX(120%); }
-  }
+	@keyframes product-image-sheen {
+		to {
+			transform: translateX(120%);
+		}
+	}
 }

@@ -12,13 +12,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
-import {
-	CircleUserRoundIcon,
-	EllipsisVerticalIcon,
-	KeyRoundIcon,
-	Loader2Icon,
-	LogOutIcon,
-} from 'lucide-react';
+import { CircleUserRoundIcon, EllipsisVerticalIcon, KeyRoundIcon, Loader2Icon, LogOutIcon } from 'lucide-react';
 
 export function NavUser({
 	user,
@@ -101,7 +95,7 @@ export function NavUser({
 						<DropdownMenuItem
 							className='gap-2.5 px-2.5 py-2'
 							disabled={loggingOut}
-							onSelect={(e) => {
+							onSelect={e => {
 								e.preventDefault();
 								void handleLogout();
 							}}

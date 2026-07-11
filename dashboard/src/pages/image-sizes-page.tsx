@@ -453,7 +453,7 @@ export default function ImageSizesPage() {
 							</tr>
 						</thead>
 						<tbody>
-							{IMAGE_LIST.map((img) => (
+							{IMAGE_LIST.map(img => (
 								<tr
 									key={img.location}
 									className='dashboard-row-enter border-b last:border-b-0 hover:bg-muted/20'
@@ -515,9 +515,7 @@ export default function ImageSizesPage() {
 					<li>
 						<strong>CSS bg</strong> — ảnh nền CSS <code>backgroundImage</code>
 					</li>
-					<li>
-						Khuyến nghị upload 2× kích thước hiển thị cho ảnh cần Retina (logo, thumb nhỏ)
-					</li>
+					<li>Khuyến nghị upload 2× kích thước hiển thị cho ảnh cần Retina (logo, thumb nhỏ)</li>
 				</ul>
 			</div>
 		</div>

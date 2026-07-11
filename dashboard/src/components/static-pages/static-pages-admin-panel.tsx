@@ -67,7 +67,8 @@ import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
 	EllipsisVerticalIcon,
-	GripVerticalIcon,	PlusIcon,
+	GripVerticalIcon,
+	PlusIcon,
 	Send,
 	Trash2,
 } from 'lucide-react';
@@ -424,7 +425,7 @@ export function StaticPagesAdminPanel() {
 							<SelectValue />
 						</SelectTrigger>
 						<SelectContent>
-												<SelectItem value='vi'>Tiếng Việt</SelectItem>
+							<SelectItem value='vi'>Tiếng Việt</SelectItem>
 							<SelectItem value='en'>English</SelectItem>
 						</SelectContent>
 					</Select>
@@ -480,7 +481,9 @@ export function StaticPagesAdminPanel() {
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead className='w-10'><span className='sr-only'>Kéo</span></TableHead>
+							<TableHead className='w-10'>
+								<span className='sr-only'>Kéo</span>
+							</TableHead>
 							<TableHead>Trang</TableHead>
 							<TableHead className='w-24'>Ngôn ngữ</TableHead>
 							<TableHead className='w-32'>Trạng thái</TableHead>
@@ -538,7 +541,13 @@ export function StaticPagesAdminPanel() {
 									<TableCell className='text-right' onClick={e => e.stopPropagation()}>
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
-												<Button type='button' variant='ghost' size='icon' className='size-8 text-muted-foreground' aria-label='Thao tác'>
+												<Button
+													type='button'
+													variant='ghost'
+													size='icon'
+													className='size-8 text-muted-foreground'
+													aria-label='Thao tác'
+												>
 													<EllipsisVerticalIcon className='size-4' />
 												</Button>
 											</DropdownMenuTrigger>
@@ -557,7 +566,11 @@ export function StaticPagesAdminPanel() {
 																	toast.success('đã xuất bản');
 																	void refetch({ silent: true });
 																} catch (e) {
-																	toast.error(e instanceof AuthApiError ? e.message : 'Thất bại');
+																	toast.error(
+																		e instanceof AuthApiError
+																			? e.message
+																			: 'Thất bại'
+																	);
 																}
 															}}
 														>
@@ -572,7 +585,11 @@ export function StaticPagesAdminPanel() {
 																	toast.success('đã lưu trữ');
 																	void refetch({ silent: true });
 																} catch (e) {
-																	toast.error(e instanceof AuthApiError ? e.message : 'Thất bại');
+																	toast.error(
+																		e instanceof AuthApiError
+																			? e.message
+																			: 'Thất bại'
+																	);
 																}
 															}}
 														>
@@ -584,7 +601,10 @@ export function StaticPagesAdminPanel() {
 												{crud.canDelete && !['home', 'about'].includes(row.slug) ? (
 													<>
 														<DropdownMenuSeparator />
-														<DropdownMenuItem variant='destructive' onClick={() => setDeleteTarget(row)}>
+														<DropdownMenuItem
+															variant='destructive'
+															onClick={() => setDeleteTarget(row)}
+														>
 															<Trash2 className='size-4' />
 															Xóa
 														</DropdownMenuItem>
@@ -605,13 +625,27 @@ export function StaticPagesAdminPanel() {
 					Hiển thị {total === 0 ? 0 : page * pageSize + 1}–{Math.min((page + 1) * pageSize, total)} / {total}
 				</span>
 				<div className='flex items-center gap-2'>
-					<Button type='button' variant='outline' size='icon' className='size-8' disabled={page <= 0} onClick={() => setPage(p => Math.max(0, p - 1))}>
+					<Button
+						type='button'
+						variant='outline'
+						size='icon'
+						className='size-8'
+						disabled={page <= 0}
+						onClick={() => setPage(p => Math.max(0, p - 1))}
+					>
 						<ChevronLeftIcon className='size-4' />
 					</Button>
 					<span>
 						Trang {page + 1} / {pageCount}
 					</span>
-					<Button type='button' variant='outline' size='icon' className='size-8' disabled={page + 1 >= pageCount} onClick={() => setPage(p => p + 1)}>
+					<Button
+						type='button'
+						variant='outline'
+						size='icon'
+						className='size-8'
+						disabled={page + 1 >= pageCount}
+						onClick={() => setPage(p => p + 1)}
+					>
 						<ChevronRightIcon className='size-4' />
 					</Button>
 				</div>
@@ -622,19 +656,25 @@ export function StaticPagesAdminPanel() {
 					<DrawerHeader className='shrink-0 border-b px-6 py-5 pr-16 text-left'>
 						<DrawerTitle>Trang tĩnh mới</DrawerTitle>
 						<DrawerDescription className='mt-1.5 max-w-2xl'>
-							Trang <span className='font-mono'>about</span> có form trực quan (hero và từng phiên). Các slug khác vẫn dùng JSON cho chính sách. Sau khi tạo bạn có thể mở chi tiết để chỉnh sửa từng trường inline.
+							Trang <span className='font-mono'>about</span> có form trực quan (hero và từng phiên). Các
+							slug khác vẫn dùng JSON cho chính sách. Sau khi tạo bạn có thể mở chi tiết để chỉnh sửa từng
+							trường inline.
 						</DrawerDescription>
 					</DrawerHeader>
 
 					<div className='min-h-0 flex-1 overflow-y-auto'>
 						<div className='mx-auto w-full max-w-6xl px-6 py-6 pb-8'>
 							{formError ? (
-								<p className='text-destructive bg-destructive/10 mb-6 rounded-md px-3 py-2 text-sm'>{formError}</p>
+								<p className='text-destructive bg-destructive/10 mb-6 rounded-md px-3 py-2 text-sm'>
+									{formError}
+								</p>
 							) : null}
 
 							<FieldGroup className='flex flex-col gap-8'>
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Nhận diện</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Nhận diện
+									</p>
 									<div className='grid gap-4 lg:grid-cols-3'>
 										<Field>
 											<FieldLabel htmlFor='sp-slug'>Slug</FieldLabel>
@@ -648,43 +688,89 @@ export function StaticPagesAdminPanel() {
 										</Field>
 										<Field>
 											<FieldLabel htmlFor='sp-language'>Ngôn ngữ</FieldLabel>
-											<Input id='sp-language' className='mt-1.5 font-mono text-sm' value={formLanguage} onChange={e => setFormLanguage(e.target.value)} disabled={formDisabled} />
+											<Input
+												id='sp-language'
+												className='mt-1.5 font-mono text-sm'
+												value={formLanguage}
+												onChange={e => setFormLanguage(e.target.value)}
+												disabled={formDisabled}
+											/>
 										</Field>
 										<Field>
 											<FieldLabel htmlFor='sp-sort'>Thứ tự</FieldLabel>
-											<Input id='sp-sort' className='mt-1.5' inputMode='numeric' pattern='[0-9]*' value={formSortOrder} onChange={e => setFormSortOrder(digitsOnly(e.target.value))} disabled={formDisabled} />
+											<Input
+												id='sp-sort'
+												className='mt-1.5'
+												inputMode='numeric'
+												pattern='[0-9]*'
+												value={formSortOrder}
+												onChange={e => setFormSortOrder(digitsOnly(e.target.value))}
+												disabled={formDisabled}
+											/>
 										</Field>
 									</div>
 									<Field>
 										<FieldLabel htmlFor='sp-title'>Tiêu đề</FieldLabel>
-										<Input id='sp-title' className='mt-1.5' value={formTitle} onChange={e => setFormTitle(e.target.value)} disabled={formDisabled} />
+										<Input
+											id='sp-title'
+											className='mt-1.5'
+											value={formTitle}
+											onChange={e => setFormTitle(e.target.value)}
+											disabled={formDisabled}
+										/>
 									</Field>
 									<Field>
 										<FieldLabel htmlFor='sp-description'>Mô tả</FieldLabel>
-										<Textarea id='sp-description' className='mt-1.5 min-h-24' value={formDescription} onChange={e => setFormDescription(e.target.value)} disabled={formDisabled} rows={4} />
+										<Textarea
+											id='sp-description'
+											className='mt-1.5 min-h-24'
+											value={formDescription}
+											onChange={e => setFormDescription(e.target.value)}
+											disabled={formDisabled}
+											rows={4}
+										/>
 									</Field>
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>SEO</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										SEO
+									</p>
 									<Field>
 										<FieldLabel htmlFor='sp-seo-title'>SEO title</FieldLabel>
-										<Input id='sp-seo-title' className='mt-1.5' value={formSeoTitle} onChange={e => setFormSeoTitle(e.target.value)} disabled={formDisabled} />
+										<Input
+											id='sp-seo-title'
+											className='mt-1.5'
+											value={formSeoTitle}
+											onChange={e => setFormSeoTitle(e.target.value)}
+											disabled={formDisabled}
+										/>
 									</Field>
 									<Field>
 										<FieldLabel htmlFor='sp-seo-description'>SEO description</FieldLabel>
-										<Textarea id='sp-seo-description' className='mt-1.5 min-h-24' value={formSeoDescription} onChange={e => setFormSeoDescription(e.target.value)} disabled={formDisabled} rows={4} />
+										<Textarea
+											id='sp-seo-description'
+											className='mt-1.5 min-h-24'
+											value={formSeoDescription}
+											onChange={e => setFormSeoDescription(e.target.value)}
+											disabled={formDisabled}
+											rows={4}
+										/>
 									</Field>
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Ảnh (tuỳ chọn)</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Ảnh (tuỳ chọn)
+									</p>
 									<div className='grid gap-4 lg:grid-cols-3'>
 										<Field>
 											<FieldLabel>Ảnh banner (Desktop)</FieldLabel>
 											<div className='mt-1.5'>
 												<SingleImageUrlDropzone
-													label={formCoverImageUrl.trim() ? 'Thay ảnh banner' : 'Chọn ảnh banner'}
+													label={
+														formCoverImageUrl.trim() ? 'Thay ảnh banner' : 'Chọn ảnh banner'
+													}
 													hint='Desktop/tablet — 1920x1080 khuyến nghị'
 													url={formCoverImageUrl}
 													disabled={formDisabled}
@@ -697,7 +783,11 @@ export function StaticPagesAdminPanel() {
 											<FieldLabel>Ảnh banner (Mobile)</FieldLabel>
 											<div className='mt-1.5'>
 												<SingleImageUrlDropzone
-													label={formBannerImageMobileUrl.trim() ? 'Thay ảnh banner mobile' : 'Chọn ảnh banner mobile'}
+													label={
+														formBannerImageMobileUrl.trim()
+															? 'Thay ảnh banner mobile'
+															: 'Chọn ảnh banner mobile'
+													}
 													hint='Điện thoại — 1080x1920 khuyến nghị. Trống = dùng ảnh desktop.'
 													url={formBannerImageMobileUrl}
 													disabled={formDisabled}
@@ -728,10 +818,22 @@ export function StaticPagesAdminPanel() {
 											{isAboutSlug ? 'Nội dung trang About' : 'Content JSON'}
 										</p>
 										<div className='flex gap-2'>
-											<Button type='button' variant='outline' size='sm' onClick={() => applyTemplate('about')} disabled={formDisabled}>
+											<Button
+												type='button'
+												variant='outline'
+												size='sm'
+												onClick={() => applyTemplate('about')}
+												disabled={formDisabled}
+											>
 												Mẫu About
 											</Button>
-											<Button type='button' variant='outline' size='sm' onClick={() => applyTemplate('policy')} disabled={formDisabled}>
+											<Button
+												type='button'
+												variant='outline'
+												size='sm'
+												onClick={() => applyTemplate('policy')}
+												disabled={formDisabled}
+											>
 												Mẫu Policy
 											</Button>
 										</div>
@@ -742,7 +844,8 @@ export function StaticPagesAdminPanel() {
 											onValueChange={v => {
 												const next = v as 'visual' | 'json';
 												setAboutContentTab(next);
-												if (next === 'json') setFormContent(prettyJson(aboutDraft ?? defaultAboutPageContent()));
+												if (next === 'json')
+													setFormContent(prettyJson(aboutDraft ?? defaultAboutPageContent()));
 											}}
 										>
 											<TabsList>
@@ -760,7 +863,9 @@ export function StaticPagesAdminPanel() {
 											</TabsContent>
 											<TabsContent value='json' className='mt-4 flex flex-col gap-3'>
 												<Field>
-													<FieldLabel htmlFor='sp-content-about-json'>Chỉnh JSON thủ công</FieldLabel>
+													<FieldLabel htmlFor='sp-content-about-json'>
+														Chỉnh JSON thủ công
+													</FieldLabel>
 													<Textarea
 														id='sp-content-about-json'
 														className='mt-1.5 min-h-112 font-mono text-xs'
@@ -771,7 +876,14 @@ export function StaticPagesAdminPanel() {
 														spellCheck={false}
 													/>
 												</Field>
-												<Button type='button' variant='secondary' size='sm' className='w-fit' disabled={formDisabled} onClick={applyAboutJsonFromTextarea}>
+												<Button
+													type='button'
+													variant='secondary'
+													size='sm'
+													className='w-fit'
+													disabled={formDisabled}
+													onClick={applyAboutJsonFromTextarea}
+												>
 													Áp dụng JSON vào form trực quan
 												</Button>
 											</TabsContent>
@@ -779,16 +891,30 @@ export function StaticPagesAdminPanel() {
 									) : (
 										<Field>
 											<FieldLabel htmlFor='sp-content'>Nội dung (JSON)</FieldLabel>
-											<Textarea id='sp-content' className='mt-1.5 min-h-112 font-mono text-xs' value={formContent} onChange={e => setFormContent(e.target.value)} disabled={formDisabled} rows={20} spellCheck={false} />
+											<Textarea
+												id='sp-content'
+												className='mt-1.5 min-h-112 font-mono text-xs'
+												value={formContent}
+												onChange={e => setFormContent(e.target.value)}
+												disabled={formDisabled}
+												rows={20}
+												spellCheck={false}
+											/>
 										</Field>
 									)}
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Trạng thái</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Trạng thái
+									</p>
 									<Field>
 										<FieldLabel>Trạng thái</FieldLabel>
-										<Select value={formStatus} onValueChange={v => setFormStatus(v as AdminStaticPageRow['status'])} disabled={formDisabled}>
+										<Select
+											value={formStatus}
+											onValueChange={v => setFormStatus(v as AdminStaticPageRow['status'])}
+											disabled={formDisabled}
+										>
 											<SelectTrigger className='mt-1.5'>
 												<SelectValue />
 											</SelectTrigger>
@@ -806,7 +932,12 @@ export function StaticPagesAdminPanel() {
 
 					<DrawerFooter className='mt-auto shrink-0 border-t px-0 py-0'>
 						<div className='mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 py-4 sm:flex-row sm:justify-end'>
-							<Button type='button' variant='outline' onClick={() => setDrawerOpen(false)} disabled={formDisabled}>
+							<Button
+								type='button'
+								variant='outline'
+								onClick={() => setDrawerOpen(false)}
+								disabled={formDisabled}
+							>
 								Hủy
 							</Button>
 							<Button type='button' onClick={() => void submitForm()} disabled={formDisabled}>
@@ -817,12 +948,16 @@ export function StaticPagesAdminPanel() {
 				</DrawerPageContent>
 			</Drawer>
 
-			<AlertDialog open={Boolean(deleteTarget)} onOpenChange={open => !open && !deleteBusy && setDeleteTarget(null)}>
+			<AlertDialog
+				open={Boolean(deleteTarget)}
+				onOpenChange={open => !open && !deleteBusy && setDeleteTarget(null)}
+			>
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>Xóa trang tĩnh?</AlertDialogTitle>
 						<AlertDialogDescription>
-							<span className='font-medium text-foreground'>{deleteTarget?.title}</span> sẽ bị xóa vĩnh viễn.
+							<span className='font-medium text-foreground'>{deleteTarget?.title}</span> sẽ bị xóa vĩnh
+							viễn.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>

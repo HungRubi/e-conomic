@@ -63,7 +63,8 @@ import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
 	EllipsisVerticalIcon,
-	GripVerticalIcon,	PlusIcon,
+	GripVerticalIcon,
+	PlusIcon,
 	Send,
 	Trash2,
 	TrashIcon,
@@ -296,7 +297,9 @@ export function CustomerFeedbacksAdminPanel() {
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead className='w-10'><span className='sr-only'>Kéo</span></TableHead>
+							<TableHead className='w-10'>
+								<span className='sr-only'>Kéo</span>
+							</TableHead>
 							<TableHead>Tiêu đề</TableHead>
 							<TableHead className='hidden md:table-cell'>Khách hàng</TableHead>
 							<TableHead className='w-28'>Trạng thái</TableHead>
@@ -342,7 +345,9 @@ export function CustomerFeedbacksAdminPanel() {
 										) : null}
 									</TableCell>
 									<TableCell>
-										<Badge variant={CONTENT_STATUS_BADGE[row.status]}>{STATUS_LABEL[row.status]}</Badge>
+										<Badge variant={CONTENT_STATUS_BADGE[row.status]}>
+											{STATUS_LABEL[row.status]}
+										</Badge>
 									</TableCell>
 									<TableCell className='text-muted-foreground hidden text-sm lg:table-cell'>
 										{row.publishedAt ? fmtUserDate(row.publishedAt) : '—'}
@@ -378,7 +383,11 @@ export function CustomerFeedbacksAdminPanel() {
 																	toast.success('đã xuất bản');
 																	void refetch({ silent: true });
 																} catch (e) {
-																	toast.error(e instanceof AuthApiError ? e.message : 'Thất bại');
+																	toast.error(
+																		e instanceof AuthApiError
+																			? e.message
+																			: 'Thất bại'
+																	);
 																}
 															}}
 														>
@@ -393,7 +402,11 @@ export function CustomerFeedbacksAdminPanel() {
 																	toast.success('đã lưu trữ');
 																	void refetch({ silent: true });
 																} catch (e) {
-																	toast.error(e instanceof AuthApiError ? e.message : 'Thất bại');
+																	toast.error(
+																		e instanceof AuthApiError
+																			? e.message
+																			: 'Thất bại'
+																	);
 																}
 															}}
 														>
@@ -405,7 +418,10 @@ export function CustomerFeedbacksAdminPanel() {
 												{crud.canDelete ? (
 													<>
 														<DropdownMenuSeparator />
-														<DropdownMenuItem variant='destructive' onClick={() => setDeleteTarget(row)}>
+														<DropdownMenuItem
+															variant='destructive'
+															onClick={() => setDeleteTarget(row)}
+														>
 															<Trash2 className='size-4' />
 															Xóa
 														</DropdownMenuItem>
@@ -457,19 +473,24 @@ export function CustomerFeedbacksAdminPanel() {
 					<DrawerHeader className='shrink-0 border-b px-6 py-5 pr-16 text-left'>
 						<DrawerTitle>Phản hồi mới</DrawerTitle>
 						<DrawerDescription className='mt-1.5 max-w-2xl'>
-							Slug để trống sẽ tự sinh. Sau khi tạo bạn có thể mở chi tiết để chỉnh sửa từng trường inline.
+							Slug để trống sẽ tự sinh. Sau khi tạo bạn có thể mở chi tiết để chỉnh sửa từng trường
+							inline.
 						</DrawerDescription>
 					</DrawerHeader>
 
 					<div className='min-h-0 flex-1 overflow-y-auto'>
 						<div className='mx-auto w-full max-w-6xl px-6 py-6 pb-8'>
 							{formError ? (
-								<p className='text-destructive bg-destructive/10 mb-6 rounded-md px-3 py-2 text-sm'>{formError}</p>
+								<p className='text-destructive bg-destructive/10 mb-6 rounded-md px-3 py-2 text-sm'>
+									{formError}
+								</p>
 							) : null}
 
 							<FieldGroup className='flex flex-col gap-8'>
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Nhận diện</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Nhận diện
+									</p>
 									<div className='grid gap-4 lg:grid-cols-2'>
 										<Field>
 											<FieldLabel htmlFor='fb-title'>Tiêu đề</FieldLabel>
@@ -508,7 +529,9 @@ export function CustomerFeedbacksAdminPanel() {
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Khách hàng</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Khách hàng
+									</p>
 									<div className='grid gap-4 lg:grid-cols-2'>
 										<Field>
 											<FieldLabel htmlFor='fb-customer-name'>Tên khách hàng</FieldLabel>
@@ -546,7 +569,9 @@ export function CustomerFeedbacksAdminPanel() {
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Ảnh bìa</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Ảnh bìa
+									</p>
 									<Field>
 										<FieldLabel>Ảnh minh họa</FieldLabel>
 										<div className='mt-1.5'>
@@ -593,7 +618,9 @@ export function CustomerFeedbacksAdminPanel() {
 														className='size-7 text-muted-foreground'
 														onClick={() =>
 															setFormBullets(prev =>
-																prev.length === 1 ? prev : prev.filter(b => b.id !== bullet.id)
+																prev.length === 1
+																	? prev
+																	: prev.filter(b => b.id !== bullet.id)
 															)
 														}
 														disabled={formDisabled || formBullets.length === 1}
@@ -607,7 +634,9 @@ export function CustomerFeedbacksAdminPanel() {
 													value={bullet.title}
 													onChange={e =>
 														setFormBullets(prev =>
-															prev.map(b => (b.id === bullet.id ? { ...b, title: e.target.value } : b))
+															prev.map(b =>
+																b.id === bullet.id ? { ...b, title: e.target.value } : b
+															)
 														)
 													}
 													disabled={formDisabled}
@@ -617,7 +646,9 @@ export function CustomerFeedbacksAdminPanel() {
 													value={bullet.text}
 													onChange={e =>
 														setFormBullets(prev =>
-															prev.map(b => (b.id === bullet.id ? { ...b, text: e.target.value } : b))
+															prev.map(b =>
+																b.id === bullet.id ? { ...b, text: e.target.value } : b
+															)
 														)
 													}
 													disabled={formDisabled}
@@ -629,7 +660,9 @@ export function CustomerFeedbacksAdminPanel() {
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Hiển thị</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Hiển thị
+									</p>
 									<div className='grid gap-4 lg:grid-cols-2'>
 										<Field>
 											<FieldLabel htmlFor='fb-sort'>Thứ tự</FieldLabel>
@@ -647,7 +680,9 @@ export function CustomerFeedbacksAdminPanel() {
 											<FieldLabel>Trạng thái</FieldLabel>
 											<Select
 												value={formStatus}
-												onValueChange={v => setFormStatus(v as AdminCustomerFeedbackRow['status'])}
+												onValueChange={v =>
+													setFormStatus(v as AdminCustomerFeedbackRow['status'])
+												}
 												disabled={formDisabled}
 											>
 												<SelectTrigger className='mt-1.5'>
@@ -679,7 +714,12 @@ export function CustomerFeedbacksAdminPanel() {
 
 					<DrawerFooter className='mt-auto shrink-0 border-t px-0 py-0'>
 						<div className='mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 py-4 sm:flex-row sm:justify-end'>
-							<Button type='button' variant='outline' onClick={() => setCreateOpen(false)} disabled={formBusy}>
+							<Button
+								type='button'
+								variant='outline'
+								onClick={() => setCreateOpen(false)}
+								disabled={formBusy}
+							>
 								Hủy
 							</Button>
 							<Button type='button' onClick={() => void submitCreate()} disabled={formDisabled}>
@@ -690,12 +730,16 @@ export function CustomerFeedbacksAdminPanel() {
 				</DrawerPageContent>
 			</Drawer>
 
-			<AlertDialog open={Boolean(deleteTarget)} onOpenChange={open => !open && !deleteBusy && setDeleteTarget(null)}>
+			<AlertDialog
+				open={Boolean(deleteTarget)}
+				onOpenChange={open => !open && !deleteBusy && setDeleteTarget(null)}
+			>
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>Xóa phản hồi?</AlertDialogTitle>
 						<AlertDialogDescription>
-							<span className='font-medium text-foreground'>{deleteTarget?.title}</span> sẽ bị xóa vĩnh viễn.
+							<span className='font-medium text-foreground'>{deleteTarget?.title}</span> sẽ bị xóa vĩnh
+							viễn.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>

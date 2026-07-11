@@ -175,7 +175,11 @@ export function TwoFactorSection({ totpEnabled, backupCodesRemaining, onChanged 
 				<div className='flex-1'>
 					<div className='flex items-center gap-2'>
 						<p className='text-sm font-semibold'>Xác thực 2 bước (TOTP)</p>
-						{totpEnabled ? <Badge variant='success'>đã bật</Badge> : <Badge variant='muted'>Chưa bật</Badge>}
+						{totpEnabled ? (
+							<Badge variant='success'>đã bật</Badge>
+						) : (
+							<Badge variant='muted'>Chưa bật</Badge>
+						)}
 						{totpEnabled && typeof backupCodesRemaining === 'number' ? (
 							<Badge variant={backupCodesRemaining <= 3 ? 'warning' : 'info'}>
 								Còn {backupCodesRemaining} backup codes
@@ -205,7 +209,7 @@ export function TwoFactorSection({ totpEnabled, backupCodesRemaining, onChanged 
 				)}
 			</div>
 
-			<Dialog open={enrollOpen} onOpenChange={(open) => !open && closeEnrollDialog()}>
+			<Dialog open={enrollOpen} onOpenChange={open => !open && closeEnrollDialog()}>
 				<DialogContent className='sm:max-w-md'>
 					<DialogHeader>
 						<DialogTitle>{backupCodes ? 'Lưu lại 10 backup codes' : 'Bật xác thực 2 bước'}</DialogTitle>
@@ -218,7 +222,7 @@ export function TwoFactorSection({ totpEnabled, backupCodesRemaining, onChanged 
 					{backupCodes ? (
 						<div className='space-y-3'>
 							<div className='grid grid-cols-2 gap-2 rounded-md border bg-muted/30 p-3 font-mono text-sm'>
-								{backupCodes.map((code) => (
+								{backupCodes.map(code => (
 									<code key={code} className='select-all rounded bg-background px-2 py-1 text-center'>
 										{code}
 									</code>
@@ -244,7 +248,9 @@ export function TwoFactorSection({ totpEnabled, backupCodesRemaining, onChanged 
 							</div>
 							<details className='text-xs text-muted-foreground'>
 								<summary className='cursor-pointer'>Không quét được? Nhập secret thủ công</summary>
-								<code className='mt-2 block break-all rounded-md bg-muted/50 p-2'>{enrollData.secret}</code>
+								<code className='mt-2 block break-all rounded-md bg-muted/50 p-2'>
+									{enrollData.secret}
+								</code>
 							</details>
 							<Field>
 								<FieldLabel htmlFor='totp-enroll-code'>Mã 6 chữ số</FieldLabel>
@@ -254,7 +260,7 @@ export function TwoFactorSection({ totpEnabled, backupCodesRemaining, onChanged 
 									maxLength={6}
 									autoComplete='one-time-code'
 									value={enrollCode}
-									onChange={(e) => setEnrollCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+									onChange={e => setEnrollCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
 									disabled={enrollPending}
 								/>
 							</Field>
@@ -268,10 +274,19 @@ export function TwoFactorSection({ totpEnabled, backupCodesRemaining, onChanged 
 							</Button>
 						) : (
 							<>
-								<Button type='button' variant='outline' onClick={closeEnrollDialog} disabled={enrollPending}>
+								<Button
+									type='button'
+									variant='outline'
+									onClick={closeEnrollDialog}
+									disabled={enrollPending}
+								>
 									Hủy
 								</Button>
-								<Button type='button' onClick={() => void submitEnroll()} disabled={enrollPending || enrollCode.length !== 6}>
+								<Button
+									type='button'
+									onClick={() => void submitEnroll()}
+									disabled={enrollPending || enrollCode.length !== 6}
+								>
 									{enrollPending ? 'Đang xác nhận…' : 'Xác nhận'}
 								</Button>
 							</>
@@ -280,12 +295,13 @@ export function TwoFactorSection({ totpEnabled, backupCodesRemaining, onChanged 
 				</DialogContent>
 			</Dialog>
 
-			<Dialog open={regenOpen} onOpenChange={(open) => !open && setRegenOpen(false)}>
+			<Dialog open={regenOpen} onOpenChange={open => !open && setRegenOpen(false)}>
 				<DialogContent className='sm:max-w-md'>
 					<DialogHeader>
 						<DialogTitle>Sinh lại 10 backup codes</DialogTitle>
 						<DialogDescription>
-							Codes cũ sẽ bị huỷ ngay sau khi sinh codes mới. Yêu cầu mật khẩu hiện tại + mã 2FA để tránh nhầm.
+							Codes cũ sẽ bị huỷ ngay sau khi sinh codes mới. Yêu cầu mật khẩu hiện tại + mã 2FA để tránh
+							nhầm.
 						</DialogDescription>
 					</DialogHeader>
 					<FieldGroup className='gap-4'>
@@ -296,7 +312,7 @@ export function TwoFactorSection({ totpEnabled, backupCodesRemaining, onChanged 
 								type='password'
 								autoComplete='current-password'
 								value={regenPw}
-								onChange={(e) => setRegenPw(e.target.value)}
+								onChange={e => setRegenPw(e.target.value)}
 								disabled={regenPending}
 							/>
 						</Field>
@@ -308,14 +324,19 @@ export function TwoFactorSection({ totpEnabled, backupCodesRemaining, onChanged 
 								maxLength={6}
 								autoComplete='one-time-code'
 								value={regenCode}
-								onChange={(e) => setRegenCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+								onChange={e => setRegenCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
 								disabled={regenPending}
 							/>
 						</Field>
 						{regenError ? <p className='text-sm text-destructive'>{regenError}</p> : null}
 					</FieldGroup>
 					<DialogFooter>
-						<Button type='button' variant='outline' onClick={() => setRegenOpen(false)} disabled={regenPending}>
+						<Button
+							type='button'
+							variant='outline'
+							onClick={() => setRegenOpen(false)}
+							disabled={regenPending}
+						>
 							Hủy
 						</Button>
 						<Button type='button' onClick={() => void submitRegen()} disabled={regenPending}>
@@ -341,7 +362,7 @@ export function TwoFactorSection({ totpEnabled, backupCodesRemaining, onChanged 
 								type='password'
 								autoComplete='current-password'
 								value={disableCurrentPw}
-								onChange={(e) => setDisableCurrentPw(e.target.value)}
+								onChange={e => setDisableCurrentPw(e.target.value)}
 								disabled={disablePending}
 							/>
 						</Field>
@@ -353,14 +374,19 @@ export function TwoFactorSection({ totpEnabled, backupCodesRemaining, onChanged 
 								maxLength={6}
 								autoComplete='one-time-code'
 								value={disableCode}
-								onChange={(e) => setDisableCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+								onChange={e => setDisableCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
 								disabled={disablePending}
 							/>
 						</Field>
 						{disableError ? <p className='text-sm text-destructive'>{disableError}</p> : null}
 					</FieldGroup>
 					<DialogFooter>
-						<Button type='button' variant='outline' onClick={() => setDisableOpen(false)} disabled={disablePending}>
+						<Button
+							type='button'
+							variant='outline'
+							onClick={() => setDisableOpen(false)}
+							disabled={disablePending}
+						>
 							Hủy
 						</Button>
 						<Button

@@ -1,6 +1,10 @@
 import * as React from 'react';
 
-import type { AdminProductCategoryRow, ListProductCategoriesParams, ProductCategoryListResponse } from '@/api/admin-product-categories';
+import type {
+	AdminProductCategoryRow,
+	ListProductCategoriesParams,
+	ProductCategoryListResponse,
+} from '@/api/admin-product-categories';
 import { AuthApiError } from '@/auth/auth-api';
 
 export type ProductCategoryListSortKey = NonNullable<ListProductCategoriesParams['sortBy']>;

@@ -18,10 +18,8 @@ function escapeCell(value: unknown): string {
 }
 
 export function buildCsv<T>(rows: readonly T[], columns: readonly CsvColumn<T>[]): string {
-	const head = columns.map((c) => escapeCell(c.header)).join(',');
-	const body = rows
-		.map((row) => columns.map((col) => escapeCell(col.accessor(row))).join(','))
-		.join('\r\n');
+	const head = columns.map(c => escapeCell(c.header)).join(',');
+	const body = rows.map(row => columns.map(col => escapeCell(col.accessor(row))).join(',')).join('\r\n');
 	return body ? `${head}\r\n${body}` : head;
 }
 
@@ -38,11 +36,7 @@ export function downloadCsv(filename: string, csv: string): void {
 	URL.revokeObjectURL(url);
 }
 
-export function exportToCsv<T>(
-	filename: string,
-	rows: readonly T[],
-	columns: readonly CsvColumn<T>[],
-): void {
+export function exportToCsv<T>(filename: string, rows: readonly T[], columns: readonly CsvColumn<T>[]): void {
 	downloadCsv(filename, buildCsv(rows, columns));
 }
 

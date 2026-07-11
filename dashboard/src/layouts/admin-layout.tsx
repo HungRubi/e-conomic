@@ -20,7 +20,7 @@ const SIDEBAR_COOKIE = 'sidebar_state';
 
 function readSidebarCookie(): boolean {
 	if (typeof document === 'undefined') return true;
-	const match = document.cookie.split(';').find((c) => c.trim().startsWith(`${SIDEBAR_COOKIE}=`));
+	const match = document.cookie.split(';').find(c => c.trim().startsWith(`${SIDEBAR_COOKIE}=`));
 	if (!match) return true;
 	return match.split('=')[1] === 'true';
 }

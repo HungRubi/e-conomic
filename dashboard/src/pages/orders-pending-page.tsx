@@ -1,5 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { GripVerticalIcon, ArrowUpRight, ChevronLeftIcon, ChevronRightIcon, ClockIcon, EllipsisVerticalIcon, RefreshCwIcon } from 'lucide-react';
+import {
+	GripVerticalIcon,
+	ArrowUpRight,
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	ClockIcon,
+	EllipsisVerticalIcon,
+	RefreshCwIcon,
+} from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import * as React from 'react';
 
@@ -16,14 +24,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { cn } from '@/lib/utils';
 
@@ -95,8 +96,15 @@ export default function OrdersPendingPage() {
 							</SelectGroup>
 						</SelectContent>
 					</Select>
-					<Button type='button' variant='outline' size='sm' onClick={() => void refetch()} disabled={isFetching}>
-						<RefreshCwIcon className={cn('mr-1.5 size-4', isFetching && 'animate-spin')} aria-hidden /> Làm mới
+					<Button
+						type='button'
+						variant='outline'
+						size='sm'
+						onClick={() => void refetch()}
+						disabled={isFetching}
+					>
+						<RefreshCwIcon className={cn('mr-1.5 size-4', isFetching && 'animate-spin')} aria-hidden /> Làm
+						mới
 					</Button>
 				</div>
 			</header>
@@ -106,8 +114,7 @@ export default function OrdersPendingPage() {
 					<TableHeader>
 						<TableRow>
 							<TableHead className='w-10'>
-								<div className='flex items-center justify-center'>
-								</div>
+								<div className='flex items-center justify-center'></div>
 							</TableHead>
 							<TableHead className='w-35'>Mã đơn</TableHead>
 							<TableHead>Khách hàng</TableHead>
@@ -181,7 +188,9 @@ export default function OrdersPendingPage() {
 											{order.paymentMethod === 'COD' ? 'COD' : 'Chuyển khoản'}
 										</span>
 									</TableCell>
-									<TableCell className='text-sm text-muted-foreground'>{fmtDate(order.createdAt)}</TableCell>
+									<TableCell className='text-sm text-muted-foreground'>
+										{fmtDate(order.createdAt)}
+									</TableCell>
 									<TableCell className='text-right'>
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
@@ -196,7 +205,11 @@ export default function OrdersPendingPage() {
 													<EllipsisVerticalIcon className='size-4' />
 												</Button>
 											</DropdownMenuTrigger>
-											<DropdownMenuContent align='end' className='w-44' onClick={e => e.stopPropagation()}>
+											<DropdownMenuContent
+												align='end'
+												className='w-44'
+												onClick={e => e.stopPropagation()}
+											>
 												<DropdownMenuItem onClick={() => openDetail(order.id)}>
 													<ArrowUpRight className='size-4' />
 													Xử lý ngay
@@ -214,8 +227,8 @@ export default function OrdersPendingPage() {
 			{totalPages > 1 ? (
 				<div className='text-muted-foreground flex flex-col gap-2 text-sm sm:flex-row sm:items-center sm:justify-between'>
 					<span>
-						Hiển thị {total === 0 ? 0 : (page - 1) * pageSize + 1}–
-						{Math.min(page * pageSize, total)} / {total}
+						Hiển thị {total === 0 ? 0 : (page - 1) * pageSize + 1}–{Math.min(page * pageSize, total)} /{' '}
+						{total}
 					</span>
 					<div className='flex items-center gap-2'>
 						<Button

@@ -50,10 +50,19 @@ export function printInvoice(order: OrderRow) {
 	const addr = order.shippingAddress as Record<string, string>;
 	const addrLine = [addr.line1, addr.ward, addr.district, addr.province].filter(Boolean).join(', ');
 	const logoUrl = publicAssetUrl(COMPANY.logo);
-	const payStatus = ({ PENDING: 'Chờ thanh toán', PAID: 'Đã thanh toán', FAILED: 'Thất bại', REFUNDED: 'Đã hoàn tiền', AWAITING_CONFIRMATION: 'Chờ xác nhận' })[order.paymentStatus] ?? order.paymentStatus;
+	const payStatus =
+		{
+			PENDING: 'Chờ thanh toán',
+			PAID: 'Đã thanh toán',
+			FAILED: 'Thất bại',
+			REFUNDED: 'Đã hoàn tiền',
+			AWAITING_CONFIRMATION: 'Chờ xác nhận',
+		}[order.paymentStatus] ?? order.paymentStatus;
 	const payMethod = order.paymentMethod === 'COD' ? 'Tiền mặt (COD)' : 'Chuyển khoản ngân hàng';
 
-	const itemsHtml = order.items.map((item, i) => `
+	const itemsHtml = order.items
+		.map(
+			(item, i) => `
 		<tr>
 			<td style="width:36px;text-align:center;border:1px solid #bbb;padding:5px 6px;vertical-align:top;font-size:12px">${i + 1}</td>
 			<td style="border:1px solid #bbb;padding:5px 6px;vertical-align:top;font-size:12px">${item.nameSnapshot}${item.variantLabel ? `<br><span style="font-size:10px;color:#666">(${item.variantLabel})</span>` : ''}</td>
@@ -61,14 +70,23 @@ export function printInvoice(order: OrderRow) {
 			<td style="width:110px;text-align:right;border:1px solid #bbb;padding:5px 6px;vertical-align:top;font-size:12px">${formatCurrency(item.priceVndSnapshot)}</td>
 			<td style="width:120px;text-align:right;border:1px solid #bbb;padding:5px 6px;vertical-align:top;font-size:12px;font-weight:600">${formatCurrency(item.lineTotalVnd)}</td>
 		</tr>
-	`).join('');
+	`
+		)
+		.join('');
 
-	const discountHtml = order.discountVnd > 0
-		? `<tr style="color:#b91c1c"><td style="text-align:left;padding:2px 0;font-size:12px">Giảm giá${order.discountCode ? ` (${order.discountCode})` : ''}:</td><td style="text-align:right;padding:2px 0;font-size:12px;width:130px">−${formatCurrency(order.discountVnd)}</td></tr>`
-		: '';
+	const discountHtml =
+		order.discountVnd > 0
+			? `<tr style="color:#b91c1c"><td style="text-align:left;padding:2px 0;font-size:12px">Giảm giá${order.discountCode ? ` (${order.discountCode})` : ''}:</td><td style="text-align:right;padding:2px 0;font-size:12px;width:130px">−${formatCurrency(order.discountVnd)}</td></tr>`
+			: '';
 
 	const now = new Date();
-	const dateStr = new Intl.DateTimeFormat('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).format(now);
+	const dateStr = new Intl.DateTimeFormat('vi-VN', {
+		day: '2-digit',
+		month: '2-digit',
+		year: 'numeric',
+		hour: '2-digit',
+		minute: '2-digit',
+	}).format(now);
 
 	const html = `<!DOCTYPE html>
 <html lang="vi">

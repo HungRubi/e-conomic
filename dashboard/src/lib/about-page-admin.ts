@@ -75,7 +75,8 @@ function isProductSpotlight(s: Record<string, unknown>): s is AboutProductSpotli
 		if (!isRecord(b) || typeof b.title !== 'string' || !Array.isArray(b.items)) return false;
 		if (!b.items.every(i => typeof i === 'string')) return false;
 	}
-	if (typeof s.ctaDescription !== 'string' || typeof s.ctaLabel !== 'string' || typeof s.ctaHref !== 'string') return false;
+	if (typeof s.ctaDescription !== 'string' || typeof s.ctaLabel !== 'string' || typeof s.ctaHref !== 'string')
+		return false;
 	return true;
 }
 

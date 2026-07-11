@@ -117,13 +117,7 @@ export function CustomerFeedbackDetailPanel() {
 	return <DetailContent feedback={data} onChanged={() => void refetch()} />;
 }
 
-function DetailContent({
-	feedback,
-	onChanged,
-}: {
-	feedback: AdminCustomerFeedbackRow;
-	onChanged: () => void;
-}) {
+function DetailContent({ feedback, onChanged }: { feedback: AdminCustomerFeedbackRow; onChanged: () => void }) {
 	const navigate = useNavigate();
 	const crud = useEntityCrud('customerFeedbacks');
 
@@ -190,7 +184,12 @@ function DetailContent({
 							>
 								<ArrowLeftIcon className='size-4' />
 							</Button>
-							<h1 className='min-w-0 flex-1 truncate text-lg font-semibold tracking-tight' title={feedback.title}>{feedback.title}</h1>
+							<h1
+								className='min-w-0 flex-1 truncate text-lg font-semibold tracking-tight'
+								title={feedback.title}
+							>
+								{feedback.title}
+							</h1>
 							<Button
 								type='button'
 								variant='ghost'
@@ -255,7 +254,9 @@ function DetailContent({
 								disabled={!crud.canUpdate}
 								onSave={v => patch({ slug: v })}
 								validate={v =>
-									/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim()) ? null : 'Slug chỉ gồm a-z, 0-9 và dấu -'
+									/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim())
+										? null
+										: 'Slug chỉ gồm a-z, 0-9 và dấu -'
 								}
 								displayClassName='font-mono text-xs'
 							/>
@@ -370,7 +371,11 @@ function DetailContent({
 									onSave={v => patch({ sortOrder: v ?? 0 })}
 									min={0}
 								/>
-								<PublishedAtField feedback={feedback} canUpdate={crud.canUpdate} onChanged={onChanged} />
+								<PublishedAtField
+									feedback={feedback}
+									canUpdate={crud.canUpdate}
+									onChanged={onChanged}
+								/>
 							</div>
 						</section>
 					</div>
@@ -450,7 +455,13 @@ function ImageSection({
 				/>
 				{feedback.imageUrl && canUpdate ? (
 					<div className='mt-3 flex justify-end'>
-						<Button type='button' variant='ghost' size='sm' onClick={() => void setImage(null)} disabled={busy}>
+						<Button
+							type='button'
+							variant='ghost'
+							size='sm'
+							onClick={() => void setImage(null)}
+							disabled={busy}
+						>
 							Gỡ ảnh
 						</Button>
 					</div>
@@ -652,9 +663,7 @@ function PublishedAtField({
 
 	return (
 		<div className='-mx-2 space-y-1.5 rounded-md px-2 py-1.5'>
-			<p className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground'>
-				Ngày giờ xuất bản
-			</p>
+			<p className='text-[11px] font-medium uppercase tracking-wider text-muted-foreground'>Ngày giờ xuất bản</p>
 			<input
 				type='datetime-local'
 				autoFocus

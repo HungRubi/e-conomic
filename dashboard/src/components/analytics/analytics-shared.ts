@@ -114,7 +114,7 @@ export type KpiDirection = 'up-good' | 'down-good';
 
 export function trendVariant(
 	kpi: AnalyticsKpi,
-	direction: KpiDirection = 'up-good',
+	direction: KpiDirection = 'up-good'
 ): 'success' | 'destructive' | 'muted' {
 	if (kpi.trend === 'flat') return 'muted';
 	if (direction === 'up-good') {

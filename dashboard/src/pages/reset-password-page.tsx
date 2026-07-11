@@ -60,7 +60,11 @@ export default function ResetPasswordPage() {
 						{done ? (
 							<div className='space-y-3 text-sm'>
 								<p>đặt lại mật khẩu thành công. Vui lòng đăng nhập với mật khẩu mới.</p>
-								<Button type='button' className='w-full' onClick={() => navigate('/login', { replace: true })}>
+								<Button
+									type='button'
+									className='w-full'
+									onClick={() => navigate('/login', { replace: true })}
+								>
 									Về đăng nhập
 								</Button>
 							</div>
@@ -75,7 +79,7 @@ export default function ResetPasswordPage() {
 											autoComplete='new-password'
 											required
 											value={newPassword}
-											onChange={(e) => setNewPassword(e.target.value)}
+											onChange={e => setNewPassword(e.target.value)}
 											disabled={pending}
 										/>
 									</Field>
@@ -87,18 +91,24 @@ export default function ResetPasswordPage() {
 											autoComplete='new-password'
 											required
 											value={confirm}
-											onChange={(e) => setConfirm(e.target.value)}
+											onChange={e => setConfirm(e.target.value)}
 											disabled={pending}
 										/>
 									</Field>
-									{error ? <p className='text-destructive text-xs' role='alert'>{error}</p> : null}
+									{error ? (
+										<p className='text-destructive text-xs' role='alert'>
+											{error}
+										</p>
+									) : null}
 									<Field>
 										<Button type='submit' className='w-full' disabled={pending}>
 											{pending ? 'Đang lưu…' : 'đặt lại mật khẩu'}
 										</Button>
 									</Field>
 									<p className='text-center text-xs text-muted-foreground'>
-										<Link to='/login' className='underline'>Quay lại đăng nhập</Link>
+										<Link to='/login' className='underline'>
+											Quay lại đăng nhập
+										</Link>
 									</p>
 								</FieldGroup>
 							</form>

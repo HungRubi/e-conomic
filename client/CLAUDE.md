@@ -4,17 +4,17 @@ Next.js 16 e-commerce client — App Router, Tailwind v4, Zustand, TanStack Quer
 
 ## Stack
 
-| Layer | Tech |
-|---|---|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript 5 |
-| Styling | Tailwind v4 + CSS variables (light/dark tokens) |
-| Client state | Zustand 5 (cart, UI) |
-| Server state | TanStack Query 5 |
-| Animation | Framer Motion 12 |
-| Icons | lucide-react |
-| Font | Inter |
-| Package | pnpm |
+| Layer        | Tech                                            |
+| ------------ | ----------------------------------------------- |
+| Framework    | Next.js 16 (App Router)                         |
+| Language     | TypeScript 5                                    |
+| Styling      | Tailwind v4 + CSS variables (light/dark tokens) |
+| Client state | Zustand 5 (cart, UI)                            |
+| Server state | TanStack Query 5                                |
+| Animation    | Framer Motion 12                                |
+| Icons        | lucide-react                                    |
+| Font         | Inter                                           |
+| Package      | pnpm                                            |
 
 ## Key dirs
 
@@ -36,15 +36,15 @@ src/
 
 ## Routes
 
-| Path | Notes |
-|---|---|
-| `/` | Home — featured, new arrivals, category grid |
-| `/cart` | Cart with selection, quantity |
-| `/checkout` | Checkout steps (shipping → payment → review) |
-| `/san-pham/[slug]` | Product detail |
-| `/login` | Login |
-| `/register` | Register |
-| `/:slug` | Category product listing |
+| Path               | Notes                                        |
+| ------------------ | -------------------------------------------- |
+| `/`                | Home — featured, new arrivals, category grid |
+| `/cart`            | Cart with selection, quantity                |
+| `/checkout`        | Checkout steps (shipping → payment → review) |
+| `/san-pham/[slug]` | Product detail                               |
+| `/login`           | Login                                        |
+| `/register`        | Register                                     |
+| `/:slug`           | Category product listing                     |
 
 ## Design tokens
 

@@ -1,13 +1,7 @@
 import * as React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import {
-	ChevronLeftIcon,
-	ChevronRightIcon,
-	RefreshCwIcon,
-	ScrollTextIcon,
-	SearchIcon,
-} from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon, RefreshCwIcon, ScrollTextIcon, SearchIcon } from 'lucide-react';
 
 import { listAuditLogs, type AuditLogRow, type ListAuditLogsParams } from '@/api/admin-audit';
 import { DateRangePicker, type DateRangeValue } from '@/components/date-range-picker';
@@ -19,14 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { dateStampForFile, exportToCsv } from '@/lib/csv-export';
 import { cn } from '@/lib/utils';
@@ -116,7 +103,7 @@ export default function AuditLogsPage() {
 	}
 
 	function toggleExpand(id: string) {
-		setExpanded((prev) => {
+		setExpanded(prev => {
 			const next = new Set(prev);
 			if (next.has(id)) next.delete(id);
 			else next.add(id);
@@ -150,15 +137,28 @@ export default function AuditLogsPage() {
 					<div>
 						<h1 className='text-lg font-semibold tracking-tight'>Audit log</h1>
 						<p className='text-xs text-muted-foreground'>
-							Lịch sử hành động admin (login, đổi đơn, đổi trạng thái…). Mỗi sự kiện ghi actor + IP + metadata.
+							Lịch sử hành động admin (login, đổi đơn, đổi trạng thái…). Mỗi sự kiện ghi actor + IP +
+							metadata.
 						</p>
 					</div>
 				</div>
 				<div className='flex gap-2'>
-					<Button type='button' variant='outline' size='sm' onClick={exportPage} disabled={items.length === 0}>
+					<Button
+						type='button'
+						variant='outline'
+						size='sm'
+						onClick={exportPage}
+						disabled={items.length === 0}
+					>
 						Xuất CSV
 					</Button>
-					<Button type='button' variant='outline' size='sm' onClick={() => void refetch()} disabled={isFetching}>
+					<Button
+						type='button'
+						variant='outline'
+						size='sm'
+						onClick={() => void refetch()}
+						disabled={isFetching}
+					>
 						<RefreshCwIcon className={cn('mr-1.5 size-3.5', isFetching && 'animate-spin')} aria-hidden />
 						Làm mới
 					</Button>
@@ -170,8 +170,8 @@ export default function AuditLogsPage() {
 					<Input
 						placeholder='Tìm action (orders.update, auth.login…)'
 						value={actionInput}
-						onChange={(e) => setActionInput(e.target.value)}
-						onKeyDown={(e) => e.key === 'Enter' && applyFilters()}
+						onChange={e => setActionInput(e.target.value)}
+						onKeyDown={e => e.key === 'Enter' && applyFilters()}
 					/>
 				</div>
 				<Button type='button' variant='outline' size='sm' onClick={applyFilters}>
@@ -180,7 +180,7 @@ export default function AuditLogsPage() {
 				<Input
 					placeholder='Actor ID'
 					value={actorIdFilter}
-					onChange={(e) => {
+					onChange={e => {
 						setActorIdFilter(e.target.value);
 						setPage(1);
 					}}
@@ -189,7 +189,7 @@ export default function AuditLogsPage() {
 				<Input
 					placeholder='Entity type (order, user…)'
 					value={entityFilter}
-					onChange={(e) => {
+					onChange={e => {
 						setEntityFilter(e.target.value);
 						setPage(1);
 					}}
@@ -197,7 +197,7 @@ export default function AuditLogsPage() {
 				/>
 				<DateRangePicker
 					value={dateRange}
-					onChange={(v) => {
+					onChange={v => {
 						setDateRange(v);
 						setPage(1);
 					}}
@@ -273,7 +273,7 @@ export default function AuditLogsPage() {
 						) : items.length === 0 ? (
 							<TableEmptyStateRow colSpan={7} description='Chưa có sự kiện nào khớp bộ lọc.' />
 						) : (
-							items.flatMap((row) => {
+							items.flatMap(row => {
 								const isExpanded = expanded.has(row.id);
 								const metadataStr = JSON.stringify(row.metadata, null, 2);
 								return [
@@ -309,7 +309,9 @@ export default function AuditLogsPage() {
 										<TableCell className='text-sm'>
 											{row.actorEmail ?? row.actorId ?? '—'}
 											{row.actorRole ? (
-												<span className='ml-1.5 text-xs text-muted-foreground'>({row.actorRole})</span>
+												<span className='ml-1.5 text-xs text-muted-foreground'>
+													({row.actorRole})
+												</span>
 											) : null}
 										</TableCell>
 										<TableCell className='text-sm'>
@@ -325,7 +327,7 @@ export default function AuditLogsPage() {
 													return href ? (
 														<Link
 															to={href}
-															onClick={(e) => e.stopPropagation()}
+															onClick={e => e.stopPropagation()}
 															className='hover:underline'
 														>
 															{label}
@@ -338,7 +340,9 @@ export default function AuditLogsPage() {
 												<span className='text-muted-foreground'>—</span>
 											)}
 										</TableCell>
-										<TableCell className='text-xs text-muted-foreground'>{row.ipAddress ?? '—'}</TableCell>
+										<TableCell className='text-xs text-muted-foreground'>
+											{row.ipAddress ?? '—'}
+										</TableCell>
 										<TableCell className='text-right text-xs text-muted-foreground'>
 											{isExpanded ? '▾' : '▸'}
 										</TableCell>
@@ -366,8 +370,7 @@ export default function AuditLogsPage() {
 
 			<div className='text-muted-foreground flex flex-col gap-2 text-sm sm:flex-row sm:items-center sm:justify-between'>
 				<span>
-					Hiển thị {total === 0 ? 0 : (page - 1) * pageSize + 1}–
-					{Math.min(page * pageSize, total)} / {total}
+					Hiển thị {total === 0 ? 0 : (page - 1) * pageSize + 1}–{Math.min(page * pageSize, total)} / {total}
 				</span>
 				<div className='flex items-center gap-2'>
 					<Button

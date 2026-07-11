@@ -40,10 +40,10 @@ export function PendingOrdersProvider({ children }: { children: React.ReactNode 
 
 	React.useEffect(() => {
 		if (!enabled || !query.data) return;
-		const currentIds = new Set(items.map((o) => o.id));
+		const currentIds = new Set(items.map(o => o.id));
 		const previous = previousIdsRef.current;
 		if (previous) {
-			const newOrders = items.filter((o) => !previous.has(o.id));
+			const newOrders = items.filter(o => !previous.has(o.id));
 			if (newOrders.length === 1) {
 				const order = newOrders[0];
 				toast.info(`Đơn mới ${order.orderNumber}`, {
@@ -58,14 +58,16 @@ export function PendingOrdersProvider({ children }: { children: React.ReactNode 
 
 	const value = React.useMemo<PendingOrdersState>(
 		() => ({ count: query.data?.total ?? 0, items, isFetching: query.isFetching }),
-		[query.data?.total, items, query.isFetching],
+		[query.data?.total, items, query.isFetching]
 	);
 
 	return <PendingOrdersContext.Provider value={value}>{children}</PendingOrdersContext.Provider>;
 }
 
 function formatVnd(value: number): string {
-	return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(value);
+	return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(
+		value
+	);
 }
 
 export function usePendingOrders(): PendingOrdersState {

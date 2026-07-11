@@ -1,6 +1,15 @@
 import { PartialType } from '@nestjs/swagger';
 import { ProductStatus, ProductType } from '@prisma/client';
-import { IsArray, IsBoolean, IsEnum, IsInt, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 export class CreateProductDto {
   @IsString() name!: string;

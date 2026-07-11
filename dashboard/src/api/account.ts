@@ -1,12 +1,12 @@
 import {
-  requestForgotPassword as rfp,
-  resetPassword as rp,
-  changeMyPassword as cmp,
-  updateMyProfile as ump,
-  startTotpEnrollment,
-  confirmTotpEnrollment,
-  disableTotp,
-  regenerateBackupCodes,
+	requestForgotPassword as rfp,
+	resetPassword as rp,
+	changeMyPassword as cmp,
+	updateMyProfile as ump,
+	startTotpEnrollment,
+	confirmTotpEnrollment,
+	disableTotp,
+	regenerateBackupCodes,
 } from '@/auth/auth-api';
 
 export { startTotpEnrollment, confirmTotpEnrollment, disableTotp, regenerateBackupCodes };

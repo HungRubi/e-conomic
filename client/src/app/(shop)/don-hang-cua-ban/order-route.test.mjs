@@ -18,21 +18,49 @@ assert.match(page, /w-22|size-22|h-22/, 'mobile order item image has a fixed squ
 assert.match(page, /md:w-28|md:size-28|md:h-28/, 'desktop order item image has a larger square footprint');
 assert.match(page, /group\/order-item/, 'order items use product-card-like grouped hover styling');
 assert.match(page, /Xem thêm/, 'multi-item mobile orders include a see-more prompt');
-assert.doesNotMatch(page, /xl:grid-cols-2/, 'desktop order items should stack full-width instead of splitting into two columns');
+assert.doesNotMatch(
+	page,
+	/xl:grid-cols-2/,
+	'desktop order items should stack full-width instead of splitting into two columns'
+);
 assert.doesNotMatch(page, /border-dashed/, 'new order item UI should not reuse the old dashed mini-card style');
 assert.match(page, /divide-y divide-border/, 'products in one order share one block separated by horizontal borders');
-assert.doesNotMatch(page, /overflow-hidden rounded-xl border border-border\/80 bg-surface2\/35/, 'products block should not add nested outer border/padding');
-assert.doesNotMatch(page, /group\/order-item rounded-xl border border-border\/80 bg-surface\/90 p-2/, 'products in one order should not be individually card-wrapped');
+assert.doesNotMatch(
+	page,
+	/overflow-hidden rounded-xl border border-border\/80 bg-surface2\/35/,
+	'products block should not add nested outer border/padding'
+);
+assert.doesNotMatch(
+	page,
+	/group\/order-item rounded-xl border border-border\/80 bg-surface\/90 p-2/,
+	'products in one order should not be individually card-wrapped'
+);
 assert.doesNotMatch(page, /Xem sản phẩm/, 'order item should not repeat per-product view product links');
 assert.doesNotMatch(page, />Đơn giá</, 'order list should hide unit price until detail page');
 assert.doesNotMatch(page, />Tạm tính</, 'order list should hide line total until detail page');
 assert.doesNotMatch(page, /p-3 transition-colors/, 'product list rows should not add extra padding');
 assert.equal((page.match(/Mua lại/g) || []).length, 1, 'each order card has one shared repurchase action in source');
 assert.equal((page.match(/Hỗ trợ/g) || []).length, 1, 'each order card has one shared support action in source');
-assert.match(page, /<div className="flex items-center justify-between gap-4 sm:justify-end">[\s\S]*Tổng[\s\S]*formatCurrency\(order\.total\)[\s\S]*<div className="flex flex-wrap items-center gap-2">[\s\S]*Mua lại[\s\S]*Hỗ trợ/, 'footer places total before shared actions');
-assert.doesNotMatch(page, /<h2 className="font-mono text-base font-semibold/, 'order code should not be over-emphasized mono semibold');
-assert.doesNotMatch(page, /<p className="mt-1 font-mono font-semibold tabular-nums text-text">/, 'unit price should not be over-emphasized');
-assert.doesNotMatch(page, /<p className="mt-1 font-mono text-sm font-semibold tabular-nums text-text md:text-base">/, 'line total should not be over-emphasized');
+assert.match(
+	page,
+	/<div className="flex items-center justify-between gap-4 sm:justify-end">[\s\S]*Tổng[\s\S]*formatCurrency\(order\.total\)[\s\S]*<div className="flex flex-wrap items-center gap-2">[\s\S]*Mua lại[\s\S]*Hỗ trợ/,
+	'footer places total before shared actions'
+);
+assert.doesNotMatch(
+	page,
+	/<h2 className="font-mono text-base font-semibold/,
+	'order code should not be over-emphasized mono semibold'
+);
+assert.doesNotMatch(
+	page,
+	/<p className="mt-1 font-mono font-semibold tabular-nums text-text">/,
+	'unit price should not be over-emphasized'
+);
+assert.doesNotMatch(
+	page,
+	/<p className="mt-1 font-mono text-sm font-semibold tabular-nums text-text md:text-base">/,
+	'line total should not be over-emphasized'
+);
 assert.match(page, /sampleOrders/, 'orders page includes sample orders for UI preview');
 assert.match(page, /Đang giao/, 'orders page shows in-progress sample status');
 assert.match(page, /Đã giao/, 'orders page shows delivered sample status');
@@ -44,6 +72,10 @@ assert.match(page, /lineTotal/, 'order items expose line total for detailed prod
 assert.match(page, /Mua lại/, 'order items include repurchase action');
 assert.match(page, /Hỗ trợ/, 'order items include support action');
 assert.match(page, /SKU/, 'order items show SKU detail');
-assert.match(page, /mt-4 divide-y divide-border\/70/, 'order products use simple separators without nested card chrome');
+assert.match(
+	page,
+	/mt-4 divide-y divide-border\/70/,
+	'order products use simple separators without nested card chrome'
+);
 assert.doesNotMatch(page, /max-w-5xl/, 'orders list should not cap width after overview sidebar removal');
 assert.doesNotMatch(page, /Chưa có đơn hàng/, 'sample preview should not show empty-state as primary UI');

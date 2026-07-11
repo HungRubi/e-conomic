@@ -171,7 +171,12 @@ function DetailContent({ page, onChanged }: { page: AdminStaticPageRow; onChange
 				<div className='flex items-start justify-between gap-4'>
 					<div className='min-w-0 flex-1'>
 						<div className='flex items-center gap-1'>
-							<h1 className='min-w-0 flex-1 truncate text-lg font-semibold tracking-tight' title={page.title}>{page.title}</h1>
+							<h1
+								className='min-w-0 flex-1 truncate text-lg font-semibold tracking-tight'
+								title={page.title}
+							>
+								{page.title}
+							</h1>
 							<Button
 								type='button'
 								variant='ghost'
@@ -234,7 +239,9 @@ function DetailContent({ page, onChanged }: { page: AdminStaticPageRow; onChange
 									disabled={!crud.canUpdate}
 									onSave={v => patch({ slug: v })}
 									validate={v =>
-										/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim()) ? null : 'Slug chỉ gồm a-z, 0-9 và dấu -'
+										/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim())
+											? null
+											: 'Slug chỉ gồm a-z, 0-9 và dấu -'
 									}
 									displayClassName='font-mono text-xs'
 								/>
@@ -282,7 +289,9 @@ function DetailContent({ page, onChanged }: { page: AdminStaticPageRow; onChange
 							<div className='flex flex-col gap-2 p-4'>
 								<div className='flex items-center justify-between gap-2 rounded-md bg-muted/30 px-3 py-2 text-sm'>
 									<span className='text-muted-foreground'>Trạng thái</span>
-									<Badge variant={CONTENT_STATUS_BADGE[page.status]}>{STATUS_LABEL[page.status]}</Badge>
+									<Badge variant={CONTENT_STATUS_BADGE[page.status]}>
+										{STATUS_LABEL[page.status]}
+									</Badge>
 								</div>
 								{crud.canUpdate && page.status !== 'ACTIVE' ? (
 									<Button
@@ -399,7 +408,11 @@ function SeoSection({
 
 	return (
 		<section className='dashboard-slide-up rounded-xl bg-card p-4 ring-1 ring-foreground/10'>
-			<SectionHeading icon={SearchCheckIcon} title='SEO' hint='Tiêu đề & mô tả hiển thị trên Google, ảnh OG hiển thị khi share Zalo / Facebook.' />
+			<SectionHeading
+				icon={SearchCheckIcon}
+				title='SEO'
+				hint='Tiêu đề & mô tả hiển thị trên Google, ảnh OG hiển thị khi share Zalo / Facebook.'
+			/>
 			<div className='mt-3 grid gap-4 sm:grid-cols-2'>
 				<EditableField
 					label='SEO title'
@@ -490,10 +503,15 @@ function HomeContentSection({
 			try {
 				await fetch(import.meta.env.VITE_WEBSITE_URL + '/api/revalidate', {
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json', 'x-revalidate-secret': import.meta.env.VITE_REVALIDATE_SECRET ?? '' },
+					headers: {
+						'Content-Type': 'application/json',
+						'x-revalidate-secret': import.meta.env.VITE_REVALIDATE_SECRET ?? '',
+					},
 					body: JSON.stringify({ tags: ['static-pages', 'home-page'] }),
 				});
-			} catch { /* silent */ }
+			} catch {
+				/* silent */
+			}
 			toast.success('đã cập nhật nội dung trang chủ');
 			onChanged();
 		} catch (e) {
@@ -502,7 +520,6 @@ function HomeContentSection({
 			setBusy(false);
 		}
 	}
-
 
 	return (
 		<section className='dashboard-slide-up dashboard-stagger-3 rounded-xl bg-card p-4 ring-1 ring-foreground/10'>
@@ -529,18 +546,10 @@ function HomeContentSection({
 					</div>
 				) : (
 					<div className='flex flex-col gap-4'>
-						<HomePageEditor
-							value={homeDraft}
-							onChange={setHomeDraft}
-							disabled={!canUpdate || busy}
-						/>
+						<HomePageEditor value={homeDraft} onChange={setHomeDraft} disabled={!canUpdate || busy} />
 						{canUpdate ? (
 							<div className='flex justify-end gap-2 border-t pt-4'>
-								<Button
-									type='button'
-									onClick={() => void saveVisual()}
-									disabled={busy || !homeDraft}
-								>
+								<Button type='button' onClick={() => void saveVisual()} disabled={busy || !homeDraft}>
 									{busy ? 'Đang lưu...' : 'Lưu nội dung trang chủ'}
 								</Button>
 							</div>

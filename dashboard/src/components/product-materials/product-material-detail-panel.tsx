@@ -241,7 +241,9 @@ function DetailContent({ material, onChanged }: { material: AdminProductMaterial
 								disabled={!crud.canUpdate}
 								onSave={v => patch({ slug: v })}
 								validate={v =>
-									/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim()) ? null : 'Slug chỉ gồm a-z, 0-9 và dấu -'
+									/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(v.trim())
+										? null
+										: 'Slug chỉ gồm a-z, 0-9 và dấu -'
 								}
 								displayClassName='font-mono text-xs'
 							/>
@@ -401,8 +403,8 @@ function DetailContent({ material, onChanged }: { material: AdminProductMaterial
 					<AlertDialogHeader>
 						<AlertDialogTitle>Xoá đá trang trí này?</AlertDialogTitle>
 						<AlertDialogDescription>
-							<span className='font-medium text-foreground'>{material.name}</span> sẽ bị xoá vĩnh viễn. Các sản
-							phẩm đang dùng sẽ mất tham chiếu.
+							<span className='font-medium text-foreground'>{material.name}</span> sẽ bị xoá vĩnh viễn.
+							Các sản phẩm đang dùng sẽ mất tham chiếu.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>
@@ -470,7 +472,13 @@ function ImageSection({
 				/>
 				{material.image && canUpdate ? (
 					<div className='mt-3 flex justify-end'>
-						<Button type='button' variant='ghost' size='sm' onClick={() => void setImage(null)} disabled={busy}>
+						<Button
+							type='button'
+							variant='ghost'
+							size='sm'
+							onClick={() => void setImage(null)}
+							disabled={busy}
+						>
 							Gỡ ảnh
 						</Button>
 					</div>

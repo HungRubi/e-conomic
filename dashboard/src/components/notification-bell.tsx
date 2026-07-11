@@ -13,11 +13,7 @@ import { listOrders, type OrderRow } from '@/api/admin-orders';
 import { useAuth } from '@/auth/auth-context';
 import { hasPermission } from '@/auth/permissions';
 import { Button } from '@/components/ui/button';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { usePendingOrders } from '@/providers/pending-orders-provider';
 import { cn } from '@/lib/utils';
 
@@ -63,7 +59,9 @@ function writeSeen(map: SeenMap): void {
 }
 
 function fmtCurrency(value: number): string {
-	return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(value);
+	return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(
+		value
+	);
 }
 
 function fmtRel(iso: string): string {
@@ -98,7 +96,8 @@ export function NotificationBell({ className }: { className?: string }) {
 
 	const contactQuery = useQuery({
 		queryKey: ['contact-inquiries', 'notifications'],
-		queryFn: () => fetchContactInquiries({ status: 'NEW', limit: 8, offset: 0, sortBy: 'createdAt', sortOrder: 'desc' }),
+		queryFn: () =>
+			fetchContactInquiries({ status: 'NEW', limit: 8, offset: 0, sortBy: 'createdAt', sortOrder: 'desc' }),
 		refetchInterval: 30_000,
 		enabled: canSeeContact,
 		staleTime: 15_000,

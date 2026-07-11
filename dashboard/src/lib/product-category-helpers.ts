@@ -29,7 +29,9 @@ export function categoryBreadcrumb(cat: AdminProductCategoryRow, all: AdminProdu
 
 /** Gán sản phẩm: chỉ lá (không hiện nút cha nếu còn con — user chọn tận cùng nhánh). */
 export function assignableLeafCategories(all: AdminProductCategoryRow[]): AdminProductCategoryRow[] {
-	return all.filter(c => isLeafCategory(c, all)).sort((a, b) => categoryBreadcrumb(a, all).localeCompare(categoryBreadcrumb(b, all), 'vi'));
+	return all
+		.filter(c => isLeafCategory(c, all))
+		.sort((a, b) => categoryBreadcrumb(a, all).localeCompare(categoryBreadcrumb(b, all), 'vi'));
 }
 
 /**
@@ -64,7 +66,10 @@ function collectDescendantIds(rootId: string, all: AdminProductCategoryRow[]): s
 }
 
 /** Đồng bộ `parent`/`child` chuỗi hiển thị website từ danh mục lá đã chọn. */
-export function productParentChildFromLeaf(leaf: AdminProductCategoryRow, all: AdminProductCategoryRow[]): {
+export function productParentChildFromLeaf(
+	leaf: AdminProductCategoryRow,
+	all: AdminProductCategoryRow[]
+): {
 	parent: string;
 	child: string;
 } {

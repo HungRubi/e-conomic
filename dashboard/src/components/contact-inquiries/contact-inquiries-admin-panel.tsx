@@ -84,7 +84,7 @@ export function ContactInquiriesAdminPanel() {
 
 	const [deleteTarget, setDeleteTarget] = React.useState<AdminContactInquiryRow | null>(null);
 	const [deleteBusy, setDeleteBusy] = React.useState(false);
-		function openDetail(row: AdminContactInquiryRow) {
+	function openDetail(row: AdminContactInquiryRow) {
 		navigate(`/content/contact-inquiries/${row.id}`);
 	}
 
@@ -159,7 +159,9 @@ export function ContactInquiriesAdminPanel() {
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead className='w-10'><span className='sr-only'>Kéo</span></TableHead>
+							<TableHead className='w-10'>
+								<span className='sr-only'>Kéo</span>
+							</TableHead>
 							<TableHead>Khách</TableHead>
 							<TableHead className='hidden md:table-cell'>Nguồn</TableHead>
 							<TableHead>Trạng thái</TableHead>

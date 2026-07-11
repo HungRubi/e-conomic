@@ -2,10 +2,7 @@ import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()
-export class PrismaService
-  extends PrismaClient
-  implements OnModuleDestroy
-{
+export class PrismaService extends PrismaClient implements OnModuleDestroy {
   private readonly logger = new Logger(PrismaService.name);
   private isConnected = false;
 
@@ -22,7 +19,9 @@ export class PrismaService
         this.isConnected = true;
         this.logger.log('Connected to database');
       } catch (error) {
-        this.logger.warn(`Database not available — ${error instanceof Error ? error.message : 'Unknown error'}`);
+        this.logger.warn(
+          `Database not available — ${error instanceof Error ? error.message : 'Unknown error'}`,
+        );
         this.logger.warn('Set DATABASE_URL in .env');
       }
     }

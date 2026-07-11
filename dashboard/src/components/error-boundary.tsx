@@ -53,9 +53,7 @@ function DefaultErrorFallback({ error, onReset }: { error: Error; onReset: () =>
 			<p className='text-sm text-muted-foreground'>
 				Trang không thể hiển thị do một lỗi không mong muốn. Bạn có thể thử lại hoặc tải lại toàn bộ.
 			</p>
-			<pre className='max-h-40 w-full overflow-auto rounded-md bg-muted/50 p-3 text-xs'>
-				{error.message}
-			</pre>
+			<pre className='max-h-40 w-full overflow-auto rounded-md bg-muted/50 p-3 text-xs'>{error.message}</pre>
 			<div className='flex gap-2'>
 				<Button type='button' variant='outline' onClick={onReset}>
 					<RotateCcwIcon className='mr-1.5 size-4' aria-hidden />

@@ -35,8 +35,8 @@ type DialogState = ConfirmOptions & { resolver: Resolver };
 export function ConfirmProvider({ children }: { children: React.ReactNode }) {
 	const [state, setState] = React.useState<DialogState | null>(null);
 
-	const confirm = React.useCallback<ConfirmContextValue>((options) => {
-		return new Promise<boolean>((resolve) => {
+	const confirm = React.useCallback<ConfirmContextValue>(options => {
+		return new Promise<boolean>(resolve => {
 			setState({ ...options, resolver: resolve });
 		});
 	}, []);
@@ -49,7 +49,7 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
 	return (
 		<ConfirmContext.Provider value={confirm}>
 			{children}
-			<AlertDialog open={state !== null} onOpenChange={(open) => !open && close(false)}>
+			<AlertDialog open={state !== null} onOpenChange={open => !open && close(false)}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>{state?.title}</AlertDialogTitle>
@@ -65,7 +65,11 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
 						</AlertDialogCancel>
 						<AlertDialogAction
 							onClick={() => close(true)}
-							className={state?.destructive ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90' : undefined}
+							className={
+								state?.destructive
+									? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+									: undefined
+							}
 						>
 							{state?.confirmLabel ?? 'Xác nhận'}
 						</AlertDialogAction>

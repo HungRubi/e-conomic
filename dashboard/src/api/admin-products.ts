@@ -33,7 +33,18 @@ export type AdminProductVariant = {
 	updatedAt: string;
 };
 
-export type AdminProductVariantInput = { id?: string; name: string; sku?: string; priceVnd?: number; stockQuantity?: number; trackStock?: boolean; images?: string[]; isActive?: boolean; sortOrder?: number; [key: string]: unknown; };
+export type AdminProductVariantInput = {
+	id?: string;
+	name: string;
+	sku?: string;
+	priceVnd?: number;
+	stockQuantity?: number;
+	trackStock?: boolean;
+	images?: string[];
+	isActive?: boolean;
+	sortOrder?: number;
+	[key: string]: unknown;
+};
 
 export type AdminProductRow = {
 	id: string;
@@ -107,7 +118,9 @@ export type ProductListResponse = {
 	totalPages: number;
 };
 
-export type ProductBody = Partial<Omit<AdminProductRow, 'id' | 'categories' | 'variants' | 'createdAt' | 'updatedAt' | 'deletedAt'>> & {
+export type ProductBody = Partial<
+	Omit<AdminProductRow, 'id' | 'categories' | 'variants' | 'createdAt' | 'updatedAt' | 'deletedAt'>
+> & {
 	name: string;
 	price?: number;
 	priceVnd?: number;
@@ -199,15 +212,24 @@ export async function createProduct(data: ProductBody): Promise<AdminProductRow>
 }
 
 export async function updateProduct(id: string, data: Partial<ProductBody>): Promise<AdminProductRow> {
-	return normalizeProduct(await apiFetch<AdminProductRow>(`/admin/products/${id}`, { method: 'PATCH', body: JSON.stringify(toServerProductBody(data)) }));
+	return normalizeProduct(
+		await apiFetch<AdminProductRow>(`/admin/products/${id}`, {
+			method: 'PATCH',
+			body: JSON.stringify(toServerProductBody(data)),
+		})
+	);
 }
 
 export async function publishProduct(id: string): Promise<AdminProductRow> {
-	return normalizeProduct(await apiFetch<AdminProductRow>(`/admin/products/${id}/publish`, { method: 'PATCH', body: '{}' }));
+	return normalizeProduct(
+		await apiFetch<AdminProductRow>(`/admin/products/${id}/publish`, { method: 'PATCH', body: '{}' })
+	);
 }
 
 export async function archiveProduct(id: string): Promise<AdminProductRow> {
-	return normalizeProduct(await apiFetch<AdminProductRow>(`/admin/products/${id}/archive`, { method: 'PATCH', body: '{}' }));
+	return normalizeProduct(
+		await apiFetch<AdminProductRow>(`/admin/products/${id}/archive`, { method: 'PATCH', body: '{}' })
+	);
 }
 
 export async function deleteProduct(id: string): Promise<AdminProductRow> {

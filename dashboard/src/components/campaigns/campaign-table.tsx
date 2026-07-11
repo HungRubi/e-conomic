@@ -88,7 +88,10 @@ export function CampaignTable({
 								}}
 							>
 								<TableCell>
-									<div className='flex items-center justify-center' onClick={e => e.stopPropagation()}>
+									<div
+										className='flex items-center justify-center'
+										onClick={e => e.stopPropagation()}
+									>
 										<GripVerticalIcon className='text-muted-foreground size-4' />
 									</div>
 								</TableCell>
@@ -97,7 +100,11 @@ export function CampaignTable({
 								<TableCell>
 									<Badge
 										variant={
-											row.status === 'ACTIVE' ? 'success' : row.status === 'DRAFT' ? 'warning' : 'muted'
+											row.status === 'ACTIVE'
+												? 'success'
+												: row.status === 'DRAFT'
+													? 'warning'
+													: 'muted'
 										}
 									>
 										{STATUS_LABEL[row.status]}
@@ -121,7 +128,11 @@ export function CampaignTable({
 												<EllipsisVerticalIcon className='size-4' />
 											</Button>
 										</DropdownMenuTrigger>
-										<DropdownMenuContent align='end' className='w-44' onClick={e => e.stopPropagation()}>
+										<DropdownMenuContent
+											align='end'
+											className='w-44'
+											onClick={e => e.stopPropagation()}
+										>
 											<DropdownMenuItem onClick={() => onOpenDetail(row)}>
 												<ArrowUpRight className='size-4' />
 												Mở chi tiết
@@ -129,7 +140,10 @@ export function CampaignTable({
 											{canDelete ? (
 												<>
 													<DropdownMenuSeparator />
-													<DropdownMenuItem variant='destructive' onClick={() => onDelete(row)}>
+													<DropdownMenuItem
+														variant='destructive'
+														onClick={() => onDelete(row)}
+													>
 														<Trash2 className='size-4' />
 														Xóa
 													</DropdownMenuItem>

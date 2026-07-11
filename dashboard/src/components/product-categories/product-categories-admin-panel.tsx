@@ -49,15 +49,13 @@ import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { parentChoicesForCategoryForm } from '@/lib/product-category-helpers';
-import {
-	digitsOnly,
-	type FieldErrorMap,
-	scrollToFirstFieldError,
-	stripFieldError,
-} from '@/lib/form-field-ui';
+import { digitsOnly, type FieldErrorMap, scrollToFirstFieldError, stripFieldError } from '@/lib/form-field-ui';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Textarea } from '@/components/ui/textarea';
-import { usePaginatedProductCategoryList, type ProductCategoryListSortKey } from '@/hooks/use-paginated-product-category-list';
+import {
+	usePaginatedProductCategoryList,
+	type ProductCategoryListSortKey,
+} from '@/hooks/use-paginated-product-category-list';
 import { publicAssetUrl } from '@/lib/public-asset-url';
 import { cn } from '@/lib/utils';
 import {
@@ -102,15 +100,8 @@ export function ProductCategoriesAdminPanel() {
 	const [statusFilter, setStatusFilter] = React.useState<'all' | AdminProductCategoryRow['status']>('all');
 	const [levelFilter, setLevelFilter] = React.useState<'all' | 0 | 1 | 2>('all');
 
-	const { rows, total, loading, error, page, setPage, refetch, upsertRow, removeRow } = usePaginatedProductCategoryList(
-		listCategories,
-		qInput,
-		sortBy,
-		sortOrder,
-		pageSize,
-		statusFilter,
-		levelFilter
-	);
+	const { rows, total, loading, error, page, setPage, refetch, upsertRow, removeRow } =
+		usePaginatedProductCategoryList(listCategories, qInput, sortBy, sortOrder, pageSize, statusFilter, levelFilter);
 
 	const [lookupRows, setLookupRows] = React.useState<AdminProductCategoryRow[]>([]);
 
@@ -263,9 +254,7 @@ export function ProductCategoriesAdminPanel() {
 			<div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
 				<div>
 					<h1 className='text-lg font-semibold tracking-tight'>Danh mục sản phẩm</h1>
-					<p className='text-muted-foreground text-sm'>
-						Click một danh mục để xem chi tiết và chỉnh sửa.
-					</p>
+					<p className='text-muted-foreground text-sm'>Click một danh mục để xem chi tiết và chỉnh sửa.</p>
 				</div>
 				<Button type='button' size='sm' className='gap-1.5' onClick={openCreate}>
 					<PlusIcon className='size-4' />
@@ -299,7 +288,10 @@ export function ProductCategoriesAdminPanel() {
 							</SelectGroup>
 						</SelectContent>
 					</Select>
-					<Select value={String(levelFilter)} onValueChange={v => setLevelFilter(v === 'all' ? 'all' : (Number(v) as 0 | 1 | 2))}>
+					<Select
+						value={String(levelFilter)}
+						onValueChange={v => setLevelFilter(v === 'all' ? 'all' : (Number(v) as 0 | 1 | 2))}
+					>
 						<SelectTrigger className='w-36'>
 							<SelectValue />
 						</SelectTrigger>
@@ -395,7 +387,10 @@ export function ProductCategoriesAdminPanel() {
 									}}
 								>
 									<TableCell>
-										<div className='flex items-center justify-center' onClick={e => e.stopPropagation()}>
+										<div
+											className='flex items-center justify-center'
+											onClick={e => e.stopPropagation()}
+										>
 											<GripVerticalIcon className='text-muted-foreground size-4' />
 										</div>
 									</TableCell>
@@ -413,16 +408,26 @@ export function ProductCategoriesAdminPanel() {
 											</span>
 										)}
 									</TableCell>
-									<TableCell className='max-w-0 truncate font-medium' title={row.name}>{row.name}</TableCell>
-									<TableCell className='text-muted-foreground font-mono text-sm'>{row.slug}</TableCell>
+									<TableCell className='max-w-0 truncate font-medium' title={row.name}>
+										{row.name}
+									</TableCell>
+									<TableCell className='text-muted-foreground font-mono text-sm'>
+										{row.slug}
+									</TableCell>
 									<TableCell className='text-sm'>{LEVEL_LABEL[row.level] ?? row.level}</TableCell>
 									<TableCell className='text-muted-foreground text-sm'>
-										{row.parentId ? (nameById.get(row.parentId) ?? row.parentId.slice(0, 8) + '…') : '—'}
+										{row.parentId
+											? (nameById.get(row.parentId) ?? row.parentId.slice(0, 8) + '…')
+											: '—'}
 									</TableCell>
 									<TableCell>
-										<Badge variant={CONTENT_STATUS_BADGE[row.status]}>{STATUS_LABEL[row.status]}</Badge>
+										<Badge variant={CONTENT_STATUS_BADGE[row.status]}>
+											{STATUS_LABEL[row.status]}
+										</Badge>
 									</TableCell>
-									<TableCell className='text-muted-foreground hidden text-sm md:table-cell'>{fmtUserDate(row.updatedAt)}</TableCell>
+									<TableCell className='text-muted-foreground hidden text-sm md:table-cell'>
+										{fmtUserDate(row.updatedAt)}
+									</TableCell>
 									<TableCell className='text-right'>
 										<DropdownMenu>
 											<DropdownMenuTrigger asChild>
@@ -437,7 +442,11 @@ export function ProductCategoriesAdminPanel() {
 													<EllipsisVerticalIcon className='size-4' />
 												</Button>
 											</DropdownMenuTrigger>
-											<DropdownMenuContent align='end' className='w-48' onClick={e => e.stopPropagation()}>
+											<DropdownMenuContent
+												align='end'
+												className='w-48'
+												onClick={e => e.stopPropagation()}
+											>
 												<DropdownMenuItem onClick={() => openDetail(row)}>
 													<ArrowUpRight className='size-4' />
 													Mở chi tiết
@@ -450,7 +459,9 @@ export function ProductCategoriesAdminPanel() {
 															reloadLookup();
 															toast.success('đã xuất bản');
 														} catch (e) {
-															toast.error(e instanceof AuthApiError ? e.message : 'Thất bại');
+															toast.error(
+																e instanceof AuthApiError ? e.message : 'Thất bại'
+															);
 														}
 													}}
 												>
@@ -465,7 +476,9 @@ export function ProductCategoriesAdminPanel() {
 															reloadLookup();
 															toast.success('đã lưu trữ');
 														} catch (e) {
-															toast.error(e instanceof AuthApiError ? e.message : 'Thất bại');
+															toast.error(
+																e instanceof AuthApiError ? e.message : 'Thất bại'
+															);
 														}
 													}}
 												>
@@ -501,7 +514,14 @@ export function ProductCategoriesAdminPanel() {
 					Hiển thị {total === 0 ? 0 : page * pageSize + 1}–{Math.min((page + 1) * pageSize, total)} / {total}
 				</span>
 				<div className='flex items-center gap-2'>
-					<Button type='button' variant='outline' size='icon' className='size-8' disabled={page <= 0} onClick={() => setPage(p => Math.max(0, p - 1))}>
+					<Button
+						type='button'
+						variant='outline'
+						size='icon'
+						className='size-8'
+						disabled={page <= 0}
+						onClick={() => setPage(p => Math.max(0, p - 1))}
+					>
 						<ChevronLeftIcon className='size-4' />
 					</Button>
 					<span>
@@ -525,20 +545,24 @@ export function ProductCategoriesAdminPanel() {
 					<DrawerHeader className='shrink-0 border-b px-6 py-5 pr-16 text-left'>
 						<DrawerTitle>Danh mục mới</DrawerTitle>
 						<DrawerDescription className='mt-1.5 max-w-2xl'>
-							Slug để trống sẽ tự sinh từ tên. Cấp được tính theo danh mục cha (tối đa cấp 2). Sau khi tạo xong
-							bạn có thể vào trang chi tiết để chỉnh sửa thông tin và quản lý sản phẩm.
+							Slug để trống sẽ tự sinh từ tên. Cấp được tính theo danh mục cha (tối đa cấp 2). Sau khi tạo
+							xong bạn có thể vào trang chi tiết để chỉnh sửa thông tin và quản lý sản phẩm.
 						</DrawerDescription>
 					</DrawerHeader>
 
 					<div className='min-h-0 flex-1 overflow-y-auto'>
 						<div className='mx-auto w-full max-w-6xl px-6 py-6 pb-8'>
 							{formError ? (
-								<p className='text-destructive bg-destructive/10 mb-6 rounded-md px-3 py-2 text-sm'>{formError}</p>
+								<p className='text-destructive bg-destructive/10 mb-6 rounded-md px-3 py-2 text-sm'>
+									{formError}
+								</p>
 							) : null}
 
 							<FieldGroup className='flex flex-col gap-8'>
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Nhận diện</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Nhận diện
+									</p>
 									<div className='grid gap-4 lg:grid-cols-2'>
 										<Field>
 											<FieldLabel htmlFor='cf-name'>Tên</FieldLabel>
@@ -554,7 +578,9 @@ export function ProductCategoriesAdminPanel() {
 												aria-invalid={Boolean(fieldErrors['cf-name'])}
 											/>
 											{fieldErrors['cf-name'] ? (
-												<p className='text-destructive mt-1 text-sm'>{fieldErrors['cf-name']}</p>
+												<p className='text-destructive mt-1 text-sm'>
+													{fieldErrors['cf-name']}
+												</p>
 											) : null}
 										</Field>
 										<Field>
@@ -573,14 +599,20 @@ export function ProductCategoriesAdminPanel() {
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Phân cấp</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Phân cấp
+									</p>
 									<p className='text-muted-foreground text-xs'>
 										Chọn danh mục cha (chỉ cấp 0–1 có thể làm cha).
 									</p>
 									<div className='grid gap-4 lg:grid-cols-2'>
 										<Field>
 											<FieldLabel htmlFor='cf-parent'>Danh mục cha</FieldLabel>
-											<Select value={formParentId} onValueChange={setFormParentId} disabled={formBusy}>
+											<Select
+												value={formParentId}
+												onValueChange={setFormParentId}
+												disabled={formBusy}
+											>
 												<SelectTrigger id='cf-parent' className='mt-1.5 w-full'>
 													<SelectValue placeholder='Chọn danh mục cha' />
 												</SelectTrigger>
@@ -588,7 +620,9 @@ export function ProductCategoriesAdminPanel() {
 													<SelectItem value='__root__'>(Không — cấp gốc)</SelectItem>
 													{parentChoices.map(c => (
 														<SelectItem key={c.id} value={c.id}>
-															<span className='text-muted-foreground mr-1.5 font-mono text-[10px]'>{LEVEL_LABEL[c.level]}</span>
+															<span className='text-muted-foreground mr-1.5 font-mono text-[10px]'>
+																{LEVEL_LABEL[c.level]}
+															</span>
 															{`${'—'.repeat(c.level)} ${c.name}`}
 														</SelectItem>
 													))}
@@ -601,7 +635,10 @@ export function ProductCategoriesAdminPanel() {
 												id='cf-sort'
 												inputMode='numeric'
 												pattern='[0-9]*'
-												className={cn('mt-1.5 w-full lg:max-w-none', fieldErrors['cf-sort'] && 'border-destructive')}
+												className={cn(
+													'mt-1.5 w-full lg:max-w-none',
+													fieldErrors['cf-sort'] && 'border-destructive'
+												)}
 												value={formSortOrder}
 												onChange={e => {
 													setFormSortOrder(digitsOnly(e.target.value));
@@ -611,14 +648,18 @@ export function ProductCategoriesAdminPanel() {
 												aria-invalid={Boolean(fieldErrors['cf-sort'])}
 											/>
 											{fieldErrors['cf-sort'] ? (
-												<p className='text-destructive mt-1 text-sm'>{fieldErrors['cf-sort']}</p>
+												<p className='text-destructive mt-1 text-sm'>
+													{fieldErrors['cf-sort']}
+												</p>
 											) : null}
 										</Field>
 									</div>
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Nội dung</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Nội dung
+									</p>
 									<div className='flex flex-col gap-6'>
 										<Field>
 											<FieldLabel htmlFor='cf-desc'>Mô tả</FieldLabel>
@@ -653,14 +694,20 @@ export function ProductCategoriesAdminPanel() {
 															stripFieldError(setFieldErrors, 'cf-image');
 															toast.success('đã tải ảnh lên');
 														} catch (e) {
-															toast.error(e instanceof AuthApiError ? e.message : 'Tải ảnh thất bại');
+															toast.error(
+																e instanceof AuthApiError
+																	? e.message
+																	: 'Tải ảnh thất bại'
+															);
 														} finally {
 															setUploadBusy(false);
 														}
 													}}
 												/>
 												{fieldErrors['cf-image'] ? (
-													<p className='text-destructive mt-1 text-sm'>{fieldErrors['cf-image']}</p>
+													<p className='text-destructive mt-1 text-sm'>
+														{fieldErrors['cf-image']}
+													</p>
 												) : null}
 											</div>
 										</Field>
@@ -668,10 +715,16 @@ export function ProductCategoriesAdminPanel() {
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Trạng thái</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Trạng thái
+									</p>
 									<Field>
 										<FieldLabel>Trạng thái</FieldLabel>
-										<Select value={formStatus} onValueChange={v => setFormStatus(v as AdminProductCategoryRow['status'])} disabled={formBusy}>
+										<Select
+											value={formStatus}
+											onValueChange={v => setFormStatus(v as AdminProductCategoryRow['status'])}
+											disabled={formBusy}
+										>
 											<SelectTrigger id='cf-status' className='mt-1.5'>
 												<SelectValue />
 											</SelectTrigger>
@@ -689,7 +742,12 @@ export function ProductCategoriesAdminPanel() {
 
 					<DrawerFooter className='mt-auto shrink-0 border-t px-0 py-0'>
 						<div className='mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 py-4 sm:flex-row sm:justify-end'>
-							<Button type='button' variant='outline' onClick={() => setCreateOpen(false)} disabled={formBusy}>
+							<Button
+								type='button'
+								variant='outline'
+								onClick={() => setCreateOpen(false)}
+								disabled={formBusy}
+							>
 								Hủy
 							</Button>
 							<Button type='button' onClick={() => void submitCreate()} disabled={formBusy}>
@@ -700,12 +758,17 @@ export function ProductCategoriesAdminPanel() {
 				</DrawerPageContent>
 			</Drawer>
 
-			<AlertDialog open={Boolean(deleteTarget)} onOpenChange={open => !open && !deleteBusy && setDeleteTarget(null)}>
+			<AlertDialog
+				open={Boolean(deleteTarget)}
+				onOpenChange={open => !open && !deleteBusy && setDeleteTarget(null)}
+			>
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>Xóa danh mục?</AlertDialogTitle>
 						<AlertDialogDescription>
-							Chỉ xóa được khi không còn danh mục con. <span className='font-medium text-foreground'>{deleteTarget?.name}</span> sẽ bị xóa vĩnh viễn.
+							Chỉ xóa được khi không còn danh mục con.{' '}
+							<span className='font-medium text-foreground'>{deleteTarget?.name}</span> sẽ bị xóa vĩnh
+							viễn.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>

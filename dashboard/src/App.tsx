@@ -13,25 +13,25 @@ const ForgotPasswordPage = React.lazy(() => import('@/pages/forgot-password-page
 const ResetPasswordPage = React.lazy(() => import('@/pages/reset-password-page'));
 
 function publicLazy(node: React.ReactNode) {
-  return (
-    <ErrorBoundary>
-      <React.Suspense fallback={<PageLoader />}>{node}</React.Suspense>
-    </ErrorBoundary>
-  );
+	return (
+		<ErrorBoundary>
+			<React.Suspense fallback={<PageLoader />}>{node}</React.Suspense>
+		</ErrorBoundary>
+	);
 }
 
 export default function App() {
-  return (
-    <TooltipProvider delayDuration={0}>
-      <Routes>
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/forgot-password' element={publicLazy(<ForgotPasswordPage />)} />
-        <Route path='/reset-password/:token' element={publicLazy(<ResetPasswordPage />)} />
-        <Route element={<RequireAuth />}>
-          <Route element={<AdminLayout />}>{adminNestedRouteElements}</Route>
-        </Route>
-      </Routes>
-      <Toaster />
-    </TooltipProvider>
-  );
+	return (
+		<TooltipProvider delayDuration={0}>
+			<Routes>
+				<Route path='/login' element={<LoginPage />} />
+				<Route path='/forgot-password' element={publicLazy(<ForgotPasswordPage />)} />
+				<Route path='/reset-password/:token' element={publicLazy(<ResetPasswordPage />)} />
+				<Route element={<RequireAuth />}>
+					<Route element={<AdminLayout />}>{adminNestedRouteElements}</Route>
+				</Route>
+			</Routes>
+			<Toaster />
+		</TooltipProvider>
+	);
 }

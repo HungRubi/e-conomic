@@ -117,7 +117,7 @@ export function ArticlesAdminPanel() {
 	const [uploadSlot, setUploadSlot] = React.useState<UploadSlot | null>(null);
 	const [deleteTarget, setDeleteTarget] = React.useState<AdminArticleRow | null>(null);
 	const [deleteBusy, setDeleteBusy] = React.useState(false);
-	
+
 	const uploadBusy = uploadSlot !== null;
 	const formDisabled = formBusy || uploadBusy;
 
@@ -147,8 +147,7 @@ export function ArticlesAdminPanel() {
 	function buildBody(): ArticleWriteBody {
 		const nullIfEmpty = (s: string) => (s.trim() === '' ? null : s.trim());
 		const reading = formReading.trim() === '' ? null : Number.parseInt(formReading, 10);
-		const publishedAt =
-			formPublishedLocal.trim() === '' ? null : new Date(formPublishedLocal).toISOString();
+		const publishedAt = formPublishedLocal.trim() === '' ? null : new Date(formPublishedLocal).toISOString();
 		return {
 			title: formTitle.trim(),
 			...(formSlug.trim() ? { slug: formSlug.trim() } : {}),
@@ -223,9 +222,9 @@ export function ArticlesAdminPanel() {
 		}
 	}
 
-			const pageCount = Math.max(1, Math.ceil(total / pageSize));
+	const pageCount = Math.max(1, Math.ceil(total / pageSize));
 
-		return (
+	return (
 		<div className='dashboard-fade-in flex min-h-0 flex-1 flex-col gap-4'>
 			<div className='flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
 				<div>
@@ -304,7 +303,9 @@ export function ArticlesAdminPanel() {
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead className='w-10'><span className='sr-only'>Kéo</span></TableHead>
+							<TableHead className='w-10'>
+								<span className='sr-only'>Kéo</span>
+							</TableHead>
 							<TableHead>Tiêu đề</TableHead>
 							<TableHead className='w-28'>Trạng thái</TableHead>
 							<TableHead className='text-muted-foreground hidden lg:table-cell'>Xuất bản</TableHead>
@@ -343,7 +344,9 @@ export function ArticlesAdminPanel() {
 										<span className='line-clamp-2'>{row.title}</span>
 									</TableCell>
 									<TableCell>
-										<Badge variant={CONTENT_STATUS_BADGE[row.status]}>{STATUS_LABEL[row.status]}</Badge>
+										<Badge variant={CONTENT_STATUS_BADGE[row.status]}>
+											{STATUS_LABEL[row.status]}
+										</Badge>
 									</TableCell>
 									<TableCell className='text-muted-foreground hidden text-sm lg:table-cell'>
 										{row.publishedAt ? fmtUserDate(row.publishedAt) : '—'}
@@ -379,7 +382,11 @@ export function ArticlesAdminPanel() {
 																	toast.success('đã xuất bản');
 																	void refetch({ silent: true });
 																} catch (e) {
-																	toast.error(e instanceof AuthApiError ? e.message : 'Thất bại');
+																	toast.error(
+																		e instanceof AuthApiError
+																			? e.message
+																			: 'Thất bại'
+																	);
 																}
 															}}
 														>
@@ -394,7 +401,11 @@ export function ArticlesAdminPanel() {
 																	toast.success('đã lưu trữ');
 																	void refetch({ silent: true });
 																} catch (e) {
-																	toast.error(e instanceof AuthApiError ? e.message : 'Thất bại');
+																	toast.error(
+																		e instanceof AuthApiError
+																			? e.message
+																			: 'Thất bại'
+																	);
 																}
 															}}
 														>
@@ -406,7 +417,10 @@ export function ArticlesAdminPanel() {
 												{crud.canDelete ? (
 													<>
 														<DropdownMenuSeparator />
-														<DropdownMenuItem variant='destructive' onClick={() => setDeleteTarget(row)}>
+														<DropdownMenuItem
+															variant='destructive'
+															onClick={() => setDeleteTarget(row)}
+														>
 															<Trash2 className='size-4' />
 															Xóa
 														</DropdownMenuItem>
@@ -458,20 +472,24 @@ export function ArticlesAdminPanel() {
 					<DrawerHeader className='shrink-0 border-b px-6 py-5 pr-16 text-left'>
 						<DrawerTitle>Bài viết mới</DrawerTitle>
 						<DrawerDescription className='mt-1.5 max-w-2xl'>
-							Slug để trống sẽ tự sinh từ tiêu đề. Sau khi tạo xong bạn có thể mở chi tiết để chỉnh sửa từng
-							trường inline.
+							Slug để trống sẽ tự sinh từ tiêu đề. Sau khi tạo xong bạn có thể mở chi tiết để chỉnh sửa
+							từng trường inline.
 						</DrawerDescription>
 					</DrawerHeader>
 
 					<div className='min-h-0 flex-1 overflow-y-auto'>
 						<div className='mx-auto w-full max-w-6xl px-6 py-6 pb-8'>
 							{formError ? (
-								<p className='text-destructive bg-destructive/10 mb-6 rounded-md px-3 py-2 text-sm'>{formError}</p>
+								<p className='text-destructive bg-destructive/10 mb-6 rounded-md px-3 py-2 text-sm'>
+									{formError}
+								</p>
 							) : null}
 
 							<FieldGroup className='flex flex-col gap-8'>
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Nhận diện</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Nhận diện
+									</p>
 									<div className='grid gap-4 lg:grid-cols-2'>
 										<Field>
 											<FieldLabel htmlFor='art-title'>Tiêu đề</FieldLabel>
@@ -499,7 +517,9 @@ export function ArticlesAdminPanel() {
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Nội dung</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Nội dung
+									</p>
 									<Field>
 										<FieldLabel htmlFor='art-excerpt'>Tóm tắt (excerpt)</FieldLabel>
 										<Textarea
@@ -526,7 +546,9 @@ export function ArticlesAdminPanel() {
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Ảnh</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Ảnh
+									</p>
 									<div className='grid gap-4 lg:grid-cols-2'>
 										<Field>
 											<FieldLabel>Ảnh bìa</FieldLabel>
@@ -558,7 +580,9 @@ export function ArticlesAdminPanel() {
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>SEO</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										SEO
+									</p>
 									<div className='grid gap-4 lg:grid-cols-2'>
 										<Field>
 											<FieldLabel htmlFor='art-meta-title'>Meta title</FieldLabel>
@@ -596,7 +620,9 @@ export function ArticlesAdminPanel() {
 								</section>
 
 								<section className='space-y-4'>
-									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Hiển thị</p>
+									<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+										Hiển thị
+									</p>
 									<div className='grid gap-4 lg:grid-cols-2'>
 										<Field>
 											<FieldLabel htmlFor='art-canonical'>URL chuẩn (canonical)</FieldLabel>
@@ -675,7 +701,12 @@ export function ArticlesAdminPanel() {
 
 					<DrawerFooter className='mt-auto shrink-0 border-t px-0 py-0'>
 						<div className='mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 py-4 sm:flex-row sm:justify-end'>
-							<Button type='button' variant='outline' onClick={() => setCreateOpen(false)} disabled={formBusy}>
+							<Button
+								type='button'
+								variant='outline'
+								onClick={() => setCreateOpen(false)}
+								disabled={formBusy}
+							>
 								Hủy
 							</Button>
 							<Button type='button' onClick={() => void submitCreate()} disabled={formDisabled}>
@@ -686,12 +717,16 @@ export function ArticlesAdminPanel() {
 				</DrawerPageContent>
 			</Drawer>
 
-			<AlertDialog open={Boolean(deleteTarget)} onOpenChange={open => !open && !deleteBusy && setDeleteTarget(null)}>
+			<AlertDialog
+				open={Boolean(deleteTarget)}
+				onOpenChange={open => !open && !deleteBusy && setDeleteTarget(null)}
+			>
 				<AlertDialogContent>
 					<AlertDialogHeader>
 						<AlertDialogTitle>Xóa bài viết?</AlertDialogTitle>
 						<AlertDialogDescription>
-							<span className='font-medium text-foreground'>{deleteTarget?.title}</span> sẽ bị xóa vĩnh viễn.
+							<span className='font-medium text-foreground'>{deleteTarget?.title}</span> sẽ bị xóa vĩnh
+							viễn.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>

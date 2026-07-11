@@ -10,14 +10,28 @@ export class UsersService {
 
   async findAll() {
     return this.prisma.user.findMany({
-      select: { id: true, email: true, name: true, role: true, createdAt: true, updatedAt: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
   async findOne(id: string) {
     const user = await this.prisma.user.findUnique({
       where: { id },
-      select: { id: true, email: true, name: true, role: true, createdAt: true, updatedAt: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
     if (!user) throw new NotFoundException('User not found');
     return user;
@@ -27,7 +41,14 @@ export class UsersService {
     const hashed = await bcrypt.hash(dto.password, 10);
     return this.prisma.user.create({
       data: { ...dto, password: hashed },
-      select: { id: true, email: true, name: true, role: true, createdAt: true, updatedAt: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
@@ -42,7 +63,14 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id },
       data,
-      select: { id: true, email: true, name: true, role: true, createdAt: true, updatedAt: true },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 

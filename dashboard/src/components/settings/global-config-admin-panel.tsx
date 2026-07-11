@@ -212,7 +212,8 @@ export function GlobalConfigAdminPanel() {
 			<div>
 				<h2 className='text-lg font-semibold tracking-tight'>Cấu hình website</h2>
 				<p className='text-muted-foreground mt-1 text-sm'>
-					Một bản ghi duy nhất cho toàn site (tên, logo, SEO, mạng xã hội, ảnh chia sẻ). Không thêm hay xóa bản ghi.
+					Một bản ghi duy nhất cho toàn site (tên, logo, SEO, mạng xã hội, ảnh chia sẻ). Không thêm hay xóa
+					bản ghi.
 				</p>
 			</div>
 
@@ -234,7 +235,11 @@ export function GlobalConfigAdminPanel() {
 							<FieldLabel>Logo</FieldLabel>
 							<div className='mt-1.5'>
 								<SingleImageUrlDropzone
-									label={logoUrl.trim() ? 'Kéo thả hoặc bấm để thay logo' : 'Kéo thả hoặc bấm để chọn logo'}
+									label={
+										logoUrl.trim()
+											? 'Kéo thả hoặc bấm để thay logo'
+											: 'Kéo thả hoặc bấm để chọn logo'
+									}
 									hint='Đường dẫn lưu sau khi tải lên (dùng trên header web)'
 									url={logoUrl}
 									disabled={formDisabled}
@@ -247,7 +252,11 @@ export function GlobalConfigAdminPanel() {
 							<FieldLabel>Favicon</FieldLabel>
 							<div className='mt-1.5'>
 								<SingleImageUrlDropzone
-									label={faviconUrl.trim() ? 'Kéo thả hoặc bấm để thay favicon' : 'Kéo thả hoặc bấm để chọn favicon'}
+									label={
+										faviconUrl.trim()
+											? 'Kéo thả hoặc bấm để thay favicon'
+											: 'Kéo thả hoặc bấm để chọn favicon'
+									}
 									hint='PNG / ICO — hiển thị tab trình duyệt'
 									url={faviconUrl}
 									disabled={formDisabled}
@@ -257,13 +266,15 @@ export function GlobalConfigAdminPanel() {
 							</div>
 						</Field>
 					</div>
-
 				</section>
 
 				<section className='space-y-4 max-w-[calc(50%-4px)]'>
-					<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Liên hệ (footer)</p>
+					<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+						Liên hệ (footer)
+					</p>
 					<p className='text-muted-foreground text-xs'>
-						Số điện thoại, địa chỉ và giờ mở cửa. Nhãn «Đường dây nóng» / «Đang mở cửa» vẫn theo ngôn ngữ trên website.
+						Số điện thoại, địa chỉ và giờ mở cửa. Nhãn «Đường dây nóng» / «Đang mở cửa» vẫn theo ngôn ngữ
+						trên website.
 					</p>
 					<Field>
 						<FieldLabel htmlFor='gc-phone'>Số hotline</FieldLabel>
@@ -301,8 +312,12 @@ export function GlobalConfigAdminPanel() {
 				</section>
 
 				<section className='space-y-4'>
-					<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Màu sắc thương hiệu (Brand)</p>
-					<p className='text-muted-foreground text-xs'>Màu chính và màu phụ cho logo, text, nền tổng thể website.</p>
+					<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+						Màu sắc thương hiệu (Brand)
+					</p>
+					<p className='text-muted-foreground text-xs'>
+						Màu chính và màu phụ cho logo, text, nền tổng thể website.
+					</p>
 					<div className='grid gap-4 lg:grid-cols-3'>
 						<Field>
 							<FieldLabel htmlFor='gc-color-primary'>Màu chính (Primary)</FieldLabel>
@@ -374,7 +389,9 @@ export function GlobalConfigAdminPanel() {
 				</section>
 
 				<section className='space-y-4'>
-					<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Mạng xã hội & cửa hàng</p>
+					<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+						Mạng xã hội & cửa hàng
+					</p>
 					<div className='grid gap-4 lg:grid-cols-2'>
 						<Field>
 							<FieldLabel htmlFor='gc-fb'>Facebook</FieldLabel>
@@ -472,15 +489,22 @@ export function GlobalConfigAdminPanel() {
 				</section>
 
 				<section className='space-y-4'>
-					<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>Chia sẻ mạng xã hội (Open Graph)</p>
+					<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>
+						Chia sẻ mạng xã hội (Open Graph)
+					</p>
 					<p className='text-muted-foreground text-xs'>
-						Ảnh mặc định khi dán link lên Zalo, Facebook, v.v. (og:image). Nên tỷ lệ ngang, tối thiểu khoảng 1200×630.
+						Ảnh mặc định khi dán link lên Zalo, Facebook, v.v. (og:image). Nên tỷ lệ ngang, tối thiểu khoảng
+						1200×630.
 					</p>
 					<Field>
 						<FieldLabel>Ảnh OG</FieldLabel>
 						<div className='mt-1.5'>
 							<SingleImageUrlDropzone
-								label={ogImageUrl.trim() ? 'Kéo thả hoặc bấm để thay ảnh OG' : 'Kéo thả hoặc bấm để chọn ảnh OG'}
+								label={
+									ogImageUrl.trim()
+										? 'Kéo thả hoặc bấm để thay ảnh OG'
+										: 'Kéo thả hoặc bấm để chọn ảnh OG'
+								}
 								hint='JPEG / PNG — hiển thị khi share link'
 								url={ogImageUrl}
 								disabled={formDisabled}
@@ -494,15 +518,21 @@ export function GlobalConfigAdminPanel() {
 				<section className='space-y-4'>
 					<p className='text-muted-foreground text-xs font-medium tracking-wide uppercase'>NỀN FOOTER</p>
 					<p className='text-muted-foreground text-xs'>
-						Ảnh nền footer toàn site. Nếu không có ảnh hoặc ảnh lỗi sẽ hiển thị nền trắng. Nên dùng ảnh tối màu vì có overlay đen phủ lên.
+						Ảnh nền footer toàn site. Nếu không có ảnh hoặc ảnh lỗi sẽ hiển thị nền trắng. Nên dùng ảnh tối
+						màu vì có overlay đen phủ lên.
 						<br />
-						Kích thước khuyến nghị: <strong>1920×800px</strong> (tỉ lệ ~12:5). Ảnh quá nhỏ sẽ bị kéo giãn, quá dọc sẽ bị crop nhiều.
+						Kích thước khuyến nghị: <strong>1920×800px</strong> (tỉ lệ ~12:5). Ảnh quá nhỏ sẽ bị kéo giãn,
+						quá dọc sẽ bị crop nhiều.
 					</p>
 					<Field>
 						<FieldLabel>Ảnh nền footer</FieldLabel>
 						<div className='mt-1.5'>
 							<SingleImageUrlDropzone
-								label={footerBackgroundImageUrl.trim() ? 'Kéo thả hoặc bấm để thay ảnh nền footer' : 'Kéo thả hoặc bấm để chọn ảnh nền footer'}
+								label={
+									footerBackgroundImageUrl.trim()
+										? 'Kéo thả hoặc bấm để thay ảnh nền footer'
+										: 'Kéo thả hoặc bấm để chọn ảnh nền footer'
+								}
 								hint='PNG / JPEG — hiển thị làm background cho footer'
 								url={footerBackgroundImageUrl}
 								disabled={formDisabled}

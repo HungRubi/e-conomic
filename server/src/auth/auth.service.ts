@@ -31,9 +31,7 @@ export class AuthService {
   // ── Register ──────────────────────────────────────────────
   async register(dto: RegisterDto) {
     if (dto.password !== dto.confirmPassword) {
-      throw new BadRequestException(
-        'Passwords do not match',
-      );
+      throw new BadRequestException('Passwords do not match');
     }
     if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/.test(dto.password)) {
       throw new BadRequestException(
@@ -158,7 +156,8 @@ export class AuthService {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
-    if (!user) return { message: 'If the email exists, a reset link has been sent.' };
+    if (!user)
+      return { message: 'If the email exists, a reset link has been sent.' };
 
     const resetToken = this.jwtService.sign(
       { sub: user.id, type: 'reset' },
@@ -172,7 +171,10 @@ export class AuthService {
     });
 
     // In production, send email here. For dev, return token in response.
-    return { message: 'If the email exists, a reset link has been sent.', token: resetToken };
+    return {
+      message: 'If the email exists, a reset link has been sent.',
+      token: resetToken,
+    };
   }
 
   // ── Reset password ─────────────────────────────────────────

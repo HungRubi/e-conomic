@@ -109,7 +109,7 @@ function DrawerPageContent({
 					'fixed z-50 flex max-h-dvh flex-col overflow-hidden border bg-popover text-sm text-popover-foreground outline-none',
 					'inset-0 rounded-none',
 					'md:inset-[15px] md:max-h-[calc(100dvh-30px)] md:rounded-xl',
-					className,
+					className
 				)}
 				{...props}
 			>

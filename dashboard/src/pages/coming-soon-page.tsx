@@ -27,7 +27,9 @@ export default function ComingSoonPage({
 				{description ? (
 					<p className='text-sm text-muted-foreground'>{description}</p>
 				) : (
-					<p className='text-sm text-muted-foreground'>Tính năng đang được hoàn thiện. Sẽ ra mắt ở các bản cập nhật tiếp theo.</p>
+					<p className='text-sm text-muted-foreground'>
+						Tính năng đang được hoàn thiện. Sẽ ra mắt ở các bản cập nhật tiếp theo.
+					</p>
 				)}
 			</div>
 			<Button asChild type='button' variant='outline'>

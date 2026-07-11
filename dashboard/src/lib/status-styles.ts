@@ -30,13 +30,7 @@ export const USER_ROLE_BADGE: Record<UserRoleKey, BadgeVariant> = {
 };
 
 export type OrderStatusKey =
-	| 'PENDING'
-	| 'CONFIRMED'
-	| 'PROCESSING'
-	| 'SHIPPED'
-	| 'DELIVERED'
-	| 'CANCELLED'
-	| 'REFUNDED';
+	'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED' | 'REFUNDED';
 
 /**
  * Trạng thái đơn hàng — màu sắc phản ánh hướng trong vòng đời:

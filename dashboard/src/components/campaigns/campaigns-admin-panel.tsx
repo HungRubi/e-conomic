@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-	createCampaign,
-	deleteCampaign,
-	fetchCampaigns,
-	type AdminCampaignRow,
-} from '@/api/admin-campaigns';
+import { createCampaign, deleteCampaign, fetchCampaigns, type AdminCampaignRow } from '@/api/admin-campaigns';
 import { AuthApiError } from '@/auth/auth-api';
 import {
 	AlertDialog,
@@ -19,10 +14,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import {
-	usePaginatedCampaignList,
-	type CampaignListSortKey,
-} from '@/hooks/use-paginated-campaign-list';
+import { usePaginatedCampaignList, type CampaignListSortKey } from '@/hooks/use-paginated-campaign-list';
 import { useEntityCrud } from '@/hooks/use-permission';
 import { CampaignTable } from '@/components/campaigns/campaign-table';
 import { CampaignFormDrawer } from '@/components/campaigns/campaign-form-drawer';
@@ -31,13 +23,9 @@ import { ChevronLeftIcon, ChevronRightIcon, PlusIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-const listCampaigns = (params: Parameters<typeof fetchCampaigns>[0]) =>
-	fetchCampaigns(params);
+const listCampaigns = (params: Parameters<typeof fetchCampaigns>[0]) => fetchCampaigns(params);
 
-const FORM_SCROLL_ORDER = [
-	'camp-title',
-	'camp-slug',
-] as const;
+const FORM_SCROLL_ORDER = ['camp-title', 'camp-slug'] as const;
 
 function parseOptionalInt(raw: string): number | null {
 	const t = raw.trim();
@@ -56,15 +44,14 @@ export function CampaignsAdminPanel() {
 	const [pageSize, setPageSize] = React.useState(10);
 	const [statusFilter, setStatusFilter] = React.useState<'all' | AdminCampaignRow['status']>('all');
 
-	const { rows, total, loading, error, page, setPage, refetch, upsertRow, removeRow } =
-		usePaginatedCampaignList(
-			listCampaigns,
-			qInput,
-			sortBy,
-			sortOrder,
-			pageSize,
-			statusFilter
-		);
+	const { rows, total, loading, error, page, setPage, refetch, upsertRow, removeRow } = usePaginatedCampaignList(
+		listCampaigns,
+		qInput,
+		sortBy,
+		sortOrder,
+		pageSize,
+		statusFilter
+	);
 
 	const [drawerOpen, setDrawerOpen] = React.useState(false);
 	const [formTitle, setFormTitle] = React.useState('');
@@ -340,7 +327,8 @@ export function CampaignsAdminPanel() {
 						<AlertDialogTitle>Xóa chiến dịch?</AlertDialogTitle>
 						<AlertDialogDescription>
 							Hành động này không thể hoàn tác. Chiến dịch{' '}
-							<span className='font-medium text-foreground'>{deleteTarget?.title}</span> sẽ bị xóa vĩnh viễn.
+							<span className='font-medium text-foreground'>{deleteTarget?.title}</span> sẽ bị xóa vĩnh
+							viễn.
 						</AlertDialogDescription>
 					</AlertDialogHeader>
 					<AlertDialogFooter>

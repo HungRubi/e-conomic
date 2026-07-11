@@ -208,7 +208,13 @@ export function ProductImagesEditor({ entries, onEntriesChange, disabled, fieldE
 							}
 						}}
 					/>
-					<Button type='button' variant='outline' disabled={disabled} onClick={appendUrl} className='sm:shrink-0'>
+					<Button
+						type='button'
+						variant='outline'
+						disabled={disabled}
+						onClick={appendUrl}
+						className='sm:shrink-0'
+					>
 						Thêm URL
 					</Button>
 				</div>
@@ -227,7 +233,12 @@ export function ProductImagesEditor({ entries, onEntriesChange, disabled, fieldE
 			{entries.length > 0 ? (
 				<div>
 					<p className='text-muted-foreground mb-2 text-xs'>Kéo để sắp xếp — ảnh đầu là ảnh chính.</p>
-					<DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd} onDragCancel={handleDragCancel}>
+					<DndContext
+						sensors={sensors}
+						onDragStart={handleDragStart}
+						onDragEnd={handleDragEnd}
+						onDragCancel={handleDragCancel}
+					>
 						<SortableContext items={entries.map(e => e.id)} strategy={verticalListSortingStrategy}>
 							<ul className='flex flex-col gap-2'>
 								{entries.map((entry, index) => (
@@ -245,7 +256,11 @@ export function ProductImagesEditor({ entries, onEntriesChange, disabled, fieldE
 							{activeEntry ? (
 								<div className='bg-card flex items-center gap-3 rounded-lg border p-2 ring-2 ring-foreground/20'>
 									<GripVerticalIcon className='text-muted-foreground size-5 shrink-0' />
-									<img src={publicAssetUrl(activeEntry.url)} alt='' className='bg-muted size-14 rounded-md border object-cover' />
+									<img
+										src={publicAssetUrl(activeEntry.url)}
+										alt=''
+										className='bg-muted size-14 rounded-md border object-cover'
+									/>
 								</div>
 							) : null}
 						</DragOverlay>
