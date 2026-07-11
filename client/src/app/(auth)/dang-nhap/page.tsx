@@ -4,7 +4,7 @@ import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock, Smartphone } from 'lucide-react';
 import { Button, Input } from '@/components';
-import { useToast } from '@/components/ui/Toast';
+import { toast } from 'sonner';
 
 interface Errors {
   email?: string;
@@ -12,7 +12,7 @@ interface Errors {
 }
 
 export default function LoginPage() {
-  const { showToast } = useToast();
+  //
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
@@ -40,7 +40,7 @@ export default function LoginPage() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 1200));
     setLoading(false);
-    showToast('success', 'Đăng nhập thành công!');
+    toast.success('Đăng nhập thành công!');
   };
 
   return (
@@ -106,7 +106,7 @@ export default function LoginPage() {
       {/* ── Google ── */}
       <button
         type="button"
-        onClick={() => showToast('info', 'Đang kết nối với Google...')}
+        onClick={() => toast.info('Đang kết nối với Google...')}
         className="flex w-full items-center justify-center gap-3 h-11 rounded-full border border-border text-sm font-medium text-text hover:bg-surface2 transition-all active:translate-y-px"
       >
         <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0" aria-hidden="true">
@@ -121,7 +121,7 @@ export default function LoginPage() {
       {/* ── Phone ── */}
       <button
         type="button"
-        onClick={() => showToast('info', 'Tính năng đang phát triển')}
+        onClick={() => toast.info('Tính năng đang phát triển')}
         className="mt-2 flex w-full items-center justify-center gap-3 h-11 rounded-full border border-border text-sm font-medium text-text2 hover:text-text hover:bg-surface2 transition-all active:translate-y-px"
       >
         <Smartphone className="w-4 h-4" />
@@ -131,7 +131,7 @@ export default function LoginPage() {
       {/* Register link */}
       <p className="mt-8 text-center text-sm text-text2">
         Chưa có tài khoản?{' '}
-        <Link href="/register" className="text-text font-semibold hover:underline underline-offset-2">
+        <Link href="/dang-ky" className="text-text font-semibold hover:underline underline-offset-2">
           Đăng ký
         </Link>
       </p>

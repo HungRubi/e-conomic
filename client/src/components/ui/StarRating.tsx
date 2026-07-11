@@ -1,4 +1,4 @@
-import { Star } from 'lucide-react';
+import { FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 
 interface StarRatingProps {
   rating: number;
@@ -11,9 +11,9 @@ interface StarRatingProps {
 }
 
 const sizeMap = {
-  sm: 'w-3 h-3',
-  md: 'w-4 h-4',
-  lg: 'w-5 h-5',
+  sm: 'text-[12px]',
+  md: 'text-[16px]',
+  lg: 'text-[20px]',
 };
 
 export default function StarRating({
@@ -30,6 +30,7 @@ export default function StarRating({
       {Array.from({ length: max }).map((_, i) => {
         const filled = rating >= i + 1;
         const half = !filled && rating >= i + 0.5;
+        const StarIcon = filled ? FaStar : half ? FaStarHalfAlt : FaRegStar;
         return (
           <button
             key={i}
@@ -38,16 +39,16 @@ export default function StarRating({
             onClick={() => interactive && onChange?.(i + 1)}
             className={
               interactive
-                ? 'cursor-pointer hover:-translate-y-px transition-transform'
+                ? 'cursor-pointer hover:scale-110 transition-transform'
                 : 'cursor-default'
             }
-            aria-label={`${i + 1} star${interactive ? '' : ''}`}
+            aria-label={`${i + 1} sao`}
           >
-            <Star
+            <StarIcon
               className={`
                 ${sizeMap[size]}
-                ${filled ? 'fill-orange text-orange' : half ? 'fill-orange/50 text-orange' : 'text-border'}
-                transition-colors
+                ${filled || half ? 'text-star' : 'text-star/30'}
+                ${interactive ? 'transition-all' : ''}
               `.trim()}
             />
           </button>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { Button, Input } from '@/components';
 import { useCartStore } from '@/stores/cart-store';
-import { useToast } from '@/components/ui/Toast';
+import { toast } from 'sonner';
 import { SHIPPING_FEE, FREE_SHIPPING_THRESHOLD } from '@/lib/constants';
 
 type Step = 'shipping' | 'payment' | 'review';
@@ -46,7 +46,6 @@ export default function CheckoutPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { items, clearCart } = useCartStore();
-  const { showToast } = useToast();
   const [step, setStep] = useState<Step>('shipping');
   const [placing, setPlacing] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
@@ -78,8 +77,13 @@ export default function CheckoutPage() {
     [paymentMethod],
   );
 
+  useEffect(() => {
+    if (items.length === 0 || checkoutItems.length === 0) {
+      router.replace('/gio-hang');
+    }
+  }, [items, checkoutItems, router]);
+
   if (items.length === 0 || checkoutItems.length === 0) {
-    router.push('/cart');
     return null;
   }
 
@@ -87,7 +91,7 @@ export default function CheckoutPage() {
     setPlacing(true);
     await new Promise((resolve) => setTimeout(resolve, 1200));
     clearCart();
-    showToast('success', 'Đặt hàng thành công!');
+    toast.success('Đặt hàng thành công!');
     router.push('/');
   };
 
@@ -244,10 +248,10 @@ export default function CheckoutPage() {
                         <Image src={item.image} alt={item.name} fill className="object-cover" sizes="64px" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="line-clamp-2 text-sm font-medium text-text">{item.name}</p>
+                        <p className="line-clamp-2 text-xs font-medium text-text">{item.name}</p>
                         <p className="mt-1 text-xs text-text2">Số lượng: {item.quantity}</p>
                       </div>
-                      <div className="font-mono text-sm font-semibold tabular-nums text-text">
+                      <div className="font-mono text-xs font-semibold tabular-nums text-text">
                         {formatCurrency(item.price * item.quantity)}
                       </div>
                     </div>
@@ -394,7 +398,7 @@ function OrderSummary({
               <p className="truncate text-sm font-medium text-text">{item.name}</p>
               <p className="text-xs text-text2">x{item.quantity}</p>
             </div>
-            <p className="font-mono text-sm font-semibold tabular-nums text-text">
+            <p className="font-mono text-xs font-semibold tabular-nums text-text">
               {formatCurrency(item.price * item.quantity)}
             </p>
           </div>
@@ -436,7 +440,7 @@ function OrderSummary({
       </div>
 
       <Link
-        href="/cart"
+        href="/gio-hang"
         className="mt-5 inline-flex h-10 w-full items-center justify-center rounded-full border border-border text-sm font-semibold text-text transition-all hover:bg-surface2 active:translate-y-px"
       >
         Chỉnh sửa giỏ hàng

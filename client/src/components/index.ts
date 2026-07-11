@@ -6,7 +6,6 @@ export { default as Skeleton } from './ui/Skeleton';
 export { ProductCardSkeleton, ProductGridSkeleton, CartSkeleton } from './ui/Skeleton';
 export { default as Sheet } from './ui/Sheet';
 export { default as Modal } from './ui/Modal';
-export { ToastProvider, useToast } from './ui/Toast';
 export { default as QuantitySelector } from './ui/QuantitySelector';
 export { default as StarRating } from './ui/StarRating';
 export { default as Select } from './ui/Select';

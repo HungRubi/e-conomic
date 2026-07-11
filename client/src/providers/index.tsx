@@ -3,7 +3,7 @@
 import { type ReactNode } from 'react';
 import { QueryProvider } from './query-provider';
 import { AppThemeProvider } from './theme-provider';
-import { ToastProvider } from '@/components/ui/Toast';
+import ToastProvider from '@/components/ui/ToastProvider';
 import { FlyingCartProvider } from '@/components/product/FlyingCartProvider';
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -11,7 +11,8 @@ export function Providers({ children }: { children: ReactNode }) {
     <QueryProvider>
       <AppThemeProvider>
         <FlyingCartProvider>
-          <ToastProvider>{children}</ToastProvider>
+          {children}
+          <ToastProvider />
         </FlyingCartProvider>
       </AppThemeProvider>
     </QueryProvider>

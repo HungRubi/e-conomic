@@ -1,7 +1,7 @@
 'use client';
 
 import { StarRating } from '@/components';
-import { Star } from 'lucide-react';
+import { FaStar } from 'react-icons/fa';
 
 interface RatingSummaryProps {
   average: number;
@@ -37,10 +37,10 @@ export default function RatingSummary({
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => onSelectRating(null)}
-            className={`h-9 px-3.5 rounded-full text-xs font-medium transition-all ${
+            className={`h-9 px-4 rounded-full text-xs font-medium transition-all duration-200 ${
               selectedRating === null
-                ? 'bg-accent text-bg'
-                : 'bg-surface2 text-text2 hover:text-text'
+                ? 'bg-accent text-bg shadow-[0_2px_12px_rgba(0,0,0,0.15)] scale-105'
+                : 'bg-surface2 text-text2 hover:bg-border/60 hover:text-text'
             }`}
           >
             Tất cả
@@ -53,15 +53,15 @@ export default function RatingSummary({
               <button
                 key={star}
                 onClick={() => onSelectRating(active ? null : star)}
-                className={`h-9 px-3.5 rounded-full text-xs font-medium transition-all flex items-center gap-1.5 ${
+                className={`h-9 px-3.5 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-1.5 ${
                   active
-                    ? 'bg-accent text-bg'
-                    : 'bg-surface2 text-text2 hover:text-text'
+                    ? 'bg-star text-black shadow-[0_2px_12px_rgba(245,158,11,0.35)] scale-105'
+                    : 'bg-surface2 text-text2 hover:bg-border/60 hover:text-text'
                 }`}
               >
-                <Star className={`h-3 w-3 ${active ? 'fill-current' : ''}`} />
+                <FaStar className={`text-[12px] ${active ? 'text-black' : 'text-star'}`} />
                 {star}
-                <span className={active ? 'text-bg/70' : 'text-text2/50'}>({count})</span>
+                <span className={active ? 'text-black/60' : 'text-text2'}>({count})</span>
               </button>
             );
           })}
@@ -80,10 +80,10 @@ export default function RatingSummary({
         <div className="flex flex-wrap gap-2">
           <button
             onClick={() => onSelectRating(null)}
-            className={`h-8 px-3 rounded-full text-[11px] font-medium transition-all ${
+            className={`h-8 px-3 rounded-full text-[11px] font-medium transition-all duration-200 ${
               selectedRating === null
-                ? 'bg-accent text-bg'
-                : 'bg-surface2 text-text2 hover:text-text'
+                ? 'bg-accent text-bg shadow-[0_2px_8px_rgba(0,0,0,0.12)] scale-105'
+                : 'bg-surface2 text-text2 hover:bg-border/60 hover:text-text'
             }`}
           >
             Tất cả
@@ -94,13 +94,15 @@ export default function RatingSummary({
               <button
                 key={star}
                 onClick={() => onSelectRating(selectedRating === star ? null : star)}
-                className={`h-8 px-3 rounded-full text-[11px] font-medium transition-all flex items-center gap-1 ${
+                className={`h-8 px-3 rounded-full text-[11px] font-medium transition-all duration-200 flex items-center gap-1 ${
                   selectedRating === star
-                    ? 'bg-accent text-bg'
-                    : 'bg-surface2 text-text2 hover:text-text'
+                    ? 'bg-star text-black shadow-[0_2px_8px_rgba(245,158,11,0.3)] scale-105'
+                    : 'bg-surface2 text-text2 hover:bg-border/60 hover:text-text'
                 }`}
               >
-                {star}★ ({count})
+                <FaStar className={`text-[12px] ${selectedRating === star ? 'text-black' : 'text-star'}`} />
+                {star}
+                <span className={selectedRating === star ? 'text-black/60' : 'text-text2'}>({count})</span>
               </button>
             );
           })}

@@ -124,8 +124,8 @@ export default function CartPage() {
   );
   const checkoutHref =
     selectedIds.length > 0
-      ? `/checkout?items=${encodeURIComponent(selectedIds.join(','))}`
-      : '/checkout';
+      ? `/thanh-toan?items=${encodeURIComponent(selectedIds.join(','))}`
+      : '/thanh-toan';
 
   const toggleItem = (id: string) => {
     setSelectedIds((current) =>
@@ -315,7 +315,7 @@ export default function CartPage() {
                       <div className="flex items-start justify-between gap-2">
                         <Link
                           href={`/san-pham/${slug}`}
-                          className="line-clamp-2 text-sm font-semibold leading-5 text-text transition-colors hover:text-text2"
+                          className="line-clamp-2 text-xs font-medium leading-5 text-text transition-colors hover:text-text2"
                         >
                           {item.name}
                         </Link>
@@ -341,7 +341,7 @@ export default function CartPage() {
 
                       <div className="mt-2.5 flex flex-wrap items-end justify-between gap-2">
                         <div>
-                          <div className="text-sm font-bold text-text">
+                          <div className="text-xs font-semibold text-text">
                             {formatCurrency(item.price)}
                           </div>
                           {product?.compareAtPrice && product.compareAtPrice > item.price && (

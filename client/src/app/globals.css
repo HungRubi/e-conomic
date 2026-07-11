@@ -12,6 +12,7 @@
   --accent-glow: rgba(13, 17, 23, 0.12);
   --green: #2da44e;
   --orange: #bf8700;
+  --star: #f59e0b;
   --red: #cf222e;
   --purple: #8250df;
   --teal: #1b7c83;
@@ -30,6 +31,7 @@
   --accent-glow: rgba(230, 237, 243, 0.12);
   --green: #3fb950;
   --orange: #d29922;
+  --star: #f5b81b;
   --red: #f85149;
   --purple: #bc8cff;
   --teal: #56d4dd;
@@ -45,6 +47,7 @@
   --color-accent: var(--accent);
   --color-green: var(--green);
   --color-orange: var(--orange);
+  --color-star: var(--star);
   --color-red: var(--red);
   --color-purple: var(--purple);
   --color-teal: var(--teal);

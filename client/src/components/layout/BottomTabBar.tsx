@@ -9,8 +9,8 @@ import { useAppTheme } from '@/providers/theme-provider';
 import Badge from '@/components/ui/Badge';
 
 const tabs = [
-  { href: '/cart', label: 'Giỏ hàng', icon: ShoppingBag, cart: true },
-  { href: '/login', label: 'Tài khoản', icon: User },
+  { href: '/gio-hang', label: 'Giỏ hàng', icon: ShoppingBag, cart: true },
+  { href: '/dang-nhap', label: 'Tài khoản', icon: User },
 ];
 
 export default function BottomTabBar() {

@@ -4,7 +4,7 @@ import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { Eye, EyeOff, Mail, Lock, User } from 'lucide-react';
 import { Button, Input } from '@/components';
-import { useToast } from '@/components/ui/Toast';
+import { toast } from 'sonner';
 
 interface Errors {
   name?: string;
@@ -14,7 +14,7 @@ interface Errors {
 }
 
 export default function RegisterPage() {
-  const { showToast } = useToast();
+  //
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
@@ -48,7 +48,7 @@ export default function RegisterPage() {
     setLoading(true);
     await new Promise((r) => setTimeout(r, 1500));
     setLoading(false);
-    showToast('success', 'Đăng ký thành công!');
+    toast.success('Đăng ký thành công!');
   };
 
   const clearError = (field: keyof Errors) => {
@@ -126,7 +126,7 @@ export default function RegisterPage() {
       {/* ── Google ── */}
       <button
         type="button"
-        onClick={() => showToast('info', 'Đang kết nối với Google...')}
+        onClick={() => toast.info('Đang kết nối với Google...')}
         className="flex w-full items-center justify-center gap-3 h-11 rounded-full border border-border text-sm font-medium text-text hover:bg-surface2 transition-all active:translate-y-px"
       >
         <svg viewBox="0 0 24 24" className="w-4 h-4 shrink-0" aria-hidden="true">
@@ -140,7 +140,7 @@ export default function RegisterPage() {
 
       <p className="mt-8 text-center text-sm text-text2">
         Đã có tài khoản?{' '}
-        <Link href="/login" className="text-text font-semibold hover:underline underline-offset-2">
+        <Link href="/dang-nhap" className="text-text font-semibold hover:underline underline-offset-2">
           Đăng nhập
         </Link>
       </p>

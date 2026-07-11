@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import {
   ChevronLeft,
   ShoppingBag,
@@ -14,43 +14,21 @@ import {
   ShieldCheck,
   PackageCheck,
   Sparkles,
-  Layers3,
 } from 'lucide-react';
-import { Button, Badge, StarRating, QuantitySelector, Skeleton, ReviewSection } from '@/components';
+import { FaStar } from 'react-icons/fa';
+import { Button, Badge, StarRating, Skeleton, ReviewSection } from '@/components';
 import ProductCard from '@/components/product/ProductCard';
+import VariantSheet from '@/components/ui/VariantSheet';
+import { useFlyingCart } from '@/components/product/FlyingCartProvider';
 import { useCartStore } from '@/stores/cart-store';
-import { useToast } from '@/components/ui/Toast';
-import { type Product, type ProductVariant } from '@/types';
+import { toast } from 'sonner';
+import { type Product } from '@/types';
 import { products, getProductBySlug, getRelatedProducts } from '@/lib/products';
 
 /* ---------- helpers ---------- */
 
 function formatPrice(price: number) {
   return `${price.toLocaleString('vi-VN')}₫`;
-}
-
-function productOptions(product: Product) {
-  const sizes = Array.from(
-    new Set(product.variants.map((variant) => variant.size).filter((size): size is string => Boolean(size))),
-  );
-  const colors = Array.from(
-    new Set(product.variants.map((variant) => variant.color).filter((color): color is string => Boolean(color))),
-  );
-  return { sizes, colors };
-}
-
-function findSelectedVariant(
-  product: Product,
-  sizes: string[],
-  colors: string[],
-  selectedSize: string | null,
-  selectedColor: string | null,
-): ProductVariant | undefined {
-  return product.variants.find((variant) => {
-    const sizeMatch = sizes.length === 0 || variant.size === selectedSize;
-    const colorMatch = colors.length === 0 || variant.color === selectedColor;
-    return sizeMatch && colorMatch;
-  }) ?? product.variants[0];
 }
 
 /* ---------- page component ---------- */
@@ -63,12 +41,11 @@ export default function ProductDetailPage() {
   const [related, setRelated] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [variantSheetOpen, setVariantSheetOpen] = useState(false);
 
   const addItem = useCartStore((state) => state.addItem);
-  const { showToast } = useToast();
+  const { flyFromRect } = useFlyingCart();
 
   useEffect(() => {
     let cancelled = false;
@@ -84,10 +61,6 @@ export default function ProductDetailPage() {
         setQuantity(1);
 
         if (nextProduct) {
-          const { sizes, colors } = productOptions(nextProduct);
-          setSelectedSize(sizes[0] ?? null);
-          setSelectedColor(colors[0] ?? null);
-
           const relatedProducts = await getRelatedProducts(nextProduct.id);
           if (!cancelled) setRelated(relatedProducts);
         } else {
@@ -111,7 +84,7 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="mx-auto max-w-[90rem] px-3 md:px-4 py-20 text-center">
+      <div className="mx-auto max-w-360 px-3 md:px-4 py-20 text-center">
         <div className="mx-auto max-w-md rounded-radius border border-border/50 bg-surface p-8">
           <h1 className="text-2xl font-bold text-text">Không tìm thấy sản phẩm</h1>
           <p className="mt-3 text-sm leading-relaxed text-text2">
@@ -127,43 +100,68 @@ export default function ProductDetailPage() {
     );
   }
 
-  const { sizes, colors } = productOptions(product);
-  const selectedVariant = findSelectedVariant(product, sizes, colors, selectedSize, selectedColor);
+  const selectedVariant = product.variants[0];
   const displayPrice = selectedVariant?.price ?? product.price;
   const image = product.images[selectedImage] ?? product.images[0];
   const stock = selectedVariant?.stock ?? 0;
-  const maxQuantity = Math.max(1, stock);
-  const safeQuantity = Math.min(quantity, maxQuantity);
   const isAvailable = stock > 0;
   const discount = product.compareAtPrice
     ? Math.round((1 - displayPrice / product.compareAtPrice) * 100)
     : 0;
 
-  const cartPayload = {
-    productId: product.id,
-    name: product.name,
-    price: displayPrice,
-    image,
-    quantity: safeQuantity,
-    size: selectedSize || undefined,
-    color: selectedColor || undefined,
+  const handleAddToCart = (options: { size?: string; color?: string; quantity: number }) => {
+    const payload = {
+      productId: product.id,
+      name: product.name,
+      price: displayPrice,
+      image,
+      quantity: options.quantity,
+      size: options.size,
+      color: options.color,
+    };
+    addItem(payload);
+
+    // Flying image from sheet position
+    const sheetContent = document.querySelector('[data-variant-sheet]');
+    if (sheetContent) {
+      const img = sheetContent.querySelector('img');
+      if (img) flyFromRect(img.getBoundingClientRect(), product.images[0]);
+    }
+
+    toast.success('Đã thêm vào giỏ hàng!');
   };
 
-  const handleAddToCart = () => {
-    if (!isAvailable) return;
-    addItem(cartPayload);
-    showToast('success', 'Đã thêm vào giỏ hàng!');
+  const handleBuyNow = (options: { size?: string; color?: string; quantity: number }) => {
+    const payload = {
+      productId: product.id,
+      name: product.name,
+      price: displayPrice,
+      image,
+      quantity: options.quantity,
+      size: options.size,
+      color: options.color,
+    };
+    addItem(payload);
+
+    const sheetContent = document.querySelector('[data-variant-sheet]');
+    if (sheetContent) {
+      const img = sheetContent.querySelector('img');
+      if (img) flyFromRect(img.getBoundingClientRect(), product.images[0]);
+    }
+
+    setVariantSheetOpen(false);
+    setTimeout(() => {
+      window.location.href = '/thanh-toan';
+    }, 500);
   };
 
-  const handleBuyNow = () => {
+  const openVariantSheet = () => {
     if (!isAvailable) return;
-    addItem(cartPayload);
-    showToast('success', 'Đã thêm vào giỏ hàng!');
-    router.push('/cart');
+    setVariantSheetOpen(true);
   };
 
   return (
-    <div className="pt-4 pb-20 md:pb-9 md:pt-[31px]">
+    <div className="pb-20 pt-5 md:pb-9 md:pt-3.5">
       <ProductBreadcrumb name={product.name} />
 
       <section className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-8 xl:gap-10">
@@ -181,24 +179,20 @@ export default function ProductDetailPage() {
           discount={discount}
           isAvailable={isAvailable}
           stock={stock}
-          sizes={sizes}
-          colors={colors}
-          selectedSize={selectedSize}
-          selectedColor={selectedColor}
-          onSizeChange={setSelectedSize}
-          onColorChange={setSelectedColor}
-          quantity={safeQuantity}
-          maxQuantity={maxQuantity}
-          onQuantityChange={setQuantity}
-          onAdd={handleAddToCart}
-          onBuy={handleBuyNow}
+          quantity={quantity}
+          onAdd={openVariantSheet}
+          onBuy={openVariantSheet}
           reduceMotion={Boolean(reduceMotion)}
         />
       </section>
 
       <ProductStory product={product} stock={stock} />
 
-      <ReviewSection productId={product.id} rating={product.rating} reviewCount={product.reviewCount} />
+      <ReviewSection
+        productId={product.id}
+        rating={product.rating}
+        reviewCount={product.reviewCount}
+      />
 
       {related.length > 0 && (
         <section className="mt-14 md:mt-18">
@@ -218,20 +212,20 @@ export default function ProductDetailPage() {
             )
               .flat()
               .map((item, i) => (
-                <ProductCard
-                  key={item.feedKey}
-                  product={item}
-                  index={i % products.length}
-                />
+                <ProductCard key={item.feedKey} product={item} index={i % products.length} />
               ))}
           </div>
         </section>
       )}
 
-      <MobileStickyCTA
-        isAvailable={isAvailable}
-        onAdd={handleAddToCart}
-        onBuy={handleBuyNow}
+      <MobileStickyCTA isAvailable={isAvailable} onAdd={openVariantSheet} onBuy={openVariantSheet} />
+
+      <VariantSheet
+        open={variantSheetOpen}
+        onClose={() => setVariantSheetOpen(false)}
+        onAddToCart={handleAddToCart}
+        onBuyNow={handleBuyNow}
+        product={product}
       />
     </div>
   );
@@ -272,29 +266,60 @@ function ProductGallery({
   discount,
   reduceMotion,
 }: ProductGalleryProps) {
-  const image = product.images[selectedImage] ?? product.images[0];
+  const images = product.images;
+  const total = images.length;
+  const curr = Math.max(0, Math.min(selectedImage, total - 1));
+  const imageUrl = images[curr] ?? images[0];
+  const prevRef = useRef(curr);
+  const dir = curr > prevRef.current ? 1 : curr < prevRef.current ? -1 : 0;
+  prevRef.current = curr;
+
+  const paginate = (delta: number) => {
+    const next = (curr + delta + total) % total;
+    setSelectedImage(next);
+  };
+
+  const swipeConfidenceThreshold = 40;
+
+  const variants = {
+    enter: (d: number) => ({ x: d > 0 ? 300 : -300, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (d: number) => ({ x: d < 0 ? 300 : -300, opacity: 0 }),
+  };
 
   return (
     <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
-      <div className="relative overflow-hidden rounded-[24px] border border-border/50 bg-surface2">
-        <motion.div
-          key={image}
-          initial={reduceMotion ? false : { opacity: 0.75, scale: 1.015 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-          className="no-css-transition relative aspect-[4/5] sm:aspect-square"
-        >
-          <Image
-            src={image}
-            alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 56vw, 760px"
-            priority
-          />
-        </motion.div>
+      <div className="relative overflow-hidden rounded-3xl border border-border/50 bg-surface2">
+        <AnimatePresence custom={dir} mode="popLayout">
+          <motion.div
+            key={imageUrl}
+            custom={dir}
+            variants={reduceMotion ? undefined : variants}
+            initial={reduceMotion ? false : 'enter'}
+            animate="center"
+            exit="exit"
+            transition={{ x: { type: 'spring', stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
+            drag={total > 1 ? 'x' : false}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.7}
+            onDragEnd={(_, { offset, velocity }) => {
+              const swipe = Math.abs(offset.x) * velocity.x;
+              if (swipe < -swipeConfidenceThreshold) paginate(1);
+              else if (swipe > swipeConfidenceThreshold) paginate(-1);
+            }}
+            className="no-css-transition relative aspect-4/5 sm:aspect-square cursor-grab active:cursor-grabbing"
+          >
+            <Image
+              src={imageUrl}
+              alt={product.name}
+              fill
+              className="object-cover pointer-events-none"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 56vw, 760px"
+              priority
+            />
+          </motion.div>
+        </AnimatePresence>
 
-        {/* Only sale badge over image — tags moved to header area */}
         {discount > 0 && (
           <div className="pointer-events-none absolute left-3 top-3 md:left-4 md:top-4">
             <span className="inline-flex rounded-full bg-red px-3 py-1 text-xs font-bold text-white shadow-sm">
@@ -302,12 +327,24 @@ function ProductGallery({
             </span>
           </div>
         )}
+
+        {/* Image counter — mobile only */}
+        <div className="absolute bottom-3 right-3 md:hidden">
+          <span className="inline-flex h-6 min-w-[44px] items-center justify-center rounded-full bg-black/40 px-2.5 text-[11px] font-semibold text-white/90 backdrop-blur-sm">
+            {curr + 1}/{total}
+          </span>
+        </div>
       </div>
 
-      {product.images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none" role="list" aria-label="Ảnh sản phẩm">
-          {product.images.map((thumbnail, index) => {
-            const selected = index === selectedImage;
+      {/* Desktop thumbnails */}
+      {total > 1 && (
+        <div
+          className="hidden md:flex gap-2 overflow-x-auto pb-1 scrollbar-none"
+          role="list"
+          aria-label="Ảnh sản phẩm"
+        >
+          {images.map((thumbnail, index) => {
+            const selected = index === curr;
             return (
               <button
                 key={thumbnail}
@@ -317,7 +354,7 @@ function ProductGallery({
                 aria-pressed={selected}
                 className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-[10px] border transition-all md:h-18 md:w-18 ${
                   selected
-                    ? 'border-text/80 ring-1 ring-text/15'
+                    ? 'border-star/60 ring-1 ring-star/20'
                     : 'border-border/50 opacity-70 hover:opacity-100'
                 }`}
               >
@@ -345,15 +382,7 @@ interface PurchasePanelProps {
   discount: number;
   isAvailable: boolean;
   stock: number;
-  sizes: string[];
-  colors: string[];
-  selectedSize: string | null;
-  selectedColor: string | null;
-  onSizeChange: (v: string) => void;
-  onColorChange: (v: string) => void;
   quantity: number;
-  maxQuantity: number;
-  onQuantityChange: (v: number) => void;
   onAdd: () => void;
   onBuy: () => void;
   reduceMotion: boolean;
@@ -371,15 +400,7 @@ function ProductPurchasePanel({
   discount,
   isAvailable,
   stock,
-  sizes,
-  colors,
-  selectedSize,
-  selectedColor,
-  onSizeChange,
-  onColorChange,
   quantity,
-  maxQuantity,
-  onQuantityChange,
   onAdd,
   onBuy,
   reduceMotion,
@@ -389,7 +410,7 @@ function ProductPurchasePanel({
       {...(reduceMotion ? { initial: false } : panelMotion)}
       className="lg:sticky lg:top-24 lg:self-start"
     >
-      <div className="rounded-[24px] border border-border/50 bg-surface p-5 shadow-[0_24px_70px_rgba(0,0,0,0.07)] md:p-6 lg:p-7">
+      <div className="rounded-3xl border border-border/50 bg-surface p-5 shadow-[0_24px_70px_rgba(0,0,0,0.07)] md:p-6 lg:p-7">
         {/* Tags + status */}
         <div className="mb-4 flex flex-wrap items-center gap-2">
           {product.tags.includes('bán chạy') && <Badge variant="success">Bán chạy</Badge>}
@@ -401,18 +422,23 @@ function ProductPurchasePanel({
         </div>
 
         {/* Name */}
-        <h1 className="text-[28px] font-bold tracking-tight text-text md:text-[34px] md:leading-tight">
+        <h1 className="text-2xl font-bold tracking-tight text-text md:text-[28px] md:leading-tight">
           {product.name}
         </h1>
 
         {/* Rating */}
         <div className="mt-3">
-          <StarRating rating={product.rating} size="md" showValue reviewCount={product.reviewCount} />
+          <StarRating
+            rating={product.rating}
+            size="md"
+            showValue
+            reviewCount={product.reviewCount}
+          />
         </div>
 
         {/* Price */}
-        <div className="mt-5 flex flex-wrap items-end gap-3">
-          <span className="text-3xl font-bold tracking-tight text-accent md:text-[34px]">
+        <div className="mt-4 flex flex-wrap items-end gap-3">
+          <span className="text-2xl font-bold tracking-tight text-accent md:text-[26px]">
             {formatPrice(displayPrice)}
           </span>
           {product.compareAtPrice && (
@@ -420,47 +446,14 @@ function ProductPurchasePanel({
               {formatPrice(product.compareAtPrice)}
             </span>
           )}
-          {discount > 0 && (
-            <Badge variant="error">Tiết kiệm {discount}%</Badge>
-          )}
+          {discount > 0 && <Badge variant="error">Tiết kiệm {discount}%</Badge>}
         </div>
 
         {/* Short description */}
-        <p className="mt-4 text-sm leading-6 text-text2 md:text-[15px]">
-          {product.description}
-        </p>
+        <p className="mt-4 text-sm leading-6 text-text2 md:text-[15px]">{product.description}</p>
 
         <div className="mt-6 space-y-5">
-          {/* Variants */}
-          <VariantSelector
-            label="Kích thước"
-            value={selectedSize}
-            options={sizes}
-            onSelect={onSizeChange}
-          />
-          <VariantSelector
-            label="Màu sắc"
-            value={selectedColor}
-            options={colors}
-            onSelect={onColorChange}
-          />
-
-          {/* Quantity */}
-          <div className="flex items-center justify-between gap-4 rounded-[12px] border border-border/50 bg-bg/50 p-3">
-            <div>
-              <div className="text-sm font-semibold text-text">Số lượng</div>
-              <div className="text-xs text-text2">
-                {isAvailable ? `Còn ${stock} sản phẩm` : 'Tạm hết hàng'}
-              </div>
-            </div>
-            <QuantitySelector
-              value={quantity}
-              onChange={onQuantityChange}
-              max={maxQuantity}
-            />
-          </div>
-
-          {/* CTAs */}
+          {/* CTAs — mở variant sheet để chọn size/màu/số lượng */}
           <div className="hidden gap-3 md:flex">
             <Button
               variant="secondary"
@@ -494,48 +487,6 @@ function ProductPurchasePanel({
         </div>
       </div>
     </motion.aside>
-  );
-}
-
-/* ---------- variant selector ---------- */
-
-interface VariantSelectorProps {
-  label: string;
-  value: string | null;
-  options: string[];
-  onSelect: (value: string) => void;
-}
-
-function VariantSelector({ label, value, options, onSelect }: VariantSelectorProps) {
-  if (options.length === 0) return null;
-
-  return (
-    <div>
-      <div className="mb-2 flex items-center justify-between gap-3">
-        <h2 className="text-sm font-semibold text-text">{label}</h2>
-        {value && <span className="text-xs font-medium text-text2">{value}</span>}
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {options.map((option) => {
-          const selected = value === option;
-          return (
-            <button
-              key={option}
-              type="button"
-              onClick={() => onSelect(option)}
-              aria-pressed={selected}
-              className={`min-h-10 rounded-full border px-4 text-sm font-semibold transition-all active:translate-y-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text/20 ${
-                selected
-                  ? 'border-text/80 bg-text/10 text-text'
-                  : 'border-border bg-surface text-text2 hover:bg-surface2 hover:text-text'
-              }`}
-            >
-              {option}
-            </button>
-          );
-        })}
-      </div>
-    </div>
   );
 }
 
@@ -578,7 +529,9 @@ function ProductStory({ product, stock }: ProductStoryProps) {
       <div className="hidden lg:block">
         <div className="flex items-center gap-3 mb-6">
           <div className="h-px w-8 bg-accent/50" />
-          <span className="text-xs font-semibold uppercase tracking-[0.15em] text-text2">Chi tiết sản phẩm</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.15em] text-text2">
+            Chi tiết sản phẩm
+          </span>
         </div>
 
         <h2 className="text-3xl font-bold tracking-tight text-text leading-tight">
@@ -586,20 +539,27 @@ function ProductStory({ product, stock }: ProductStoryProps) {
         </h2>
 
         <div className="mt-6 space-y-4 text-base leading-7 text-text2">
+          <p className="text-[15px] leading-[1.7]">{product.description}</p>
           <p className="text-[15px] leading-[1.7]">
-            {product.description}
+            <strong className="font-semibold text-text">Chất liệu:</strong> Sợi cotton tự nhiên 100%
+            được chọn lọc từ những cánh đồng bông chất lượng cao. Vải dệt kim mịn, dày dặn nhưng vẫn
+            đảm bảo độ thoáng khí tối ưu cho làn da.
           </p>
           <p className="text-[15px] leading-[1.7]">
-            <strong className="font-semibold text-text">Chất liệu:</strong> Sợi cotton tự nhiên 100% được chọn lọc từ những cánh đồng bông chất lượng cao. Vải dệt kim mịn, dày dặn nhưng vẫn đảm bảo độ thoáng khí tối ưu cho làn da.
+            <strong className="font-semibold text-text">Thiết kế:</strong> Form regular fit ôm vừa
+            phải, không quá chật cũng không quá rộng. Cổ tròn bo gân chắc chắn, giữ form sau nhiều
+            lần giặt. Đường may chỉ kép tại các vị trí chịu lực (vai, nách, sườn) đảm bảo độ bền
+            vượt trội.
           </p>
           <p className="text-[15px] leading-[1.7]">
-            <strong className="font-semibold text-text">Thiết kế:</strong> Form regular fit ôm vừa phải, không quá chật cũng không quá rộng. Cổ tròn bo gân chắc chắn, giữ form sau nhiều lần giặt. Đường may chỉ kép tại các vị trí chịu lực (vai, nách, sườn) đảm bảo độ bền vượt trội.
+            <strong className="font-semibold text-text">Hướng dẫn bảo quản:</strong> Giặt ở nhiệt độ
+            dưới 30°C, không dùng chất tẩy mạnh, phơi trong bóng râm để giữ màu sắc bền lâu. Không
+            là ủi trực tiếp lên vùng in/họa tiết (nếu có).
           </p>
           <p className="text-[15px] leading-[1.7]">
-            <strong className="font-semibold text-text">Hướng dẫn bảo quản:</strong> Giặt ở nhiệt độ dưới 30°C, không dùng chất tẩy mạnh, phơi trong bóng râm để giữ màu sắc bền lâu. Không là ủi trực tiếp lên vùng in/họa tiết (nếu có).
-          </p>
-          <p className="text-[15px] leading-[1.7]">
-            <strong className="font-semibold text-text">Ưu điểm nổi bật:</strong> Công nghệ dệt Pre-Shrunk giúp hạn chế co rút sau giặt. Sợi vải được xử lý kháng khuẩn, khử mùi, an toàn cho da nhạy cảm. Chứng nhận OEKO-TEX Standard 100.
+            <strong className="font-semibold text-text">Ưu điểm nổi bật:</strong> Công nghệ dệt
+            Pre-Shrunk giúp hạn chế co rút sau giặt. Sợi vải được xử lý kháng khuẩn, khử mùi, an
+            toàn cho da nhạy cảm. Chứng nhận OEKO-TEX Standard 100.
           </p>
         </div>
 
@@ -617,7 +577,7 @@ function ProductStory({ product, stock }: ProductStoryProps) {
             </span>
           )}
           <span className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-surface px-3 py-1.5 text-xs font-medium text-text2">
-            ⭐ {product.rating.toFixed(1)} ({product.reviewCount} đánh giá)
+            <FaStar className="text-[12px] text-star/40" /> {product.rating.toFixed(1)} ({product.reviewCount} đánh giá)
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-surface px-3 py-1.5 text-xs font-medium text-text2">
             🧩 {product.variants.length} lựa chọn
@@ -639,9 +599,7 @@ function ProductStory({ product, stock }: ProductStoryProps) {
           <h2 className="text-2xl font-bold tracking-tight text-text md:text-3xl">
             Thông tin sản phẩm
           </h2>
-          <p className="mt-3 text-sm leading-7 text-text2 md:text-base">
-            {product.description}
-          </p>
+          <p className="mt-3 text-sm leading-7 text-text2 md:text-base">{product.description}</p>
           <div className="mt-5 flex flex-wrap gap-2">
             {product.tags.map((tag) => (
               <span
@@ -655,21 +613,27 @@ function ProductStory({ product, stock }: ProductStoryProps) {
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-2">
-          <article className="rounded-[16px] border border-border/50 bg-surface p-4">
-            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-[8px] bg-text/5 text-text">
+          <article className="rounded-2xl border border-border/50 bg-surface p-4">
+            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-text/5 text-text">
               <PackageCheck className="h-4 w-4" />
             </div>
             <div className="text-xs font-semibold text-text2">Tồn kho</div>
-            <div className="mt-1 text-lg font-bold text-text">{stock > 0 ? `${stock} sản phẩm` : 'Hết hàng'}</div>
-            <p className="mt-1 text-sm leading-relaxed text-text2">Cập nhật theo lựa chọn hiện tại.</p>
+            <div className="mt-1 text-lg font-bold text-text">
+              {stock > 0 ? `${stock} sản phẩm` : 'Hết hàng'}
+            </div>
+            <p className="mt-1 text-sm leading-relaxed text-text2">
+              Cập nhật theo lựa chọn hiện tại.
+            </p>
           </article>
-          <article className="rounded-[16px] border border-border/50 bg-surface p-4">
-            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-[8px] bg-text/5 text-text">
+          <article className="rounded-2xl border border-border/50 bg-surface p-4">
+            <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-text/5 text-text">
               <Sparkles className="h-4 w-4" />
             </div>
             <div className="text-xs font-semibold text-text2">Đánh giá</div>
             <div className="mt-1 text-lg font-bold text-text">{product.rating.toFixed(1)}/5</div>
-            <p className="mt-1 text-sm leading-relaxed text-text2">{product.reviewCount} lượt đánh giá từ khách hàng.</p>
+            <p className="mt-1 text-sm leading-relaxed text-text2">
+              {product.reviewCount} lượt đánh giá từ khách hàng.
+            </p>
           </article>
         </div>
       </div>
@@ -689,14 +653,18 @@ function ProductDetailSkeleton() {
       </div>
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(360px,0.9fr)] lg:gap-8 xl:gap-10">
         <div className="space-y-3 lg:sticky lg:top-24 lg:self-start">
-          <Skeleton variant="rectangular" className="aspect-[4/5] sm:aspect-square rounded-[24px]" />
+          <Skeleton variant="rectangular" className="aspect-4/5 sm:aspect-square rounded-3xl" />
           <div className="flex gap-2 overflow-hidden">
             {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} variant="rectangular" className="h-14 w-14 shrink-0 rounded-[10px]" />
+              <Skeleton
+                key={i}
+                variant="rectangular"
+                className="h-14 w-14 shrink-0 rounded-[10px]"
+              />
             ))}
           </div>
         </div>
-        <div className="rounded-[24px] border border-border/50 bg-surface p-5 md:p-6 lg:p-7">
+        <div className="rounded-3xl border border-border/50 bg-surface p-5 md:p-6 lg:p-7">
           <div className="space-y-4">
             <Skeleton className="h-5 w-28" />
             <Skeleton className="h-9 w-11/12" />

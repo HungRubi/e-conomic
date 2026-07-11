@@ -6,8 +6,9 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { ShoppingBag, ShoppingCart } from 'lucide-react';
 import { StarRating } from '@/components';
+import VariantSheet from '@/components/ui/VariantSheet';
 import { useCartStore } from '@/stores/cart-store';
-import { useToast } from '@/components/ui/Toast';
+import { toast } from 'sonner';
 import { useFlyingCart } from './FlyingCartProvider';
 import type { Product } from '@/types';
 
@@ -19,10 +20,10 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, index = 0, showBuyNow = true }: ProductCardProps) {
   const addItem = useCartStore((s) => s.addItem);
-  const { showToast } = useToast();
   const { flyFromRect } = useFlyingCart();
   const cardRef = useRef<HTMLDivElement>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [variantSheetOpen, setVariantSheetOpen] = useState(false);
 
   const discount = product.compareAtPrice
     ? Math.round((1 - product.price / product.compareAtPrice) * 100)
@@ -30,27 +31,69 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
   const primaryTag = product.tags[0];
   const soldCount = (product.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0) % 200) + 50;
 
-  const addToCart = useCallback(() => {
+  const triggerFlying = useCallback(() => {
     const img = cardRef.current?.querySelector('img');
-    if (img) flyFromRect(img.getBoundingClientRect());
+    const rect = img?.getBoundingClientRect();
+    if (rect) flyFromRect(rect, product.images[0]);
+  }, [product.images, flyFromRect]);
 
-    addItem({
-      productId: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.images[0],
-      quantity: 1,
-    });
-    showToast('success', `Đã thêm "${product.name}" vào giỏ`);
-  }, [product, addItem, showToast, flyFromRect]);
+  const handleAddToCart = useCallback(
+    (options: { size?: string; color?: string; quantity: number }) => {
+      addItem({
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.images[0],
+        quantity: options.quantity,
+        size: options.size,
+        color: options.color,
+      });
+      triggerFlying();
+      toast.success(`Đã thêm "${product.name}" vào giỏ`);
+    },
+    [product, addItem, triggerFlying],
+  );
+
+  const handleBuyNowVariant = useCallback(
+    (options: { size?: string; color?: string; quantity: number }) => {
+      addItem({
+        productId: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.images[0],
+        quantity: options.quantity,
+        size: options.size,
+        color: options.color,
+      });
+      triggerFlying();
+      setTimeout(() => {
+        window.location.href = '/thanh-toan';
+      }, 500);
+    },
+    [product, addItem, triggerFlying],
+  );
+
+  const openSheet = useCallback(() => {
+    setVariantSheetOpen(true);
+  }, []);
 
   const handleAdd = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
       e.stopPropagation();
-      addToCart();
+      openSheet();
     },
-    [addToCart],
+    [openSheet],
+  );
+
+  const handleBuyNow = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+      // Open variant sheet so user can choose size/color
+      setVariantSheetOpen(true);
+    },
+    [],
   );
 
   return (
@@ -108,7 +151,7 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
 
         <div className="flex flex-col px-1.5 pb-1 pt-2.5 gap-1">
           <Link href={`/san-pham/${product.slug}`} className="block">
-            <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-text transition-colors group-hover:text-accent">
+            <h3 className="line-clamp-2 text-xs font-medium leading-snug text-text transition-colors group-hover:text-accent">
               {product.name}
             </h3>
           </Link>
@@ -124,7 +167,7 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
 
           <div className="flex flex-wrap items-end justify-between gap-x-1 pt-1">
             <div className="min-w-0">
-              <div className="text-sm font-bold text-text leading-tight">
+              <div className="text-xs font-semibold text-text leading-tight">
                 {product.price.toLocaleString('vi-VN')}₫
               </div>
               {product.compareAtPrice && (
@@ -137,7 +180,7 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
             {showBuyNow && (
               <button
                 type="button"
-                onClick={handleAdd}
+                onClick={handleBuyNow}
                 className="mt-1.5 w-full sm:w-auto inline-flex h-7 items-center justify-center gap-1 rounded-full bg-text px-3 text-[11px] font-bold text-bg shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:opacity-85 active:translate-y-px"
               >
                 <ShoppingCart className="h-3 w-3" />
@@ -147,6 +190,14 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
           </div>
         </div>
       </div>
+
+      <VariantSheet
+        open={variantSheetOpen}
+        onClose={() => setVariantSheetOpen(false)}
+        onAddToCart={handleAddToCart}
+        onBuyNow={handleBuyNowVariant}
+        product={product}
+      />
     </motion.article>
   );
 }

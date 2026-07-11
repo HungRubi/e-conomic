@@ -9,6 +9,7 @@ import { Search, ShoppingBag, Menu, User, Sun, Moon, X,
 } from 'lucide-react';
 import { useUIStore } from '@/stores/ui-store';
 import { useCartStore } from '@/stores/cart-store';
+import { useFlyingCart } from '@/components/product/FlyingCartProvider';
 import Badge from '@/components/ui/Badge';
 
 const user = {
@@ -27,6 +28,8 @@ export default function Header() {
   const { searchOpen, toggleSearch, toggleSidebar } = useUIStore();
   const totalItems = useCartStore((s) => s.totalItems());
   const { theme, toggleTheme, mounted } = useAppTheme();
+  const { bumpCart } = useFlyingCart();
+  const [bumpKey, setBumpKey] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState('');
   const [accountOpen, setAccountOpen] = useState(false);
@@ -39,6 +42,11 @@ export default function Header() {
       setQuery('');
     }
   }, [searchOpen]);
+
+  // Bump badge when flying item lands
+  useEffect(() => {
+    if (bumpCart > 0) setBumpKey((k) => k + 1);
+  }, [bumpCart]);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -218,18 +226,22 @@ export default function Header() {
               </AnimatePresence>
             </div>
             <Link
-              href="/cart"
+              href="/gio-hang"
               className="relative p-2 rounded-full text-text2 hover:text-text hover:bg-surface2 transition-all"
               aria-label="Cart"
             >
               <ShoppingBag className="w-5 h-5" />
               {mounted && totalItems > 0 && (
                 <motion.span
-                  key={totalItems}
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                  key={`${totalItems}-${bumpKey}`}
                   className="absolute -top-0.5 -right-0.5"
+                  initial={{ opacity: 0, scale: 0.6 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={
+                    bumpKey > 0
+                      ? { type: 'spring', stiffness: 500, damping: 10, mass: 0.6 }
+                      : { duration: 0.2, ease: [0.16, 1, 0.3, 1] }
+                  }
                 >
                   <Badge count={totalItems} />
                 </motion.span>

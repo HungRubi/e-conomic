@@ -69,7 +69,7 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
       {/* ── User account (mobile only) ── */}
       <div className="md:hidden mx-2 mb-2">
         <Link
-          href="/login"
+          href="/dang-nhap"
           onClick={onLinkClick}
           className="flex items-center gap-3 px-3 py-3 rounded-lg bg-surface2/80 hover:bg-surface2 transition-colors"
         >
