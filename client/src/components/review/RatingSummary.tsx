@@ -59,7 +59,7 @@ export default function RatingSummary({
 										: 'bg-surface2 text-text2 hover:bg-border/60 hover:text-text'
 								}`}
 							>
-								<FaStar className={`text-[12px] ${active ? 'text-black' : 'text-star'}`} />
+								<FaStar className={`txt-xsmall ${active ? 'text-black' : 'text-star'}`} />
 								{star}
 								<span className={active ? 'text-black/60' : 'text-text2'}>({count})</span>
 							</button>
@@ -80,7 +80,7 @@ export default function RatingSummary({
 				<div className='flex flex-wrap gap-2'>
 					<button
 						onClick={() => onSelectRating(null)}
-						className={`h-8 px-3 rounded-full text-[11px] font-medium transition-all duration-200 ${
+						className={`h-8 px-3 rounded-full txt-compact-xsmall-plus transition-all duration-200 ${
 							selectedRating === null
 								? 'bg-accent text-bg shadow-[0_2px_8px_rgba(0,0,0,0.12)] scale-105'
 								: 'bg-surface2 text-text2 hover:bg-border/60 hover:text-text'
@@ -94,14 +94,14 @@ export default function RatingSummary({
 							<button
 								key={star}
 								onClick={() => onSelectRating(selectedRating === star ? null : star)}
-								className={`h-8 px-3 rounded-full text-[11px] font-medium transition-all duration-200 flex items-center gap-1 ${
+								className={`h-8 px-3 rounded-full txt-compact-xsmall-plus transition-all duration-200 flex items-center gap-1 ${
 									selectedRating === star
 										? 'bg-star text-black shadow-[0_2px_8px_rgba(245,158,11,0.3)] scale-105'
 										: 'bg-surface2 text-text2 hover:bg-border/60 hover:text-text'
 								}`}
 							>
 								<FaStar
-									className={`text-[12px] ${selectedRating === star ? 'text-black' : 'text-star'}`}
+									className={`txt-xsmall ${selectedRating === star ? 'text-black' : 'text-star'}`}
 								/>
 								{star}
 								<span className={selectedRating === star ? 'text-black/60' : 'text-text2'}>

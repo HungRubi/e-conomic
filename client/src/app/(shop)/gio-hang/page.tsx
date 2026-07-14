@@ -119,7 +119,7 @@ export default function CartPage() {
 			<section className='py-8 md:py-12'>
 				<div className='mb-6'>
 					<p className='text-sm text-text2'>Đang tải giỏ hàng</p>
-					<h1 className='mt-1 text-3xl font-semibold tracking-[-0.04em] text-text sm:text-4xl'>Giỏ hàng</h1>
+					<h1 className='mt-1 h1-core tracking-[-0.04em] text-text'>Giỏ hàng</h1>
 				</div>
 				<CartSkeleton />
 			</section>
@@ -138,7 +138,7 @@ export default function CartPage() {
 						</div>
 					</div>
 
-					<h1 className='text-3xl font-bold tracking-[-0.04em] text-text sm:text-4xl'>Giỏ hàng trống</h1>
+					<h1 className='h1-core tracking-[-0.04em] text-text'>Giỏ hàng trống</h1>
 					<p className='mx-auto mt-4 max-w-sm text-base leading-7 text-text2'>
 						Bạn chưa có sản phẩm nào trong giỏ. <br />
 						Khám phá bộ sưu tập mới nhất của chúng tôi.
@@ -169,7 +169,7 @@ export default function CartPage() {
 							<div key={item.label} className='text-center'>
 								<item.icon className='mx-auto mb-2 h-5 w-5 text-text2/50' strokeWidth={1} />
 								<p className='text-xs font-semibold text-text'>{item.label}</p>
-								<p className='text-[11px] text-text2'>{item.desc}</p>
+								<p className='txt-compact-xsmall-plus text-text2'>{item.desc}</p>
 							</div>
 						))}
 					</div>
@@ -184,7 +184,7 @@ export default function CartPage() {
 		<section>
 			<div className='mb-6 md:mb-8 pt-2'>
 				<p className='text-sm text-text2'>{totalItems()} sản phẩm trong giỏ</p>
-				<h1 className='mt-1 text-3xl font-semibold tracking-[-0.04em] text-text sm:text-4xl'>Giỏ hàng</h1>
+				<h1 className='mt-1 h1-core tracking-[-0.04em] text-text'>Giỏ hàng</h1>
 			</div>
 
 			<div className='grid gap-6 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-8'>
@@ -201,7 +201,7 @@ export default function CartPage() {
 							type='button'
 							onClick={removeSelected}
 							disabled={selectedIds.length === 0}
-							className='inline-flex h-9 items-center gap-2 rounded-full px-3 text-sm font-medium text-text2 transition-all hover:bg-surface2 hover:text-red disabled:pointer-events-none disabled:opacity-40'
+							className='focus-ring inline-flex h-9 items-center gap-2 rounded-full px-3 txt-medium text-text2 transition-all hover:bg-surface2 hover:text-red disabled:pointer-events-none disabled:opacity-40'
 						>
 							<Trash2 className='h-4 w-4' strokeWidth={1.8} />
 							Xóa đã chọn
@@ -283,8 +283,8 @@ export default function CartPage() {
 												</Link>
 												<button
 													type='button'
-													onClick={() => removeItem(item.id)}
-													className='flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-text2 transition-all hover:bg-surface2 hover:text-red active:translate-y-px'
+													onClick={() => { if (window.confirm(`Xóa ${item.name} khỏi giỏ hàng?`)) removeItem(item.id); }}
+													className='focus-ring flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-text2 transition-all hover:bg-surface2 hover:text-red active:translate-y-px'
 													aria-label={`Xóa ${item.name} khỏi giỏ hàng`}
 												>
 													<Trash2 className='h-3.5 w-3.5' strokeWidth={1.8} />
@@ -294,7 +294,7 @@ export default function CartPage() {
 											{variantText && (
 												<button
 													type='button'
-													className='mt-1.5 inline-flex max-w-full items-center gap-1 rounded-full border border-border/80 bg-surface2/70 px-2.5 py-1 text-[11px] font-medium text-text2 transition-all hover:bg-surface2'
+													className='mt-1.5 inline-flex max-w-full items-center gap-1 rounded-full border border-border/80 bg-surface2/70 px-2.5 py-1 txt-compact-xsmall-plus text-text2 transition-all hover:bg-surface2'
 												>
 													<span className='truncate'>{variantText}</span>
 													<ChevronDown className='h-3 w-3 shrink-0' strokeWidth={1.8} />
@@ -307,7 +307,7 @@ export default function CartPage() {
 														{formatCurrency(item.price)}
 													</div>
 													{product?.compareAtPrice && product.compareAtPrice > item.price && (
-														<div className='text-[11px] text-text2 line-through'>
+														<div className='txt-compact-xsmall-plus text-text2 line-through'>
 															{formatCurrency(product.compareAtPrice)}
 														</div>
 													)}
@@ -320,7 +320,7 @@ export default function CartPage() {
 												/>
 											</div>
 
-											<div className='mt-2 flex flex-wrap gap-1.5 text-[11px] text-text2'>
+											<div className='mt-2 flex flex-wrap gap-1.5 txt-compact-xsmall-plus text-text2'>
 												<span className='inline-flex items-center gap-1 rounded-full border border-border/60 bg-surface2/50 px-2 py-0.5'>
 													<Truck className='h-3 w-3' strokeWidth={1.8} />
 													Giao 2-4 ngày
@@ -399,7 +399,7 @@ function OrderSummary({
 				<div className='border-t border-border pt-3'>
 					<div className='flex items-end justify-between gap-4'>
 						<span className='font-semibold text-text'>Tổng</span>
-						<span className='text-xl font-semibold tracking-[-0.03em] tabular-nums text-text'>
+						<span className='txt-xlarge-plus tracking-[-0.03em] tabular-nums text-text'>
 							{formatCurrency(total)}
 						</span>
 					</div>
@@ -454,7 +454,7 @@ function MobileCheckoutBar({
 	disabled: boolean;
 }) {
 	return (
-		<div className='fixed inset-x-0 bottom-14 z-30 border-t border-border bg-bg/95 px-4 py-3 backdrop-blur-xl md:hidden'>
+		<div className='fixed inset-x-0 bottom-0 z-30 border-t border-border bg-bg/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] backdrop-blur-xl md:hidden'>
 			<div className='flex items-center gap-3'>
 				<div className='min-w-0 flex-1'>
 					<p className='text-xs text-text2'>Đã chọn {selectedQuantity} sản phẩm</p>
@@ -487,7 +487,7 @@ function SuggestedProducts() {
 	return (
 		<section className='mt-10 border-t border-border pt-8 md:mt-14 md:pt-10'>
 			<div className='mb-5 md:mb-7'>
-				<h2 className='text-2xl font-semibold tracking-[-0.04em] text-text md:text-3xl'>Gợi ý thêm cho bạn</h2>
+				<h2 className='h2-core tracking-[-0.04em] text-text'>Gợi ý thêm cho bạn</h2>
 				<p className='mt-2 max-w-xl text-sm leading-6 text-text2'>
 					Danh sách kéo dài để bạn tiếp tục khám phá sản phẩm phù hợp.
 				</p>

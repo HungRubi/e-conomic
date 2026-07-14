@@ -28,7 +28,7 @@ export default function Badge({ children, variant = 'default', count, dot, max =
 		return (
 			<span
 				className={`inline-block w-2 h-2 rounded-full bg-ui-tag-${colorMap[variant]}-icon ${className}`}
-				aria-label='indicator'
+				aria-label='Trạng thái'
 			/>
 		);
 	}
@@ -38,7 +38,7 @@ export default function Badge({ children, variant = 'default', count, dot, max =
 		if (count <= 0) return null;
 		return (
 			<span
-				className={`inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold leading-none rounded-full bg-ui-fg-interactive text-ui-fg-on-color ${className}`}
+				className={`inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 txt-compact-xsmall-plus leading-none rounded-full bg-ui-fg-interactive text-ui-fg-on-color ${className}`}
 			>
 				{count > max ? `${max}+` : count}
 			</span>

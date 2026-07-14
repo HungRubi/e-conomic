@@ -91,7 +91,7 @@ function ShareButton({ url, title }: { url: string; title: string }) {
 				className='flex h-8 w-8 items-center justify-center rounded-full bg-surface2 text-text2 hover:text-text hover:bg-border transition-all'
 				aria-label='Sao chép liên kết'
 			>
-				{copied ? <span className='text-[10px] font-bold text-green'>OK</span> : <Link2 className='h-4 w-4' />}
+				{copied ? <span className='txt-compact-xsmall-plus text-green'>OK</span> : <Link2 className='h-4 w-4' />}
 			</button>
 		</div>
 	);
@@ -172,7 +172,7 @@ export default function BlogDetailPage() {
 					<div className='mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-surface2'>
 						<Bookmark className='h-8 w-8 text-text2' />
 					</div>
-					<h2 className='text-xl font-bold text-text mb-2'>Không tìm thấy bài viết</h2>
+					<h2 className='h2-core text-text mb-2'>Không tìm thấy bài viết</h2>
 					<p className='text-sm text-text2 mb-6 leading-relaxed'>
 						Bài viết không tồn tại hoặc đã bị xoá. Quay lại blog để khám phá các bài viết khác.
 					</p>
@@ -247,12 +247,12 @@ export default function BlogDetailPage() {
 						</div>
 
 						{/* Title */}
-						<h1 className='text-2xl md:text-3xl lg:text-4xl font-bold text-text leading-tight mb-4 tracking-tight'>
+						<h1 className='h1-core leading-tight mb-4 tracking-tight'>
 							{post.title}
 						</h1>
 
 						{/* Excerpt lead */}
-						<p className='text-base md:text-lg leading-relaxed text-text2/80 mb-8 border-l-2 border-accent/30 pl-4 italic'>
+						<p className='txt-large leading-relaxed text-text2/80 mb-8 border-l-2 border-accent/30 pl-4 italic'>
 							{post.excerpt}
 						</p>
 
@@ -273,7 +273,7 @@ export default function BlogDetailPage() {
 										{['hướng dẫn', post.category.toLowerCase(), 'mẹo hay'].map(t => (
 											<span
 												key={t}
-												className='rounded-full bg-surface2 px-3 py-1 text-xs font-medium text-text2'
+												className='rounded-full bg-surface2 px-3 py-1 txt-xsmall-plus text-text2'
 											>
 												#{t}
 											</span>
@@ -291,7 +291,7 @@ export default function BlogDetailPage() {
 									<Link
 										key={tag}
 										href={`/blog?tag=${tag}`}
-										className='rounded-full bg-surface2 px-3 py-1 text-xs font-medium text-text2 hover:text-text hover:bg-border transition-colors'
+										className='rounded-full bg-surface2 px-3 py-1 txt-xsmall-plus text-text2 hover:text-text hover:bg-border transition-colors'
 									>
 										#{tag}
 									</Link>
@@ -301,7 +301,7 @@ export default function BlogDetailPage() {
 
 						{/* Mobile share — visible below md */}
 						<div className='flex items-center justify-between mt-6 pt-6 border-t border-border md:hidden'>
-							<span className='text-xs font-medium text-text2'>Chia sẻ bài viết</span>
+							<span className='txt-xsmall-plus text-text2'>Chia sẻ bài viết</span>
 							<ShareButton url={url} title={post.title} />
 						</div>
 
@@ -326,7 +326,7 @@ export default function BlogDetailPage() {
 						<div className='sticky top-24 space-y-6'>
 							{/* Share */}
 							<div className='rounded-xl border border-border bg-surface p-4'>
-								<p className='text-xs font-semibold text-text2 uppercase tracking-wider mb-3'>
+								<p className='txt-compact-xsmall-plus text-text2 uppercase tracking-wider mb-3'>
 									Chia sẻ
 								</p>
 								<ShareButton url={url} title={post.title} />
@@ -335,7 +335,7 @@ export default function BlogDetailPage() {
 							{/* Table of Contents (placeholder — expands when content is real) */}
 							{toc.length > 0 && (
 								<div className='rounded-xl border border-border bg-surface p-4'>
-									<p className='text-xs font-semibold text-text2 uppercase tracking-wider mb-3'>
+									<p className='txt-compact-xsmall-plus text-text2 uppercase tracking-wider mb-3'>
 										Nội dung
 									</p>
 									<nav className='space-y-1'>
@@ -356,7 +356,7 @@ export default function BlogDetailPage() {
 							{/* Mini related */}
 							{related.length > 0 && (
 								<div className='rounded-xl border border-border bg-surface p-4'>
-									<p className='text-xs font-semibold text-text2 uppercase tracking-wider mb-3'>
+									<p className='txt-compact-xsmall-plus text-text2 uppercase tracking-wider mb-3'>
 										Bài viết cùng chuyên mục
 									</p>
 									<div className='space-y-3'>
@@ -365,7 +365,7 @@ export default function BlogDetailPage() {
 												<h4 className='text-sm font-medium text-text group-hover:text-accent transition-colors line-clamp-2 leading-snug'>
 													{p.title}
 												</h4>
-												<p className='text-[11px] text-text2 mt-1'>{p.category}</p>
+												<p className='txt-compact-xsmall-plus text-text2 mt-1'>{p.category}</p>
 											</Link>
 										))}
 									</div>
@@ -379,7 +379,7 @@ export default function BlogDetailPage() {
 				{related.length > 0 && (
 					<section className='mt-14 pt-8 border-t border-border'>
 						<div className='flex items-center justify-between mb-6'>
-							<h2 className='text-xl font-bold text-text'>Bài viết liên quan</h2>
+							<h2 className='h2-core text-text'>Bài viết liên quan</h2>
 							<Link
 								href='/blog'
 								className='flex items-center gap-1 text-sm text-accent hover:text-accent/80 transition-colors'

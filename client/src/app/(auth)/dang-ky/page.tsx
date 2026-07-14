@@ -59,7 +59,7 @@ export default function RegisterPage() {
 		<div className='card p-6 sm:p-8 shadow-[0_2px_12px_rgba(0,0,0,0.04)]'>
 			{/* Header */}
 			<div className='text-center mb-8'>
-				<Link href='/' className='text-xl font-bold tracking-tight text-text'>
+				<Link href='/' className='h2-core tracking-tight text-text'>
 					e‑conomic
 				</Link>
 				<p className='text-sm text-text2 mt-1.5'>Tạo tài khoản mới</p>
@@ -132,7 +132,7 @@ export default function RegisterPage() {
 			{/* ── Divider ── */}
 			<div className='relative my-6'>
 				<div className='absolute inset-x-0 top-1/2 h-px bg-border' />
-				<span className='relative z-10 block mx-auto w-fit px-4 text-xs text-text2 bg-surface'>
+				<span className='relative z-10 block mx-auto w-fit px-4 txt-xsmall text-text2 bg-surface'>
 					Hoặc đăng ký với
 				</span>
 			</div>
@@ -164,7 +164,7 @@ export default function RegisterPage() {
 				Google
 			</button>
 
-			<p className='mt-8 text-center text-sm text-text2'>
+			<p className='mt-8 text-center txt-medium text-text2'>
 				Đã có tài khoản?{' '}
 				<Link href='/dang-nhap' className='text-text font-semibold hover:underline underline-offset-2'>
 					Đăng nhập

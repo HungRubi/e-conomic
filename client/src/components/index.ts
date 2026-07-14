@@ -1,3 +1,6 @@
+// Medusa typography
+export { Heading, Text } from '@medusajs/ui';
+
 // UI primitives
 export { default as Button } from './ui/Button';
 export { default as Input } from './ui/Input';

@@ -42,7 +42,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
 					{/* Top row: name + date */}
 					<div className='flex items-center justify-between gap-2'>
 						<span className='text-sm font-semibold text-text'>{review.author}</span>
-						<span className='shrink-0 text-[11px] text-text2/60'>{timeAgo(review.createdAt)}</span>
+						<span className='shrink-0 txt-compact-xsmall-plus text-text2/60'>{timeAgo(review.createdAt)}</span>
 					</div>
 
 					{/* Star rating */}
@@ -52,7 +52,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
 
 					{/* Verified badge */}
 					{review.verified && (
-						<span className='mt-1 inline-flex items-center gap-1 rounded-full bg-green/5 px-2 py-0.5 text-[10px] font-medium text-green'>
+						<span className='mt-1 inline-flex items-center gap-1 rounded-full bg-green/5 px-2 py-0.5 txt-compact-xsmall-plus text-green'>
 							<span className='h-1 w-1 rounded-full bg-green' />
 							Đã mua hàng
 						</span>

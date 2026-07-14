@@ -7,7 +7,7 @@ export default function ShopLayout({ children }: { children: ReactNode }) {
 			<Header />
 			<div className='w-full max-w-360 mx-auto px-3 md:px-4 flex gap-6 min-h-screen'>
 				<ShopSidebar />
-				<main className='w-0 flex-1 min-w-0'>{children}</main>
+				<main id='main-content' className='w-0 flex-1 min-w-0'>{children}</main>
 			</div>
 			<Footer />
 		</>

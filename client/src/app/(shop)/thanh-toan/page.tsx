@@ -91,7 +91,7 @@ export default function CheckoutPage() {
 		<section className='pt-2 pb-8 md:pb-16'>
 			<div className='mb-6 md:mb-8'>
 				<p className='text-sm text-text2'>Hoàn tất đơn hàng trong vài bước</p>
-				<h1 className='mt-1 text-3xl font-semibold tracking-[-0.04em] text-text sm:text-4xl'>Thanh toán</h1>
+				<h1 className='mt-1 h1-core tracking-[-0.04em] text-text'>Thanh toán</h1>
 			</div>
 
 			<div className='grid gap-6 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-8'>
@@ -105,7 +105,7 @@ export default function CheckoutPage() {
 									<MapPin className='h-5 w-5' strokeWidth={1.8} />
 								</div>
 								<div>
-									<h2 className='text-lg font-semibold tracking-[-0.025em] text-text'>
+									<h2 className='h3-core tracking-[-0.025em] text-text'>
 										Thông tin giao hàng
 									</h2>
 									<p className='mt-1 text-sm leading-6 text-text2'>
@@ -158,7 +158,7 @@ export default function CheckoutPage() {
 
 					{step === 'payment' && (
 						<div className='rounded-xl border border-border/80 bg-surface/90 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.06)] sm:p-5'>
-							<h2 className='text-lg font-semibold tracking-[-0.025em] text-text'>
+							<h2 className='h3-core tracking-[-0.025em] text-text'>
 								Phương thức thanh toán
 							</h2>
 							<p className='mt-1 text-sm leading-6 text-text2'>
@@ -238,7 +238,7 @@ export default function CheckoutPage() {
 							</ReviewCard>
 
 							<div className='rounded-xl border border-border/80 bg-surface/90 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.06)] sm:p-5'>
-								<h2 className='text-lg font-semibold tracking-[-0.025em] text-text'>Sản phẩm</h2>
+								<h2 className='h3-core tracking-[-0.025em] text-text'>Sản phẩm</h2>
 								<div className='mt-4 divide-y divide-border/70'>
 									{checkoutItems.map(item => (
 										<div key={item.id} className='flex gap-3 py-3 first:pt-0 last:pb-0'>
@@ -308,13 +308,13 @@ function CheckoutStepper({ stepIndex }: { stepIndex: number }) {
 						<div key={step.key} className='min-w-0'>
 							<div className='flex items-center gap-2'>
 								<span
-									className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-semibold ${active ? 'bg-text text-bg' : 'bg-surface2 text-text2'}`}
+									className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full txt-medium-plus ${active ? 'bg-text text-bg' : 'bg-surface2 text-text2'}`}
 								>
 									{done ? <Check className='h-4 w-4' strokeWidth={2.2} /> : index + 1}
 								</span>
 								<span className='hidden min-w-0 sm:block'>
 									<span
-										className={`block truncate text-sm font-semibold ${active ? 'text-text' : 'text-text2'}`}
+										className={`block truncate txt-medium-plus ${active ? 'text-text' : 'text-text2'}`}
 									>
 										{step.label}
 									</span>
@@ -346,7 +346,7 @@ function ReviewCard({
 	return (
 		<div className='rounded-xl border border-border/80 bg-surface/90 p-4 shadow-[0_18px_60px_rgba(0,0,0,0.06)] sm:p-5'>
 			<div className='mb-3 flex items-center justify-between gap-4'>
-				<h2 className='text-lg font-semibold tracking-[-0.025em] text-text'>{title}</h2>
+				<h2 className='h3-core tracking-[-0.025em] text-text'>{title}</h2>
 				<button
 					type='button'
 					onClick={onEdit}
@@ -377,7 +377,7 @@ function OrderSummary({
 }) {
 	return (
 		<div className='rounded-xl border border-border/80 bg-surface/90 p-5 shadow-[0_18px_60px_rgba(0,0,0,0.06)]'>
-			<h2 className='text-lg font-semibold tracking-[-0.025em] text-text'>Tóm tắt đơn hàng</h2>
+			<h2 className='h3-core tracking-[-0.025em] text-text'>Tóm tắt đơn hàng</h2>
 
 			{remainingForFreeShipping > 0 ? (
 				<div className='mt-4 rounded-xl border border-border/70 bg-surface2/60 p-3'>

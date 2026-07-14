@@ -123,12 +123,12 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
 					{/* Left side: discount + tag */}
 					<div className='absolute left-2 top-2 flex items-center gap-1 max-w-[calc(100%-3.5rem)]'>
 						{discount > 0 && (
-							<span className='shrink-0 rounded-full bg-red px-2 py-0.5 text-[10px] font-bold text-white leading-none'>
+							<span className='shrink-0 rounded-full bg-red px-2 py-0.5 txt-compact-xsmall-plus text-white leading-none'>
 								-{discount}%
 							</span>
 						)}
 						{primaryTag && (
-							<span className='truncate rounded-full border border-border bg-surface/85 px-2 py-0.5 text-[10px] font-semibold text-text backdrop-blur-md leading-none'>
+							<span className='truncate rounded-full border border-border bg-surface/85 px-2 py-0.5 txt-compact-xsmall-plus text-text backdrop-blur-md leading-none'>
 								{primaryTag}
 							</span>
 						)}
@@ -155,7 +155,7 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
 
 					<div className='flex items-center justify-between gap-2'>
 						<StarRating rating={product.rating} reviewCount={product.reviewCount} />
-						<span className='shrink-0 text-[10px] text-text2/60'>Đã bán {soldCount}</span>
+						<span className='shrink-0 txt-xsmall text-text2/60'>Đã bán {soldCount}</span>
 					</div>
 
 					<div className='flex flex-wrap items-end justify-between gap-x-1 pt-1'>
@@ -164,7 +164,7 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
 								{product.price.toLocaleString('vi-VN')}₫
 							</div>
 							{product.compareAtPrice && (
-								<div className='text-[10px] text-text2 line-through leading-tight'>
+								<div className='txt-xsmall text-text2 line-through leading-tight'>
 									{product.compareAtPrice.toLocaleString('vi-VN')}₫
 								</div>
 							)}
@@ -174,7 +174,7 @@ export default function ProductCard({ product, index = 0, showBuyNow = true }: P
 							<button
 								type='button'
 								onClick={handleBuyNow}
-								className='mt-1.5 w-full sm:w-auto inline-flex h-7 items-center justify-center gap-1 rounded-full bg-text px-3 text-[11px] font-bold text-bg shadow-sm transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] hover:opacity-85 active:translate-y-px'
+								className='focus-ring mt-1.5 w-full sm:w-auto inline-flex h-7 items-center justify-center gap-1 rounded-full bg-text px-3 txt-compact-xsmall-plus text-bg shadow-sm transition-all duration-300 touch-manipulation ease-[cubic-bezier(0.16,1,0.3,1)] hover:opacity-85 active:translate-y-px'
 							>
 								<ShoppingCart className='h-3 w-3' />
 								Mua ngay

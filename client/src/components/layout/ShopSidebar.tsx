@@ -62,23 +62,23 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 	const pathname = usePathname();
 	const activeSlug = pathname === '/' ? null : pathname.slice(1);
 
-	const linkBase = 'mx-2 flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors';
+	const linkBase = 'mx-2 flex items-center gap-3 px-3 py-2 rounded-lg txt-medium transition-colors';
 
 	return (
-		<div className='flex flex-col gap-1'>
+		<div className='flex flex-col gap-1 overscroll-contain'>
 			{/* ── User account (mobile only) ── */}
 			<div className='md:hidden mx-2 mb-2'>
 				<Link
 					href='/dang-nhap'
 					onClick={onLinkClick}
-					className='flex items-center gap-3 px-3 py-3 rounded-lg bg-surface2/80 hover:bg-surface2 transition-colors'
+					className='focus-ring flex items-center gap-3 px-3 py-3 rounded-lg bg-surface2/80 hover:bg-surface2 transition-colors'
 				>
 					<span className='flex items-center justify-center w-9 h-9 rounded-full bg-accent/10 text-accent shrink-0'>
 						<User className='w-4 h-4' />
 					</span>
 					<div className='min-w-0'>
 						<div className='text-sm font-semibold text-text'>Đăng nhập / Đăng ký</div>
-						<div className='text-[11px] text-text2'>Tích luỹ điểm thưởng</div>
+						<div className='txt-compact-xsmall-plus text-text2'>Tích luỹ điểm thưởng</div>
 					</div>
 					<ChevronRight className='w-4 h-4 ml-auto shrink-0 text-text2/50' />
 				</Link>
@@ -108,11 +108,11 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 
 			{/* ── Categories ── */}
 			<div className='space-y-0.5 mt-1'>
-				<p className='text-[11px] font-semibold text-text2 uppercase tracking-wider px-3 mb-1'>Danh mục</p>
+				<p className='txt-compact-xsmall-plus text-text2 uppercase tracking-wider px-3 mb-1'>Danh mục</p>
 				<Link
 					href='/'
 					onClick={onLinkClick}
-					className={`${linkBase} ${
+					className={`focus-ring ${linkBase} ${
 						!activeSlug
 							? 'bg-accent/10 text-accent font-medium'
 							: 'text-text2 hover:text-text hover:bg-surface2'
@@ -128,7 +128,7 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 						key={cat.id}
 						href={`/${cat.slug}`}
 						onClick={onLinkClick}
-						className={`${linkBase} ${
+						className={`focus-ring ${linkBase} ${
 							activeSlug === cat.slug
 								? 'bg-accent/10 text-accent font-medium'
 								: 'text-text2 hover:text-text hover:bg-surface2'
@@ -146,7 +146,7 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 
 			{/* ── Quick services ── */}
 			<div className='space-y-1 px-0'>
-				<p className='text-[11px] font-semibold text-text2 uppercase tracking-wider px-1 mb-1'>Tiện ích</p>
+				<p className='txt-compact-xsmall-plus text-text2 uppercase tracking-wider px-1 mb-1'>Tiện ích</p>
 				<Link
 					href='/don-hang-cua-ban'
 					onClick={onLinkClick}
@@ -175,7 +175,7 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 				<Link
 					href='/?tag=sale'
 					onClick={onLinkClick}
-					className='mx-2 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface2 hover:bg-border transition-colors group'
+					className='focus-ring mx-2 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface2 hover:bg-border transition-colors group'
 				>
 					<span className='flex items-center justify-center w-7 h-7 rounded-full bg-red/10 text-red shrink-0'>
 						<Zap className='w-3.5 h-3.5' />
@@ -184,14 +184,14 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 						<div className='text-sm font-semibold text-text group-hover:text-accent transition-colors'>
 							Siêu sale — Giá tốc
 						</div>
-						<div className='text-[11px] text-text2'>Flash sale 12h–14h mỗi ngày</div>
+						<div className='txt-compact-xsmall-plus text-text2'>Flash sale 12h–14h mỗi ngày</div>
 					</div>
 				</Link>
 
 				<Link
-					href='/vouchers'
+					href='#'
 					onClick={onLinkClick}
-					className='mx-2 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface2 hover:bg-border transition-colors group'
+					className='focus-ring mx-2 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface2 hover:bg-border transition-colors group'
 				>
 					<span className='flex items-center justify-center w-7 h-7 rounded-full bg-green/10 text-green shrink-0'>
 						<Ticket className='w-3.5 h-3.5' />
@@ -200,14 +200,14 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 						<div className='text-sm font-semibold text-text group-hover:text-accent transition-colors'>
 							Mã giảm giá
 						</div>
-						<div className='text-[11px] text-text2'>Giảm đến 50% cho đơn từ 500K</div>
+						<div className='txt-compact-xsmall-plus text-text2'>Giảm đến 50% cho đơn từ 500K</div>
 					</div>
 				</Link>
 
 				<Link
-					href='/games'
+					href='#'
 					onClick={onLinkClick}
-					className='mx-2 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface2 hover:bg-border transition-colors group'
+					className='focus-ring mx-2 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface2 hover:bg-border transition-colors group'
 				>
 					<span className='flex items-center justify-center w-7 h-7 rounded-full bg-purple/10 text-purple shrink-0'>
 						<Gamepad2 className='w-3.5 h-3.5' />
@@ -216,14 +216,14 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 						<div className='text-sm font-semibold text-text group-hover:text-accent transition-colors'>
 							Mini Game
 						</div>
-						<div className='text-[11px] text-text2'>Quay số trúng thưởng mỗi ngày</div>
+						<div className='txt-compact-xsmall-plus text-text2'>Quay số trúng thưởng mỗi ngày</div>
 					</div>
 				</Link>
 
 				<Link
 					href='#'
 					onClick={onLinkClick}
-					className='mx-2 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface2 hover:bg-border transition-colors group'
+					className='focus-ring mx-2 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface2 hover:bg-border transition-colors group'
 				>
 					<span className='flex items-center justify-center w-7 h-7 rounded-full bg-teal/10 text-teal shrink-0'>
 						<Gift className='w-3.5 h-3.5' />
@@ -232,14 +232,14 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 						<div className='text-sm font-semibold text-text group-hover:text-accent transition-colors'>
 							Quà tặng & Ưu đãi
 						</div>
-						<div className='text-[11px] text-text2'>Tích điểm đổi quà hấp dẫn</div>
+						<div className='txt-compact-xsmall-plus text-text2'>Tích điểm đổi quà hấp dẫn</div>
 					</div>
 				</Link>
 
 				<Link
 					href='#'
 					onClick={onLinkClick}
-					className='mx-2 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface2 hover:bg-border transition-colors group'
+					className='focus-ring mx-2 flex items-center gap-3 px-3 py-2.5 rounded-lg bg-surface2 hover:bg-border transition-colors group'
 				>
 					<span className='flex items-center justify-center w-7 h-7 rounded-full bg-blue/10 text-blue shrink-0'>
 						<Percent className='w-3.5 h-3.5' />
@@ -248,7 +248,7 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 						<div className='text-sm font-semibold text-text group-hover:text-accent transition-colors'>
 							Giảm giá theo giờ
 						</div>
-						<div className='text-[11px] text-text2'>Deal sốc mỗi khung giờ vàng</div>
+						<div className='txt-compact-xsmall-plus text-text2'>Deal sốc mỗi khung giờ vàng</div>
 					</div>
 				</Link>
 			</div>
@@ -271,7 +271,7 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 				<div className='absolute inset-0 bg-gradient-to-t from-black/60 to-transparent' />
 				<div className='absolute bottom-2 left-3 right-3'>
 					<div className='text-xs font-bold text-white'>Ưu đãi đặc biệt</div>
-					<div className='text-[10px] text-white/80'>Miễn phí vận chuyển từ 500K</div>
+					<div className='txt-compact-xsmall-plus text-white/80'>Miễn phí vận chuyển từ 500K</div>
 				</div>
 			</Link>
 		</div>

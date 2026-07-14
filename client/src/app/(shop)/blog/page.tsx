@@ -44,7 +44,7 @@ export default function BlogPage() {
 						<BookOpen className='h-5 w-5' />
 					</div>
 					<div>
-						<h1 className='text-2xl font-bold text-text'>Bài viết & Hướng dẫn</h1>
+						<h1 className='h2-core text-text'>Bài viết & Hướng dẫn</h1>
 						<p className='text-sm text-text2 mt-0.5'>Kiến thức, mẹo hay & cảm hứng mua sắm</p>
 					</div>
 				</div>
@@ -63,7 +63,7 @@ export default function BlogPage() {
 					<div className='flex gap-2 flex-wrap'>
 						<button
 							onClick={() => setSelectedCategory(null)}
-							className={`h-9 px-3 rounded-full text-xs font-medium transition-all ${
+							className={`focus-ring h-9 px-3 rounded-full txt-xsmall-plus transition-all touch-manipulation ${
 								!selectedCategory ? 'bg-accent text-bg' : 'bg-surface2 text-text2 hover:text-text'
 							}`}
 						>
@@ -73,7 +73,7 @@ export default function BlogPage() {
 							<button
 								key={cat}
 								onClick={() => setSelectedCategory(cat === selectedCategory ? null : cat)}
-								className={`h-9 px-3 rounded-full text-xs font-medium transition-all ${
+								className={`focus-ring h-9 px-3 rounded-full txt-xsmall-plus transition-all touch-manipulation ${
 									selectedCategory === cat
 										? 'bg-accent text-bg'
 										: 'bg-surface2 text-text2 hover:text-text'
@@ -105,7 +105,7 @@ export default function BlogPage() {
 						<div className='mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-surface2 text-text2'>
 							<BookOpen className='h-7 w-7' />
 						</div>
-						<h3 className='text-lg font-semibold text-text mb-1'>Không tìm thấy bài viết</h3>
+						<h3 className='h3-core text-text mb-1'>Không tìm thấy bài viết</h3>
 						<p className='text-sm text-text2'>
 							{search ? 'Thử từ khoá khác hoặc bỏ lọc danh mục' : 'Đang cập nhật nội dung mới'}
 						</p>

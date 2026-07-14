@@ -45,7 +45,7 @@ export default function BottomTabBar() {
 									</motion.span>
 								)}
 							</div>
-							<span className='text-[10px] leading-none'>{label}</span>
+							<span className='txt-compact-xsmall-plus leading-none'>{label}</span>
 						</Link>
 					);
 				})}

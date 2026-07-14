@@ -311,7 +311,7 @@ function ProductGallery({ product, selectedImage, setSelectedImage, discount, re
 
 				{/* Image counter — mobile only */}
 				<div className='absolute bottom-3 right-3 md:hidden'>
-					<span className='inline-flex h-6 min-w-[44px] items-center justify-center rounded-full bg-black/40 px-2.5 text-[11px] font-semibold text-white/90 backdrop-blur-sm'>
+					<span className='inline-flex h-6 min-w-[44px] items-center justify-center rounded-full bg-black/40 px-2.5 txt-compact-xsmall-plus text-white/90 backdrop-blur-sm'>
 						{curr + 1}/{total}
 					</span>
 				</div>
@@ -333,7 +333,7 @@ function ProductGallery({ product, selectedImage, setSelectedImage, discount, re
 								onClick={() => setSelectedImage(index)}
 								aria-label={`Xem ảnh ${index + 1}`}
 								aria-pressed={selected}
-								className={`relative h-14 w-14 shrink-0 overflow-hidden rounded-[10px] border transition-all md:h-18 md:w-18 ${
+								className={`focus-ring relative h-14 w-14 shrink-0 overflow-hidden rounded-[10px] border transition-all md:h-18 md:w-18 ${
 									selected
 										? 'border-star/60 ring-1 ring-star/20'
 										: 'border-border/50 opacity-70 hover:opacity-100'
@@ -401,7 +401,7 @@ function ProductPurchasePanel({
 				</div>
 
 				{/* Name */}
-				<h1 className='text-2xl font-bold tracking-tight text-text md:text-[28px] md:leading-tight'>
+				<h1 className='h2-core tracking-tight text-text md:leading-tight'>
 					{product.name}
 				</h1>
 
@@ -412,7 +412,7 @@ function ProductPurchasePanel({
 
 				{/* Price */}
 				<div className='mt-4 flex flex-wrap items-end gap-3'>
-					<span className='text-2xl font-bold tracking-tight text-accent md:text-[26px]'>
+					<span className='txt-xlarge-plus tracking-tight text-accent'>
 						{formatPrice(displayPrice)}
 					</span>
 					{product.compareAtPrice && (
@@ -424,7 +424,7 @@ function ProductPurchasePanel({
 				</div>
 
 				{/* Short description */}
-				<p className='mt-4 text-sm leading-6 text-text2 md:text-[15px]'>{product.description}</p>
+				<p className='mt-4 txt-medium leading-6 text-text2'>{product.description}</p>
 
 				<div className='mt-6 space-y-5'>
 					{/* CTAs — mở variant sheet để chọn size/màu/số lượng */}
@@ -511,23 +511,23 @@ function ProductStory({ product, stock }: ProductStoryProps) {
 				<h2 className='text-3xl font-bold tracking-tight text-text leading-tight'>{product.name}</h2>
 
 				<div className='mt-6 space-y-4 text-base leading-7 text-text2'>
-					<p className='text-[15px] leading-[1.7]'>{product.description}</p>
-					<p className='text-[15px] leading-[1.7]'>
+					<p className='txt-medium leading-[1.7]'>{product.description}</p>
+					<p className='txt-medium leading-[1.7]'>
 						<strong className='font-semibold text-text'>Chất liệu:</strong> Sợi cotton tự nhiên 100% được
 						chọn lọc từ những cánh đồng bông chất lượng cao. Vải dệt kim mịn, dày dặn nhưng vẫn đảm bảo độ
 						thoáng khí tối ưu cho làn da.
 					</p>
-					<p className='text-[15px] leading-[1.7]'>
+					<p className='txt-medium leading-[1.7]'>
 						<strong className='font-semibold text-text'>Thiết kế:</strong> Form regular fit ôm vừa phải,
 						không quá chật cũng không quá rộng. Cổ tròn bo gân chắc chắn, giữ form sau nhiều lần giặt. Đường
 						may chỉ kép tại các vị trí chịu lực (vai, nách, sườn) đảm bảo độ bền vượt trội.
 					</p>
-					<p className='text-[15px] leading-[1.7]'>
+					<p className='txt-medium leading-[1.7]'>
 						<strong className='font-semibold text-text'>Hướng dẫn bảo quản:</strong> Giặt ở nhiệt độ dưới
 						30°C, không dùng chất tẩy mạnh, phơi trong bóng râm để giữ màu sắc bền lâu. Không là ủi trực
 						tiếp lên vùng in/họa tiết (nếu có).
 					</p>
-					<p className='text-[15px] leading-[1.7]'>
+					<p className='txt-medium leading-[1.7]'>
 						<strong className='font-semibold text-text'>Ưu điểm nổi bật:</strong> Công nghệ dệt Pre-Shrunk
 						giúp hạn chế co rút sau giặt. Sợi vải được xử lý kháng khuẩn, khử mùi, an toàn cho da nhạy cảm.
 						Chứng nhận OEKO-TEX Standard 100.
@@ -548,7 +548,7 @@ function ProductStory({ product, stock }: ProductStoryProps) {
 						</span>
 					)}
 					<span className='inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-surface px-3 py-1.5 text-xs font-medium text-text2'>
-						<FaStar className='text-[12px] text-star/40' /> {product.rating.toFixed(1)} (
+						<FaStar className='txt-xsmall-plus text-star/40' /> {product.rating.toFixed(1)} (
 						{product.reviewCount} đánh giá)
 					</span>
 					<span className='inline-flex items-center gap-1.5 rounded-full border border-border/50 bg-surface px-3 py-1.5 text-xs font-medium text-text2'>
@@ -661,7 +661,7 @@ interface MobileStickyCTAProps {
 
 function MobileStickyCTA({ isAvailable, onAdd, onBuy }: MobileStickyCTAProps) {
 	return (
-		<div className='fixed inset-x-0 bottom-0 z-50 border-t border-border bg-bg/95 px-3 py-3 shadow-[0_-18px_50px_rgba(0,0,0,0.12)] backdrop-blur-xl md:hidden'>
+		<div className='fixed inset-x-0 bottom-0 z-50 border-t border-border bg-bg/95 px-3 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] shadow-[0_-18px_50px_rgba(0,0,0,0.12)] backdrop-blur-xl md:hidden'>
 			<div className='mx-auto flex max-w-md items-center gap-2'>
 				<Button
 					variant='secondary'

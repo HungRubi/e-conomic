@@ -23,7 +23,7 @@ export default function QuantitySelector({ value, onChange, min = 1, max = 99, s
 			<button
 				onClick={() => onChange(Math.max(min, value - 1))}
 				disabled={value <= min}
-				className={`${btnW} ${totalH} flex items-center justify-center rounded-l-lg text-fg-subtle transition-colors hover:bg-bg-subtle active:opacity-60 disabled:pointer-events-none disabled:opacity-20`}
+				className={`focus-ring ${btnW} ${totalH} flex items-center justify-center rounded-l-lg text-fg-subtle transition-colors hover:bg-bg-subtle active:opacity-60 disabled:pointer-events-none disabled:opacity-20 touch-manipulation`}
 				aria-label='Decrease'
 			>
 				<Minus className={iconSize} strokeWidth={1.5} />
@@ -38,7 +38,7 @@ export default function QuantitySelector({ value, onChange, min = 1, max = 99, s
 			<button
 				onClick={() => onChange(Math.min(max, value + 1))}
 				disabled={value >= max}
-				className={`${btnW} ${totalH} flex items-center justify-center rounded-r-lg text-fg-subtle transition-colors hover:bg-bg-subtle active:opacity-60 disabled:pointer-events-none disabled:opacity-20`}
+				className={`focus-ring ${btnW} ${totalH} flex items-center justify-center rounded-r-lg text-fg-subtle transition-colors hover:bg-bg-subtle active:opacity-60 disabled:pointer-events-none disabled:opacity-20 touch-manipulation`}
 				aria-label='Increase'
 			>
 				<Plus className={iconSize} strokeWidth={1.5} />

@@ -11,9 +11,9 @@ interface StarRatingProps {
 }
 
 const sizeMap = {
-	sm: 'text-[12px]',
-	md: 'text-[16px]',
-	lg: 'text-[20px]',
+	sm: 'txt-xsmall',
+	md: 'txt-medium',
+	lg: 'txt-xlarge',
 };
 
 export default function StarRating({

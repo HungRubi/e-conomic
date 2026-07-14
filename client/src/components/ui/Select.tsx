@@ -25,9 +25,7 @@ export default function Select({ value, options, onChange, className = '', disab
 		>
 			<MedusaSelect.Trigger className={className}>
 				<MedusaSelect.Value placeholder='Chọn...' />
-				<MedusaSelect.Trigger>
-					<ChevronDown className='h-4 w-4' />
-				</MedusaSelect.Trigger>
+				<ChevronDown className='h-4 w-4' />
 			</MedusaSelect.Trigger>
 			<MedusaSelect.Content>
 				{options.map(opt => (

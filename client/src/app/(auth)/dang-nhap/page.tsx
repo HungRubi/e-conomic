@@ -2,7 +2,7 @@
 
 import { useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import { Eye, EyeOff, Mail, Lock, Smartphone } from 'lucide-react';
+import { Mail, Lock, Smartphone } from 'lucide-react';
 import { Button, Input } from '@/components';
 import { toast } from '@medusajs/ui';
 
@@ -14,7 +14,6 @@ interface Errors {
 export default function LoginPage() {
 	//
 	const [loading, setLoading] = useState(false);
-	const [showPassword, setShowPassword] = useState(false);
 	const [errors, setErrors] = useState<Errors>({});
 	const [form, setForm] = useState({ email: '', password: '' });
 
@@ -47,7 +46,7 @@ export default function LoginPage() {
 		<div className='card p-6 sm:p-8 shadow-[0_2px_12px_rgba(0,0,0,0.04)]'>
 			{/* Header */}
 			<div className='text-center mb-8'>
-				<Link href='/' className='text-xl font-bold tracking-tight text-text'>
+				<Link href='/' className='h2-core tracking-tight text-text'>
 					e‑conomic
 				</Link>
 				<p className='text-sm text-text2 mt-1.5'>Đăng nhập tài khoản</p>
@@ -70,19 +69,9 @@ export default function LoginPage() {
 				<div>
 					<Input
 						label='Mật khẩu'
-						type={showPassword ? 'text' : 'password'}
+						type='password'
 						placeholder='••••••••'
 						iconLeft={<Lock className='w-4 h-4' />}
-						iconRight={
-							<button
-								type='button'
-								onClick={() => setShowPassword(!showPassword)}
-								className='text-text2 hover:text-text transition-colors'
-								tabIndex={-1}
-							>
-								{showPassword ? <EyeOff className='w-4 h-4' /> : <Eye className='w-4 h-4' />}
-							</button>
-						}
 						value={form.password}
 						error={errors.password}
 						onChange={e => {
@@ -109,7 +98,7 @@ export default function LoginPage() {
 			{/* ── Divider ── */}
 			<div className='relative my-6'>
 				<div className='absolute inset-x-0 top-1/2 h-px bg-border' />
-				<span className='relative z-10 block mx-auto w-fit px-4 text-xs text-text2 bg-surface'>
+				<span className='relative z-10 block mx-auto w-fit px-4 txt-xsmall text-text2 bg-surface'>
 					Hoặc tiếp tục với
 				</span>
 			</div>
@@ -152,7 +141,7 @@ export default function LoginPage() {
 			</button>
 
 			{/* Register link */}
-			<p className='mt-8 text-center text-sm text-text2'>
+			<p className='mt-8 text-center txt-medium text-text2'>
 				Chưa có tài khoản?{' '}
 				<Link href='/dang-ky' className='text-text font-semibold hover:underline underline-offset-2'>
 					Đăng ký

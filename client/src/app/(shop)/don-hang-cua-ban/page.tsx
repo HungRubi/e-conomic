@@ -99,7 +99,7 @@ export default function OrdersPage() {
 				<div>
 					<div className='mb-6 md:mb-8'>
 						<p className='text-sm text-text2'>Theo dõi trạng thái mua hàng</p>
-						<h1 className='mt-1 text-3xl font-semibold tracking-[-0.04em] text-text sm:text-4xl'>
+						<h1 className='mt-1 h1-core tracking-[-0.04em] text-text'>
 							Đơn hàng của bạn
 						</h1>
 					</div>
@@ -150,7 +150,7 @@ export default function OrdersPage() {
 															className='object-cover transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/order-item:scale-105'
 															sizes='(max-width: 768px) 88px, 112px'
 														/>
-														<span className='absolute right-2 top-2 rounded-full bg-surface/90 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-text shadow-sm backdrop-blur-md'>
+														<span className='absolute right-2 top-2 rounded-full bg-surface/90 px-2 py-0.5 txt-compact-xsmall-plus tabular-nums text-text shadow-sm backdrop-blur-md'>
 															x{item.qty}
 														</span>
 													</div>

@@ -36,18 +36,18 @@ export default function BlogCard({ post, index = 0 }: BlogCardProps) {
 						/>
 					</div>
 					<div className='flex flex-col gap-2 p-3'>
-						<div className='flex items-center gap-2 text-[11px] text-text2'>
+						<div className='flex items-center gap-2 txt-compact-xsmall-plus text-text2'>
 							<span className='rounded-full bg-surface2 px-2 py-0.5 font-medium'>{post.category}</span>
 							<span className='flex items-center gap-1'>
 								<CalendarIcon className='h-3 w-3' />
 								{date}
 							</span>
 						</div>
-						<h3 className='line-clamp-2 text-sm font-semibold leading-snug text-text transition-colors group-hover:text-accent'>
+						<h3 className='line-clamp-2 txt-medium-plus leading-snug text-text transition-colors group-hover:text-accent'>
 							{post.title}
 						</h3>
-						<p className='line-clamp-2 text-xs leading-relaxed text-text2'>{post.excerpt}</p>
-						<div className='mt-auto flex items-center gap-1 pt-1 text-xs font-medium text-accent'>
+						<p className='line-clamp-2 txt-xsmall leading-relaxed text-text2'>{post.excerpt}</p>
+						<div className='mt-auto flex items-center gap-1 pt-1 txt-xsmall-plus text-accent'>
 							Đọc tiếp <ArrowRight className='h-3 w-3' />
 						</div>
 					</div>

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ShoppingBag, ArrowRight, Check, Minus, Plus } from 'lucide-react';
 import Image from 'next/image';
 import { Button } from '@/components';
@@ -28,6 +28,7 @@ interface VariantSheetProps {
 
 export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, product }: VariantSheetProps) {
 	const isMobile = useIsMobile();
+	const reduceMotion = useReducedMotion();
 
 	/* ── internal variant state ── */
 	const sizes = [...new Set(product.variants.map(v => v.size).filter(Boolean))] as string[];
@@ -154,7 +155,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 				type='button'
 				onClick={onClick}
 				className={`
-          relative inline-flex items-center gap-1.5 h-[34px] rounded-full px-4
+          focus-ring relative inline-flex items-center gap-1.5 focus-ring h-[34px] rounded-full px-4
           text-xs font-semibold tracking-wide
           transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
           active:scale-[0.96]
@@ -179,7 +180,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 					type='button'
 					onClick={() => onChange(Math.max(1, value - 1))}
 					disabled={value <= 1}
-					className='flex h-8 w-8 items-center justify-center rounded-full text-fg-subtle transition-colors hover:bg-bg-subtle active:bg-bg-subtle/80 disabled:opacity-20 disabled:pointer-events-none'
+					className='focus-ring flex h-8 w-8 items-center justify-center rounded-full text-fg-subtle transition-colors hover:bg-bg-subtle active:bg-bg-subtle/80 disabled:opacity-20 disabled:pointer-events-none'
 					aria-label='Giảm'
 				>
 					<Minus className='h-3.5 w-3.5' strokeWidth={1.8} />
@@ -191,7 +192,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 					type='button'
 					onClick={() => onChange(Math.min(max, value + 1))}
 					disabled={value >= max}
-					className='flex h-8 w-8 items-center justify-center rounded-full text-fg-subtle transition-colors hover:bg-bg-subtle active:bg-bg-subtle/80 disabled:opacity-20 disabled:pointer-events-none'
+					className='focus-ring flex h-8 w-8 items-center justify-center rounded-full text-fg-subtle transition-colors hover:bg-bg-subtle active:bg-bg-subtle/80 disabled:opacity-20 disabled:pointer-events-none'
 					aria-label='Tăng'
 				>
 					<Plus className='h-3.5 w-3.5' strokeWidth={1.8} />
@@ -211,12 +212,12 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 				<div className='min-w-0 flex-1'>
 					<h3 className='text-sm font-semibold text-fg-base leading-snug line-clamp-1'>{product.name}</h3>
 					<div className='mt-1 flex items-baseline gap-2.5'>
-						<span className='text-xl font-bold text-fg-base tracking-tight'>{fmtPrice(displayPrice)}</span>
+						<span className='txt-xlarge-plus text-fg-base tracking-tight'>{fmtPrice(displayPrice)}</span>
 						{comparePrice && (
 							<span className='text-sm text-fg-subtle/70 line-through'>{fmtPrice(comparePrice)}</span>
 						)}
 						{discount > 0 && (
-							<span className='text-[11px] font-bold text-tag-red-text bg-tag-red-bg/30 px-1.5 py-0.5 rounded-md'>
+							<span className='txt-compact-xsmall-plus text-tag-red-text bg-tag-red-bg/30 px-1.5 py-0.5 rounded-md'>
 								-{discount}%
 							</span>
 						)}
@@ -229,11 +230,11 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 				{sizes.length > 0 && (
 					<div className='pb-2'>
 						<div className='flex items-center justify-between mb-3'>
-							<span className='text-[11px] font-semibold uppercase tracking-[0.08em] text-fg-subtle/60'>
+							<span className='txt-compact-xsmall-plus uppercase tracking-[0.08em] text-fg-subtle/60'>
 								Kích thước
 							</span>
 							{selectedSize && (
-								<span className='text-[13px] font-medium text-fg-base'>{selectedSize}</span>
+								<span className='txt-medium-plus text-fg-base'>{selectedSize}</span>
 							)}
 						</div>
 						<div className='flex flex-wrap gap-2'>
@@ -252,11 +253,11 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 				{colors.length > 0 && (
 					<div className='py-2'>
 						<div className='flex items-center justify-between mb-3'>
-							<span className='text-[11px] font-semibold uppercase tracking-[0.08em] text-fg-subtle/60'>
+							<span className='txt-compact-xsmall-plus uppercase tracking-[0.08em] text-fg-subtle/60'>
 								Màu sắc
 							</span>
 							{selectedColor && (
-								<span className='text-[13px] font-medium text-fg-base'>{selectedColor}</span>
+								<span className='txt-medium-plus text-fg-base'>{selectedColor}</span>
 							)}
 						</div>
 						<div className='flex flex-wrap gap-2'>
@@ -273,7 +274,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 				)}
 
 				<div className='flex items-center justify-between py-2'>
-					<span className='text-[11px] font-semibold uppercase tracking-[0.08em] text-fg-subtle/60'>
+					<span className='txt-compact-xsmall-plus uppercase tracking-[0.08em] text-fg-subtle/60'>
 						Số lượng
 					</span>
 					<QtyControl value={quantity} onChange={setQuantity} max={maxQty} />
@@ -287,7 +288,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 					disabled={!canConfirm || added}
 					onClick={handleAddToCart}
 					className={`
-            h-[46px] rounded-full text-[14px] font-semibold
+            focus-ring h-[46px] rounded-full txt-medium-plus
             transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
             active:scale-[0.98]
             flex items-center justify-center gap-2
@@ -316,7 +317,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 					disabled={!canConfirm || added}
 					onClick={handleBuyNow}
 					className={`
-            h-[46px] rounded-full text-[14px] font-semibold
+            focus-ring h-[46px] rounded-full txt-medium-plus
             transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
             active:scale-[0.98]
             flex items-center justify-center gap-2
@@ -367,10 +368,10 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 								height: '72dvh',
 								transform: dragY > 0 ? `translateY(${dragY}px)` : undefined,
 							}}
-							initial={{ y: '100%' }}
+							initial={(reduceMotion ? undefined : { y: '100%' })}
 							animate={{ y: 0 }}
-							exit={{ y: '100%' }}
-							transition={{ type: 'spring', damping: 32, stiffness: 300, mass: 1 }}
+							exit={(reduceMotion ? undefined : { y: '100%' })}
+							transition={reduceMotion ? { duration: 0 } : { type: 'spring', damping: 32, stiffness: 300, mass: 1 }}
 						>
 							<div
 								ref={dragHandleRef}
@@ -381,7 +382,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 								<div className='h-1 w-9 rounded-full bg-border/40' />
 							</div>
 							<div className='flex shrink-0 items-center justify-center px-5 pb-0.5'>
-								<span className='text-[13px] font-semibold uppercase tracking-[0.08em] text-fg-subtle/60'>
+								<span className='txt-medium-plus uppercase tracking-[0.08em] text-fg-subtle/60'>
 									Tuỳ chọn sản phẩm
 								</span>
 							</div>
