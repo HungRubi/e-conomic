@@ -19,18 +19,18 @@ export default function QuantitySelector({ value, onChange, min = 1, max = 99, s
 	const txtSize = isSm ? 'text-sm' : 'text-sm';
 
 	return (
-		<div className={`inline-flex items-center ${totalH} rounded-lg border border-border/60 bg-bg`}>
+		<div className={`inline-flex items-center ${totalH} rounded-lg border border-border-base/60 bg-bg-base`}>
 			<button
 				onClick={() => onChange(Math.max(min, value - 1))}
 				disabled={value <= min}
-				className={`${btnW} ${totalH} flex items-center justify-center rounded-l-lg text-text2 transition-colors hover:bg-surface2 active:opacity-60 disabled:pointer-events-none disabled:opacity-20`}
+				className={`${btnW} ${totalH} flex items-center justify-center rounded-l-lg text-fg-subtle transition-colors hover:bg-bg-subtle active:opacity-60 disabled:pointer-events-none disabled:opacity-20`}
 				aria-label='Decrease'
 			>
 				<Minus className={iconSize} strokeWidth={1.5} />
 			</button>
 
 			<span
-				className={`flex items-center justify-center ${txtW} ${totalH} tabular-nums ${txtSize} font-medium text-text`}
+				className={`flex items-center justify-center ${txtW} ${totalH} tabular-nums ${txtSize} font-medium text-fg-base`}
 			>
 				{value}
 			</span>
@@ -38,7 +38,7 @@ export default function QuantitySelector({ value, onChange, min = 1, max = 99, s
 			<button
 				onClick={() => onChange(Math.min(max, value + 1))}
 				disabled={value >= max}
-				className={`${btnW} ${totalH} flex items-center justify-center rounded-r-lg text-text2 transition-colors hover:bg-surface2 active:opacity-60 disabled:pointer-events-none disabled:opacity-20`}
+				className={`${btnW} ${totalH} flex items-center justify-center rounded-r-lg text-fg-subtle transition-colors hover:bg-bg-subtle active:opacity-60 disabled:pointer-events-none disabled:opacity-20`}
 				aria-label='Increase'
 			>
 				<Plus className={iconSize} strokeWidth={1.5} />

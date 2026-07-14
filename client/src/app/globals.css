@@ -1,149 +1,229 @@
 @import 'tailwindcss';
-@source "../node_modules/@medusajs/ui";
-@config "@medusajs/ui-preset";
+@source "../../node_modules/@medusajs/ui";
 @import './medusa-tokens.css';
 
-/* ── Design tokens: Apple/Vercel — both themes ── */
-:root {
-	--bg: #fafbfc;
-	--surface: #ffffff;
-	--surface2: #f1f3f5;
-	--border: #dee2e6;
-	--text: #0d1117;
-	--text2: #656d76;
-	--accent: #0d1117;
-	--accent-glow: rgba(13, 17, 23, 0.12);
-	--green: #2da44e;
-	--orange: #bf8700;
-	--star: #f59e0b;
-	--red: #cf222e;
-	--purple: #8250df;
-	--teal: #1b7c83;
-	--radius: 14px;
-	--radius-sm: 8px;
-}
-
-.dark {
-	--bg: #0d1117;
-	--surface: #161b22;
-	--surface2: #21262d;
-	--border: #30363d;
-	--text: #e6edf3;
-	--text2: #8b949e;
-	--accent: #e6edf3;
-	--accent-glow: rgba(230, 237, 243, 0.12);
-	--green: #3fb950;
-	--orange: #d29922;
-	--star: #f5b81b;
-	--red: #f85149;
-	--purple: #bc8cff;
-	--teal: #56d4dd;
-}
-
+/* ── Medusa theme tokens for Tailwind v4 ── */
 @theme inline {
-	--color-bg: var(--bg);
-	--color-surface: var(--surface);
-	--color-surface2: var(--surface2);
-	--color-border: var(--border);
-	--color-text: var(--text);
-	--color-text2: var(--text2);
-	--color-accent: var(--accent);
-	--color-green: var(--green);
-	--color-orange: var(--orange);
-	--color-star: var(--star);
-	--color-red: var(--red);
-	--color-purple: var(--purple);
-	--color-teal: var(--teal);
-	--radius-card: var(--radius);
-	--radius-btn: var(--radius-sm);
+	/* ─ short custom aliases (existing) ─ */
+	--color-bg: var(--bg-base);
+	--color-surface: var(--bg-base);
+	--color-surface2: var(--bg-subtle);
+	--color-border: var(--border-base);
+	--color-text: var(--fg-base);
+	--color-text2: var(--fg-subtle);
+	--color-accent: var(--fg-base);
+	--color-green: var(--tag-green-text);
+	--color-orange: var(--tag-orange-text);
+	--color-red: var(--tag-red-text);
+	--color-purple: var(--tag-purple-text);
+	--color-star: var(--tag-orange-icon);
+	--color-teal: var(--tag-blue-text);
+	--radius-card: 14px;
+	--radius-btn: 8px;
 	--font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 	--font-mono: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+
+	/* ─ fg-* / bg-* / border-* aliases for custom components ─ */
+	/* These map text-fg-base → var(--fg-base), bg-bg-base → var(--bg-base), etc. */
+	--color-fg-base: var(--fg-base);
+	--color-fg-subtle: var(--fg-subtle);
+	--color-fg-muted: var(--fg-muted);
+	--color-fg-disabled: var(--fg-disabled);
+	--color-fg-error: var(--fg-error);
+	--color-fg-interactive: var(--fg-interactive);
+	--color-fg-on-color: var(--fg-on-color);
+	--color-fg-on-inverted: var(--fg-on-inverted);
+
+	--color-bg-base: var(--bg-base);
+	--color-bg-subtle: var(--bg-subtle);
+	--color-bg-component: var(--bg-component);
+	--color-bg-field: var(--bg-field);
+	--color-bg-highlight: var(--bg-highlight);
+	--color-bg-interactive: var(--bg-interactive);
+	--color-bg-disabled: var(--bg-disabled);
+	--color-bg-overlay: var(--bg-overlay);
+
+	--color-border-base: var(--border-base);
+	--color-border-strong: var(--border-strong);
+	--color-border-interactive: var(--border-interactive);
+	--color-border-danger: var(--border-danger);
+	--color-border-error: var(--border-error);
+	--color-border-transparent: var(--border-transparent);
+
+	--color-tag-red-text: var(--tag-red-text);
+	--color-tag-red-bg: var(--tag-red-bg);
+	--color-tag-green-text: var(--tag-green-text);
+	--color-tag-green-bg: var(--tag-green-bg);
+	--color-tag-green-border: var(--tag-green-border);
+	--color-tag-green-icon: var(--tag-green-icon);
+	--color-tag-orange-text: var(--tag-orange-text);
+	--color-tag-orange-icon: var(--tag-orange-icon);
+	--color-tag-purple-text: var(--tag-purple-text);
+	--color-tag-purple-bg: var(--tag-purple-bg);
+	--color-tag-blue-text: var(--tag-blue-text);
+	--color-tag-blue-icon: var(--tag-blue-icon);
+	--color-tag-blue-bg: var(--tag-blue-bg);
+
+	/* ─ Medusa UI colors → utility classes ─ */
+	/* bg-* / text-* / border-* resolved from these */
+	--color-ui-bg-base: var(--bg-base);
+	--color-ui-bg-base-hover: var(--bg-base-hover);
+	--color-ui-bg-base-pressed: var(--bg-base-pressed);
+	--color-ui-bg-subtle: var(--bg-subtle);
+	--color-ui-bg-subtle-hover: var(--bg-subtle-hover);
+	--color-ui-bg-subtle-pressed: var(--bg-subtle-pressed);
+	--color-ui-bg-component: var(--bg-component);
+	--color-ui-bg-component-hover: var(--bg-component-hover);
+	--color-ui-bg-component-pressed: var(--bg-component-pressed);
+	--color-ui-bg-field: var(--bg-field);
+	--color-ui-bg-field-hover: var(--bg-field-hover);
+	--color-ui-bg-field-component: var(--bg-field-component);
+	--color-ui-bg-field-component-hover: var(--bg-field-component-hover);
+	--color-ui-bg-highlight: var(--bg-highlight);
+	--color-ui-bg-highlight-hover: var(--bg-highlight-hover);
+	--color-ui-bg-interactive: var(--bg-interactive);
+	--color-ui-bg-disabled: var(--bg-disabled);
+	--color-ui-bg-overlay: var(--bg-overlay);
+	--color-ui-bg-switch-off: var(--bg-switch-off);
+	--color-ui-bg-switch-off-hover: var(--bg-switch-off-hover);
+
+	--color-ui-fg-base: var(--fg-base);
+	--color-ui-fg-subtle: var(--fg-subtle);
+	--color-ui-fg-muted: var(--fg-muted);
+	--color-ui-fg-disabled: var(--fg-disabled);
+	--color-ui-fg-error: var(--fg-error);
+	--color-ui-fg-interactive: var(--fg-interactive);
+	--color-ui-fg-interactive-hover: var(--fg-interactive-hover);
+	--color-ui-fg-on-color: var(--fg-on-color);
+	--color-ui-fg-on-inverted: var(--fg-on-inverted);
+
+	--color-ui-border-base: var(--border-base);
+	--color-ui-border-strong: var(--border-strong);
+	--color-ui-border-interactive: var(--border-interactive);
+	--color-ui-border-danger: var(--border-danger);
+	--color-ui-border-error: var(--border-error);
+	--color-ui-border-transparent: var(--border-transparent);
+	--color-ui-border-menu-top: var(--border-menu-top);
+	--color-ui-border-menu-bot: var(--border-menu-bot);
+
+	--color-ui-button-neutral: var(--button-neutral);
+	--color-ui-button-neutral-hover: var(--button-neutral-hover);
+	--color-ui-button-neutral-pressed: var(--button-neutral-pressed);
+	--color-ui-button-inverted: var(--button-inverted);
+	--color-ui-button-inverted-hover: var(--button-inverted-hover);
+	--color-ui-button-inverted-pressed: var(--button-inverted-pressed);
+	--color-ui-button-danger: var(--button-danger);
+	--color-ui-button-danger-hover: var(--button-danger-hover);
+	--color-ui-button-danger-pressed: var(--button-danger-pressed);
+	--color-ui-button-transparent: var(--button-transparent);
+	--color-ui-button-transparent-hover: var(--button-transparent-hover);
+	--color-ui-button-transparent-pressed: var(--button-transparent-pressed);
+
+	--color-ui-contrast-fg-primary: var(--contrast-fg-primary);
+	--color-ui-contrast-fg-secondary: var(--contrast-fg-secondary);
+	--color-ui-contrast-bg-base: var(--contrast-bg-base);
+	--color-ui-contrast-bg-base-hover: var(--contrast-bg-base-hover);
+	--color-ui-contrast-bg-base-pressed: var(--contrast-bg-base-pressed);
+	--color-ui-contrast-bg-subtle: var(--contrast-bg-subtle);
+	--color-ui-contrast-border-base: var(--contrast-border-base);
+	--color-ui-contrast-border-bot: var(--contrast-border-bot);
+	--color-ui-contrast-border-top: var(--contrast-border-top);
+
+	--color-ui-tag-neutral-bg: var(--tag-neutral-bg);
+	--color-ui-tag-neutral-bg-hover: var(--tag-neutral-bg-hover);
+	--color-ui-tag-neutral-text: var(--tag-neutral-text);
+	--color-ui-tag-neutral-icon: var(--tag-neutral-icon);
+	--color-ui-tag-neutral-border: var(--tag-neutral-border);
+	--color-ui-tag-red-bg: var(--tag-red-bg);
+	--color-ui-tag-red-bg-hover: var(--tag-red-bg-hover);
+	--color-ui-tag-red-text: var(--tag-red-text);
+	--color-ui-tag-red-icon: var(--tag-red-icon);
+	--color-ui-tag-red-border: var(--tag-red-border);
+	--color-ui-tag-orange-bg: var(--tag-orange-bg);
+	--color-ui-tag-orange-bg-hover: var(--tag-orange-bg-hover);
+	--color-ui-tag-orange-text: var(--tag-orange-text);
+	--color-ui-tag-orange-icon: var(--tag-orange-icon);
+	--color-ui-tag-orange-border: var(--tag-orange-border);
+	--color-ui-tag-green-bg: var(--tag-green-bg);
+	--color-ui-tag-green-bg-hover: var(--tag-green-bg-hover);
+	--color-ui-tag-green-text: var(--tag-green-text);
+	--color-ui-tag-green-icon: var(--tag-green-icon);
+	--color-ui-tag-green-border: var(--tag-green-border);
+	--color-ui-tag-blue-bg: var(--tag-blue-bg);
+	--color-ui-tag-blue-bg-hover: var(--tag-blue-bg-hover);
+	--color-ui-tag-blue-text: var(--tag-blue-text);
+	--color-ui-tag-blue-icon: var(--tag-blue-icon);
+	--color-ui-tag-blue-border: var(--tag-blue-border);
+	--color-ui-tag-purple-bg: var(--tag-purple-bg);
+	--color-ui-tag-purple-bg-hover: var(--tag-purple-bg-hover);
+	--color-ui-tag-purple-text: var(--tag-purple-text);
+	--color-ui-tag-purple-icon: var(--tag-purple-icon);
+	--color-ui-tag-purple-border: var(--tag-purple-border);
+
+	--color-ui-alpha-250: var(--alpha-250);
+	--color-ui-alpha-400: var(--alpha-400);
+
+	/* ─ Shadows ─ */
+	--shadow-elevation-card-rest: var(--elevation-card-rest);
+	--shadow-elevation-card-hover: var(--elevation-card-hover);
+	--shadow-elevation-flyout: var(--elevation-flyout);
+	--shadow-elevation-tooltip: var(--elevation-tooltip);
+	--shadow-elevation-modal: var(--elevation-modal);
+	--shadow-elevation-code-block: var(--elevation-code-block);
+	--shadow-elevation-commandbar: var(--elevation-commandbar);
+	--shadow-buttons-neutral: var(--buttons-neutral);
+	--shadow-buttons-neutral-hover: var(--buttons-neutral-hover);
+	--shadow-buttons-neutral-focus: var(--buttons-neutral-focus);
+	--shadow-buttons-inverted: var(--buttons-inverted);
+	--shadow-buttons-inverted-focus: var(--buttons-inverted-focus);
+	--shadow-buttons-danger: var(--buttons-danger);
+	--shadow-buttons-danger-focus: var(--buttons-danger-focus);
+	--shadow-borders-base: var(--borders-base);
+	--shadow-borders-error: var(--borders-error);
+	--shadow-borders-focus: var(--borders-focus);
+	--shadow-borders-interactive-with-shadow: var(--borders-interactive-with-shadow);
+	--shadow-borders-interactive-with-focus: var(--borders-interactive-with-focus);
+	--shadow-borders-interactive-with-active: var(--borders-interactive-with-active);
 }
 
-/* Smooth theme transition on key properties only */
+/* ── Smooth theme transition for non-Medusa elements only ── */
 html,
-body,
-header,
-footer,
-section,
-div,
-span,
-p,
-h1,
-h2,
-h3,
-h4,
-h5,
-a,
-button,
-input,
-select,
-textarea,
-label,
-svg path,
-.card {
+body {
 	transition:
-		background-color 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-		border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-		color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-		box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-		opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-		transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+		background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+		color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
 	* {
 		scrollbar-width: thin;
-		scrollbar-color: var(--border) transparent;
+		scrollbar-color: var(--border-base) transparent;
 	}
 
 	html {
-		background: var(--bg);
+		background: var(--bg-base);
 		overflow-y: scroll;
 		scrollbar-gutter: stable;
 	}
 
 	body {
 		min-height: 100dvh;
-		background: var(--bg);
-		color: var(--text);
-		font-family: var(--font-sans);
+		background: var(--bg-base);
+		color: var(--fg-base);
+		font-family: 'Inter', sans-serif;
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
 	}
 
 	::selection {
-		background: var(--accent);
-		color: #fff;
-	}
-
-	input,
-	textarea,
-	select {
-		background-color: var(--surface2);
+		background: var(--bg-interactive);
+		color: var(--fg-on-color);
 	}
 }
 
 @layer components {
-	.card {
-		background: var(--surface);
-		border: 1px solid var(--border);
-		border-radius: var(--radius);
-		transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-	}
-	.card:hover {
-		border-color: var(--border);
-		box-shadow: 0 14px 40px var(--accent-glow);
-	}
-
-	/* overrides for framer-motion elements that should not have CSS transitions */
-	.no-css-transition,
-	.no-css-transition * {
-		transition: none !important;
-	}
-
 	.skeleton {
-		background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
+		background: linear-gradient(90deg, var(--bg-base) 25%, var(--bg-subtle) 50%, var(--bg-base) 75%);
 		background-size: 200% 100%;
 		animation: skeleton-pulse 1.5s ease-in-out infinite;
 		border-radius: var(--radius-sm);
@@ -163,55 +243,5 @@ svg path,
 	}
 	.scrollbar-none::-webkit-scrollbar {
 		display: none;
-	}
-
-	.scrollbar-hover {
-		scrollbar-width: thin;
-		scrollbar-color: transparent transparent;
-		transition: scrollbar-color 0.25s ease;
-	}
-	.scrollbar-hover:hover {
-		scrollbar-color: var(--border) transparent;
-	}
-	.scrollbar-hover::-webkit-scrollbar {
-		width: 6px;
-		height: 6px;
-	}
-	.scrollbar-hover::-webkit-scrollbar-track {
-		background: transparent;
-	}
-	.scrollbar-hover::-webkit-scrollbar-thumb {
-		background: transparent;
-		border-radius: 3px;
-	}
-	.scrollbar-hover:hover::-webkit-scrollbar-thumb {
-		background: var(--border);
-	}
-
-	.product-card-image {
-		object-position: center center;
-		transform: scale(1);
-		transition:
-			opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-			filter 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-			transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-			object-position 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-	}
-
-	.product-card:hover .product-card-image {
-		object-position: center 46%;
-		transform: scale(1.05);
-	}
-
-	.product-image-sheen {
-		background: linear-gradient(110deg, transparent 0%, rgb(255 255 255 / 0.16) 36%, transparent 68%);
-		transform: translateX(-120%);
-		animation: product-image-sheen 1.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-	}
-
-	@keyframes product-image-sheen {
-		to {
-			transform: translateX(120%);
-		}
 	}
 }

@@ -84,7 +84,7 @@ export default function ProductDetailPage() {
 						Sản phẩm này không tồn tại hoặc đã bị xoá.
 					</p>
 					<Link href='/' className='mt-6 inline-flex'>
-						<Button variant='outline' icon={<ChevronLeft className='h-4 w-4' />}>
+						<Button variant='secondary' icon={<ChevronLeft className='h-4 w-4' />}>
 							Quay lại cửa hàng
 						</Button>
 					</Link>
@@ -431,7 +431,7 @@ function ProductPurchasePanel({
 					<div className='hidden gap-3 md:flex'>
 						<Button
 							variant='secondary'
-							size='lg'
+							size='large'
 							className='flex-1 whitespace-nowrap'
 							icon={<ShoppingBag className='h-5 w-5' />}
 							onClick={onAdd}
@@ -440,7 +440,7 @@ function ProductPurchasePanel({
 							Thêm vào giỏ
 						</Button>
 						<Button
-							size='lg'
+							size='large'
 							className='flex-1 whitespace-nowrap bg-text text-bg shadow-[0_4px_16px_rgba(0,0,0,0.12)] hover:shadow-[0_10px_28px_rgba(0,0,0,0.18)] dark:bg-text dark:text-bg dark:shadow-[0_4px_16px_rgba(230,237,243,0.12)] dark:hover:shadow-[0_10px_28px_rgba(230,237,243,0.18)]'
 							onClick={onBuy}
 							disabled={!isAvailable}
@@ -665,7 +665,7 @@ function MobileStickyCTA({ isAvailable, onAdd, onBuy }: MobileStickyCTAProps) {
 			<div className='mx-auto flex max-w-md items-center gap-2'>
 				<Button
 					variant='secondary'
-					size='md'
+					size='base'
 					className='h-12 flex-1 whitespace-nowrap px-3 text-sm rounded-full border-border'
 					icon={<ShoppingBag className='h-4 w-4' />}
 					onClick={onAdd}
@@ -674,7 +674,7 @@ function MobileStickyCTA({ isAvailable, onAdd, onBuy }: MobileStickyCTAProps) {
 					Thêm vào giỏ
 				</Button>
 				<Button
-					size='md'
+					size='base'
 					className='h-12 flex-1 whitespace-nowrap px-3 text-sm bg-text text-bg rounded-full shadow-[0_4px_16px_rgba(0,0,0,0.15)]'
 					onClick={onBuy}
 					disabled={!isAvailable}

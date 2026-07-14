@@ -160,8 +160,8 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
           active:scale-[0.96]
           ${
 				active
-					? 'bg-text text-bg shadow-[0_1px_6px_rgba(0,0,0,0.12)]'
-					: 'bg-surface2/60 text-text2 border border-border/40 hover:border-text/30 hover:text-text'
+					? 'bg-fg-base text-bg-base shadow-[0_1px_6px_rgba(0,0,0,0.12)]'
+					: 'bg-bg-subtle/60 text-fg-subtle border border-border-base/40 hover:border-fg-base/30 hover:text-fg-base'
 			}
         `}
 			>
@@ -174,22 +174,24 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 	/* ── Inline quantity ── */
 	function QtyControl({ value, onChange, max }: { value: number; onChange: (v: number) => void; max: number }) {
 		return (
-			<div className='inline-flex items-center gap-3 rounded-full bg-surface2/70 border border-border/30 px-1'>
+			<div className='inline-flex items-center gap-3 rounded-full bg-surface2/70 border border-border-base/30 px-1'>
 				<button
 					type='button'
 					onClick={() => onChange(Math.max(1, value - 1))}
 					disabled={value <= 1}
-					className='flex h-8 w-8 items-center justify-center rounded-full text-text2 transition-colors hover:bg-surface2 active:bg-surface2/80 disabled:opacity-20 disabled:pointer-events-none'
+					className='flex h-8 w-8 items-center justify-center rounded-full text-fg-subtle transition-colors hover:bg-bg-subtle active:bg-bg-subtle/80 disabled:opacity-20 disabled:pointer-events-none'
 					aria-label='Giảm'
 				>
 					<Minus className='h-3.5 w-3.5' strokeWidth={1.8} />
 				</button>
-				<span className='min-w-[24px] text-center text-sm font-semibold text-text tabular-nums'>{value}</span>
+				<span className='min-w-[24px] text-center text-sm font-semibold text-fg-base tabular-nums'>
+					{value}
+				</span>
 				<button
 					type='button'
 					onClick={() => onChange(Math.min(max, value + 1))}
 					disabled={value >= max}
-					className='flex h-8 w-8 items-center justify-center rounded-full text-text2 transition-colors hover:bg-surface2 active:bg-surface2/80 disabled:opacity-20 disabled:pointer-events-none'
+					className='flex h-8 w-8 items-center justify-center rounded-full text-fg-subtle transition-colors hover:bg-bg-subtle active:bg-bg-subtle/80 disabled:opacity-20 disabled:pointer-events-none'
 					aria-label='Tăng'
 				>
 					<Plus className='h-3.5 w-3.5' strokeWidth={1.8} />
@@ -202,19 +204,19 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 	const sheetContent = (
 		<div className='flex flex-col gap-0 h-full' data-variant-sheet>
 			{/* ── Product summary ── */}
-			<div className='flex items-center gap-4 pb-4 border-b border-border/10 shrink-0'>
+			<div className='flex items-center gap-4 pb-4 border-b border-border-base/10 shrink-0'>
 				<div className='relative h-16 w-16 shrink-0 overflow-hidden rounded-[14px] bg-surface2 ring-1 ring-border/10'>
 					<Image src={product.images[0]} alt={product.name} fill className='object-cover' sizes='64px' />
 				</div>
 				<div className='min-w-0 flex-1'>
-					<h3 className='text-sm font-semibold text-text leading-snug line-clamp-1'>{product.name}</h3>
+					<h3 className='text-sm font-semibold text-fg-base leading-snug line-clamp-1'>{product.name}</h3>
 					<div className='mt-1 flex items-baseline gap-2.5'>
-						<span className='text-xl font-bold text-accent tracking-tight'>{fmtPrice(displayPrice)}</span>
+						<span className='text-xl font-bold text-fg-base tracking-tight'>{fmtPrice(displayPrice)}</span>
 						{comparePrice && (
-							<span className='text-sm text-text2/70 line-through'>{fmtPrice(comparePrice)}</span>
+							<span className='text-sm text-fg-subtle/70 line-through'>{fmtPrice(comparePrice)}</span>
 						)}
 						{discount > 0 && (
-							<span className='text-[11px] font-bold text-red bg-red/5 px-1.5 py-0.5 rounded-md'>
+							<span className='text-[11px] font-bold text-tag-red-text bg-tag-red-bg/30 px-1.5 py-0.5 rounded-md'>
 								-{discount}%
 							</span>
 						)}
@@ -227,10 +229,12 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 				{sizes.length > 0 && (
 					<div className='pb-2'>
 						<div className='flex items-center justify-between mb-3'>
-							<span className='text-[11px] font-semibold uppercase tracking-[0.08em] text-text2/60'>
+							<span className='text-[11px] font-semibold uppercase tracking-[0.08em] text-fg-subtle/60'>
 								Kích thước
 							</span>
-							{selectedSize && <span className='text-[13px] font-medium text-text'>{selectedSize}</span>}
+							{selectedSize && (
+								<span className='text-[13px] font-medium text-fg-base'>{selectedSize}</span>
+							)}
 						</div>
 						<div className='flex flex-wrap gap-2'>
 							{sizes.map(s => (
@@ -248,11 +252,11 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 				{colors.length > 0 && (
 					<div className='py-2'>
 						<div className='flex items-center justify-between mb-3'>
-							<span className='text-[11px] font-semibold uppercase tracking-[0.08em] text-text2/60'>
+							<span className='text-[11px] font-semibold uppercase tracking-[0.08em] text-fg-subtle/60'>
 								Màu sắc
 							</span>
 							{selectedColor && (
-								<span className='text-[13px] font-medium text-text'>{selectedColor}</span>
+								<span className='text-[13px] font-medium text-fg-base'>{selectedColor}</span>
 							)}
 						</div>
 						<div className='flex flex-wrap gap-2'>
@@ -269,7 +273,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 				)}
 
 				<div className='flex items-center justify-between py-2'>
-					<span className='text-[11px] font-semibold uppercase tracking-[0.08em] text-text2/60'>
+					<span className='text-[11px] font-semibold uppercase tracking-[0.08em] text-fg-subtle/60'>
 						Số lượng
 					</span>
 					<QtyControl value={quantity} onChange={setQuantity} max={maxQty} />
@@ -277,7 +281,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 			</div>
 
 			{/* ── Dual CTAs ── */}
-			<div className='shrink-0 pt-4 border-t border-border/10 grid grid-cols-2 gap-3'>
+			<div className='shrink-0 pt-4 border-t border-border-base/10 grid grid-cols-2 gap-3'>
 				<button
 					type='button'
 					disabled={!canConfirm || added}
@@ -289,10 +293,10 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
             flex items-center justify-center gap-2
             ${
 				added
-					? 'bg-green/10 text-green border border-green/30 scale-95'
+					? 'bg-tag-green-bg/30 text-tag-green-text border border-tag-green-border scale-95'
 					: canConfirm
-						? 'border border-border/60 text-text bg-surface hover:bg-surface2 cursor-pointer'
-						: 'border border-border/20 text-text2/40 bg-surface2/30 cursor-not-allowed'
+						? 'border border-border-base/60 text-fg-base bg-bg-base hover:bg-bg-subtle cursor-pointer'
+						: 'border border-border-base/20 text-fg-subtle/40 bg-surface2/30 cursor-not-allowed'
 			}
           `}
 				>
@@ -318,10 +322,10 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
             flex items-center justify-center gap-2
             ${
 				added
-					? 'bg-green text-white scale-95 shadow-none'
+					? 'bg-tag-green-bg text-white scale-95 shadow-none'
 					: canConfirm
-						? 'bg-text text-bg shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.14)] cursor-pointer'
-						: 'bg-surface2/60 text-text2/40 cursor-not-allowed'
+						? 'bg-fg-base text-bg-base shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.14)] cursor-pointer'
+						: 'bg-bg-subtle/60 text-fg-subtle/40 cursor-not-allowed'
 			}
           `}
 				>
@@ -356,7 +360,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 					{isMobile ? (
 						<motion.div
 							ref={sheetRef}
-							className='fixed bottom-0 left-0 right-0 z-50 flex flex-col bg-surface shadow-2xl overflow-hidden'
+							className='fixed bottom-0 left-0 right-0 z-50 flex flex-col bg-bg-base shadow-2xl overflow-hidden'
 							style={{
 								borderTopLeftRadius: 20,
 								borderTopRightRadius: 20,
@@ -377,7 +381,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 								<div className='h-1 w-9 rounded-full bg-border/40' />
 							</div>
 							<div className='flex shrink-0 items-center justify-center px-5 pb-0.5'>
-								<span className='text-[13px] font-semibold uppercase tracking-[0.08em] text-text2/60'>
+								<span className='text-[13px] font-semibold uppercase tracking-[0.08em] text-fg-subtle/60'>
 									Tuỳ chọn sản phẩm
 								</span>
 							</div>
@@ -391,7 +395,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 					) : (
 						<div className='fixed inset-0 z-50 flex items-center justify-center p-4' onClick={onClose}>
 							<motion.div
-								className='relative w-[440px] bg-surface shadow-2xl overflow-hidden'
+								className='relative w-[440px] bg-bg-base shadow-2xl overflow-hidden'
 								style={{ borderRadius: 24 }}
 								initial={{ opacity: 0, scale: 0.94, y: 16 }}
 								animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -402,7 +406,7 @@ export default function VariantSheet({ open, onClose, onAddToCart, onBuyNow, pro
 								<button
 									type='button'
 									onClick={onClose}
-									className='absolute top-4 right-4 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-surface/80 backdrop-blur-sm border border-border/20 text-text2 hover:text-text transition-colors'
+									className='absolute top-4 right-4 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-bg-base/80 backdrop-blur-sm border border-border-base/20 text-fg-subtle hover:text-fg-base transition-colors'
 									aria-label='Đóng'
 								>
 									<svg width='14' height='14' viewBox='0 0 14 14' fill='none'>

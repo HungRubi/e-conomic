@@ -388,18 +388,18 @@ function OrderSummary({
 				</div>
 				<div className='flex items-center justify-between gap-4 text-text2'>
 					<span>Tạm tính</span>
-					<span className='font-mono tabular-nums text-text'>{formatCurrency(selectedSubtotal)}</span>
+					<span className='tabular-nums text-text'>{formatCurrency(selectedSubtotal)}</span>
 				</div>
 				<div className='flex items-center justify-between gap-4 text-text2'>
 					<span>Phí vận chuyển</span>
-					<span className='font-mono tabular-nums text-text'>
+					<span className='tabular-nums text-text'>
 						{shipping === 0 ? 'Miễn phí' : formatCurrency(shipping)}
 					</span>
 				</div>
 				<div className='border-t border-border pt-3'>
 					<div className='flex items-end justify-between gap-4'>
 						<span className='font-semibold text-text'>Tổng</span>
-						<span className='font-mono text-xl font-semibold tracking-[-0.03em] tabular-nums text-text'>
+						<span className='text-xl font-semibold tracking-[-0.03em] tabular-nums text-text'>
 							{formatCurrency(total)}
 						</span>
 					</div>
@@ -458,7 +458,7 @@ function MobileCheckoutBar({
 			<div className='flex items-center gap-3'>
 				<div className='min-w-0 flex-1'>
 					<p className='text-xs text-text2'>Đã chọn {selectedQuantity} sản phẩm</p>
-					<p className='font-mono text-lg font-semibold tracking-[-0.03em] tabular-nums text-text'>
+					<p className='text-lg font-semibold tracking-[-0.03em] tabular-nums text-text'>
 						{formatCurrency(total)}
 					</p>
 				</div>

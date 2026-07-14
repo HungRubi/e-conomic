@@ -150,7 +150,7 @@ export default function OrdersPage() {
 															className='object-cover transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/order-item:scale-105'
 															sizes='(max-width: 768px) 88px, 112px'
 														/>
-														<span className='absolute right-2 top-2 rounded-full bg-surface/90 px-2 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-text shadow-sm backdrop-blur-md'>
+														<span className='absolute right-2 top-2 rounded-full bg-surface/90 px-2 py-0.5 text-[11px] font-semibold tabular-nums text-text shadow-sm backdrop-blur-md'>
 															x{item.qty}
 														</span>
 													</div>
@@ -159,7 +159,7 @@ export default function OrdersPage() {
 														<div className='flex min-w-0 items-center gap-2 text-xs text-text2'>
 															<span className='truncate font-medium'>{item.brand}</span>
 															<span aria-hidden='true'>•</span>
-															<span className='truncate font-mono tabular-nums'>
+															<span className='truncate tabular-nums'>
 																SKU {item.sku}
 															</span>
 														</div>
@@ -205,7 +205,7 @@ export default function OrdersPage() {
 										<div className='flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4'>
 											<div className='flex items-center justify-between gap-4 sm:justify-end'>
 												<span className='text-sm text-text2'>Tổng</span>
-												<span className='font-mono text-base font-medium tabular-nums text-text'>
+												<span className='text-base font-medium tabular-nums text-text'>
 													{formatCurrency(order.total)}
 												</span>
 											</div>

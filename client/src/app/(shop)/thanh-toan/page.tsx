@@ -147,7 +147,7 @@ export default function CheckoutPage() {
 								<Button
 									onClick={() => setStep('payment')}
 									disabled={!form.fullName || !form.phone || !form.address}
-									size='lg'
+									size='large'
 								>
 									Tiếp tục
 									<ArrowRight className='ml-1 h-4 w-4' strokeWidth={1.8} />
@@ -209,13 +209,13 @@ export default function CheckoutPage() {
 
 							<div className='mt-5 flex justify-between gap-3'>
 								<Button
-									variant='ghost'
+									variant='transparent'
 									onClick={() => setStep('shipping')}
 									icon={<ChevronLeft className='h-4 w-4' />}
 								>
 									Quay lại
 								</Button>
-								<Button onClick={() => setStep('review')} size='lg'>
+								<Button onClick={() => setStep('review')} size='large'>
 									Xem lại đơn
 									<ArrowRight className='ml-1 h-4 w-4' strokeWidth={1.8} />
 								</Button>
@@ -257,7 +257,7 @@ export default function CheckoutPage() {
 												</p>
 												<p className='mt-1 text-xs text-text2'>Số lượng: {item.quantity}</p>
 											</div>
-											<div className='font-mono text-xs font-semibold tabular-nums text-text'>
+											<div className='text-xs font-semibold tabular-nums text-text'>
 												{formatCurrency(item.price * item.quantity)}
 											</div>
 										</div>
@@ -267,13 +267,13 @@ export default function CheckoutPage() {
 
 							<div className='flex justify-between gap-3'>
 								<Button
-									variant='ghost'
+									variant='transparent'
 									onClick={() => setStep('payment')}
 									icon={<ChevronLeft className='h-4 w-4' />}
 								>
 									Quay lại
 								</Button>
-								<Button onClick={handlePlaceOrder} loading={placing} size='lg'>
+								<Button onClick={handlePlaceOrder} loading={placing} size='large'>
 									{placing ? 'Đang xử lý...' : 'Đặt hàng'}
 								</Button>
 							</div>
@@ -412,7 +412,7 @@ function OrderSummary({
 							<p className='truncate text-sm font-medium text-text'>{item.name}</p>
 							<p className='text-xs text-text2'>x{item.quantity}</p>
 						</div>
-						<p className='font-mono text-xs font-semibold tabular-nums text-text'>
+						<p className='text-xs font-semibold tabular-nums text-text'>
 							{formatCurrency(item.price * item.quantity)}
 						</p>
 					</div>
@@ -422,17 +422,17 @@ function OrderSummary({
 			<div className='mt-5 space-y-3 border-t border-border pt-4 text-sm'>
 				<div className='flex items-center justify-between gap-4 text-text2'>
 					<span>Tạm tính</span>
-					<span className='font-mono tabular-nums text-text'>{formatCurrency(subtotal)}</span>
+					<span className='tabular-nums text-text'>{formatCurrency(subtotal)}</span>
 				</div>
 				<div className='flex items-center justify-between gap-4 text-text2'>
 					<span>Phí vận chuyển</span>
-					<span className='font-mono tabular-nums text-text'>
+					<span className='tabular-nums text-text'>
 						{shipping === 0 ? 'Miễn phí' : formatCurrency(shipping)}
 					</span>
 				</div>
 				<div className='flex items-end justify-between gap-4 border-t border-border pt-3'>
 					<span className='font-semibold text-text'>Tổng</span>
-					<span className='font-mono text-xl font-semibold tracking-[-0.03em] tabular-nums text-text'>
+					<span className='text-xl font-semibold tracking-[-0.03em] tabular-nums text-text'>
 						{formatCurrency(total)}
 					</span>
 				</div>

@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang='vi' suppressHydrationWarning className={`${inter.variable} h-full`}>
-			<body className='agent min-h-full flex flex-col text-text antialiased' suppressHydrationWarning>
+			<body className='agent min-h-full flex flex-col text-fg-base antialiased' suppressHydrationWarning>
 				<Providers>{children}</Providers>
 			</body>
 		</html>
