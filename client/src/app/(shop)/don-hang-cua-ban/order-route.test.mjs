@@ -2,16 +2,21 @@ import { existsSync, readFileSync } from 'node:fs';
 import assert from 'node:assert/strict';
 
 const routePath = new URL('./page.tsx', import.meta.url);
+const detailRoutePath = new URL('./[id]/page.tsx', import.meta.url);
 const header = readFileSync(new URL('../../../components/layout/Header.tsx', import.meta.url), 'utf8');
 const sidebar = readFileSync(new URL('../../../components/layout/ShopSidebar.tsx', import.meta.url), 'utf8');
 
 assert.equal(existsSync(routePath), true, 'don-hang-cua-ban route page exists');
+assert.equal(existsSync(detailRoutePath), true, 'don-hang-cua-ban/[id] detail route page exists');
 assert.match(header, /href: '\/don-hang-cua-ban'/, 'account order link uses /don-hang-cua-ban');
 assert.match(sidebar, /href="\/don-hang-cua-ban"/, 'sidebar order lookup uses /don-hang-cua-ban');
 assert.doesNotMatch(header, /href: '\/orders'/, 'header no longer points at missing /orders route');
 assert.doesNotMatch(sidebar, /href="\/orders"/, 'sidebar no longer points at missing /orders route');
 
 const page = readFileSync(routePath, 'utf8');
+const detailPage = readFileSync(detailRoutePath, 'utf8');
+
+// List page assertions
 assert.match(page, /VISIBLE_MOBILE_ITEMS\s*=\s*2/, 'mobile order cards show two product rows before expand prompt');
 assert.match(page, /aspect-square/, 'order item product images must be square');
 assert.match(page, /w-22|size-22|h-22/, 'mobile order item image has a fixed square footprint');
@@ -79,3 +84,21 @@ assert.match(
 );
 assert.doesNotMatch(page, /max-w-5xl/, 'orders list should not cap width after overview sidebar removal');
 assert.doesNotMatch(page, /Chưa có đơn hàng/, 'sample preview should not show empty-state as primary UI');
+
+// Detail page assertions
+assert.match(detailPage, /getOrderById/, 'detail page uses getOrderById for lookup');
+assert.match(detailPage, /notFound/, 'detail page calls notFound for missing orders');
+assert.match(detailPage, /lg:grid-cols-\[minmax\(0,1fr\)_23rem\]/, 'detail page uses two-column layout');
+assert.match(detailPage, /Đơn giá/, 'detail page shows unit price');
+assert.match(detailPage, /Tạm tính/, 'detail page shows line total');
+assert.match(detailPage, /Trạng thái đơn hàng/, 'detail page has timeline section');
+assert.match(detailPage, /Chi tiết thanh toán/, 'detail page has payment summary');
+assert.match(detailPage, /Sản phẩm đã mua/, 'detail page has product listing section');
+assert.match(detailPage, /Chính sách & hỗ trợ/, 'detail page has policy & support section');
+assert.match(detailPage, /formatCurrency\(order\.total\)/, 'detail page shows order total from order data');
+assert.match(detailPage, /@medusajs\/icons/, 'detail page uses Medusa icons');
+assert.match(detailPage, /Badge/, 'detail page uses Medusa Badge');
+assert.match(detailPage, /Button/, 'detail page uses Medusa Button (via wrapper)');
+assert.doesNotMatch(detailPage, /unitPrice/, 'detail page hides raw unitPrice field name (renders as Đơn giá)');
+assert.match(detailPage, /Quay lại đơn hàng/, 'detail page has back link');
+assert.match(detailPage, /lg:sticky lg:top-24/, 'detail page sidebar is sticky on large screens');

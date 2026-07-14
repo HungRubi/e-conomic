@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
 	ArrowRight,
-	ChevronDown,
 	CreditCard,
 	RotateCcw,
 	ShieldCheck,
@@ -15,7 +14,7 @@ import {
 	Trash2,
 	Truck,
 } from 'lucide-react';
-import { CartSkeleton, QuantitySelector } from '@/components';
+import { CartSkeleton, QuantitySelector, Select } from '@/components';
 import ProductCard from '@/components/product/ProductCard';
 import { useCartStore } from '@/stores/cart-store';
 import { SHIPPING_FEE, FREE_SHIPPING_THRESHOLD } from '@/lib/constants';
@@ -63,7 +62,7 @@ function Checkbox({ checked, onChange, label }: { checked: boolean; onChange?: (
 }
 
 export default function CartPage() {
-	const { items, removeItem, updateQuantity, totalItems } = useCartStore();
+	const { items, removeItem, updateQuantity, updateItemVariant, totalItems } = useCartStore();
 	const [mounted, setMounted] = useState(false);
 	const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
@@ -187,7 +186,7 @@ export default function CartPage() {
 				<h1 className='mt-1 h1-core tracking-[-0.04em] text-text'>Giỏ hàng</h1>
 			</div>
 
-			<div className='grid gap-6 lg:grid-cols-[minmax(0,1fr)_23rem] lg:gap-8'>
+			<div className='grid gap-6 min-[1300px]:grid-cols-[minmax(0,1fr)_23rem] min-[1300px]:gap-8'>
 				<div className='space-y-3'>
 					<div className='flex items-center justify-between gap-3 rounded-xl border border-border/80 bg-surface/90 px-3 py-3 shadow-[0_18px_60px_rgba(0,0,0,0.06)] sm:px-4'>
 						<label className='flex min-w-0 cursor-pointer items-center gap-3 text-sm font-medium text-text'>
@@ -241,9 +240,25 @@ export default function CartPage() {
 							const product = productById.get(item.productId);
 							const slug = product?.slug ?? item.productId;
 							const selected = selectedIdSet.has(item.id);
-							const variantText = [item.size && `Size ${item.size}`, item.color]
-								.filter(Boolean)
-								.join(' / ');
+
+							// Extract sizes and colors from product variants
+							const sizes = product ? [...new Set(product.variants.map(v => v.size).filter(Boolean))] as string[] : [];
+							const colors = product ? [...new Set(product.variants.map(v => v.color).filter(Boolean))] as string[] : [];
+
+							const handleVariantChange = (field: 'size' | 'color', val: string) => {
+								const newSize = field === 'size' ? val : item.size;
+								const newColor = field === 'color' ? val : item.color;
+								const match = product?.variants.find(v =>
+									(sizes.length === 0 || v.size === newSize) &&
+									(colors.length === 0 || v.color === newColor)
+								);
+								updateItemVariant(item.id, {
+									size: newSize,
+									color: newColor,
+									price: match?.price ?? item.price,
+									image: match?.image ?? item.image,
+								});
+							};
 
 							return (
 								<article
@@ -291,14 +306,26 @@ export default function CartPage() {
 												</button>
 											</div>
 
-											{variantText && (
-												<button
-													type='button'
-													className='mt-1.5 inline-flex max-w-full items-center gap-1 rounded-full border border-border/80 bg-surface2/70 px-2.5 py-1 txt-compact-xsmall-plus text-text2 transition-all hover:bg-surface2'
-												>
-													<span className='truncate'>{variantText}</span>
-													<ChevronDown className='h-3 w-3 shrink-0' strokeWidth={1.8} />
-												</button>
+											{/* Variant selection with Medusa Select */}
+											{(sizes.length > 0 || colors.length > 0) && (
+												<div className='mt-2 flex flex-wrap items-center gap-2'>
+													{sizes.length > 0 && (
+														<Select
+															value={item.size ?? sizes[0]}
+															options={sizes.map(s => ({ value: s, label: s }))}
+															onChange={e => handleVariantChange('size', e.target.value)}
+															className='h-8 w-auto min-w-[80px] max-w-[140px] rounded-full border border-border/80 bg-surface2/70 px-2.5 text-xs text-text2 [&>svg]:h-3 [&>svg]:w-3'
+														/>
+													)}
+													{colors.length > 0 && (
+														<Select
+															value={item.color ?? colors[0]}
+															options={colors.map(c => ({ value: c, label: c }))}
+															onChange={e => handleVariantChange('color', e.target.value)}
+															className='h-8 w-auto min-w-[80px] max-w-[140px] rounded-full border border-border/80 bg-surface2/70 px-2.5 text-xs text-text2 [&>svg]:h-3 [&>svg]:w-3'
+														/>
+													)}
+												</div>
 											)}
 
 											<div className='mt-2.5 flex flex-wrap items-end justify-between gap-2'>
@@ -338,7 +365,7 @@ export default function CartPage() {
 					</div>
 				</div>
 
-				<aside className='hidden lg:block lg:sticky lg:top-24 lg:self-start'>
+				<aside className='hidden min-[700px]:block min-[1300px]:sticky min-[1300px]:top-24 min-[1300px]:self-start'>
 					<OrderSummary
 						selectedQuantity={selectedQuantity}
 						selectedSubtotal={selectedSubtotal}
@@ -454,7 +481,7 @@ function MobileCheckoutBar({
 	disabled: boolean;
 }) {
 	return (
-		<div className='fixed inset-x-0 bottom-0 z-30 border-t border-border bg-bg/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] backdrop-blur-xl md:hidden'>
+		<div className='fixed inset-x-0 bottom-0 z-30 border-t border-border bg-bg/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom,0px))] backdrop-blur-xl min-[700px]:hidden'>
 			<div className='flex items-center gap-3'>
 				<div className='min-w-0 flex-1'>
 					<p className='text-xs text-text2'>Đã chọn {selectedQuantity} sản phẩm</p>

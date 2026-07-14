@@ -95,5 +95,31 @@ export interface BlogPost {
 	createdAt: string;
 }
 
+// Order
+export interface OrderItem {
+	name: string;
+	brand: string;
+	variant: string;
+	sku: string;
+	qty: number;
+	unitPrice: number;
+	lineTotal: number;
+	fulfillment: string;
+	slug: string;
+	supportLabel: string;
+	image: string;
+}
+
+export interface Order {
+	id: string;
+	date: string;
+	status: string;
+	statusTone: string;
+	icon: string;
+	eta: string;
+	total: number;
+	items: OrderItem[];
+}
+
 export type ConvStatus = 'OPEN' | 'ASSIGNED' | 'CLOSED';
 export type MsgRole = 'user' | 'ai' | 'staff';
