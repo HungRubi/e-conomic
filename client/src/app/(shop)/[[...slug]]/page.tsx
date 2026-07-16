@@ -9,13 +9,12 @@ import { ArrowRight, ChevronLeft, ChevronRight, PackageSearch } from 'lucide-rea
 import ProductCard from '@/components/product/ProductCard';
 import BlogSection from '@/components/blog/BlogSection';
 import AdBanner from '@/components/ads/AdBanner';
-import { Select } from '@/components';
 import { ProductCardSkeleton, ProductGridSkeleton } from '@/components/ui/Skeleton';
-import { type Product, type BlogPost } from '@/types';
-import { getProducts, getFeaturedProducts, getNewArrivals } from '@/lib/products';
+import { type Product, type BlogPost, type Category } from '@/types';
+import { getProducts, getNewArrivals, getBestSellingProducts } from '@/lib/products';
 import { getRecentBlogPosts } from '@/lib/blog';
-import { ads } from '@/lib/ads';
-import { categories } from '@/lib/categories';
+import { getHeroBanners, getAdBanners, type Banner } from '@/lib/banners';
+import { getCategories as fetchAllCategories } from '@/lib/categories';
 
 const slides = [
 	{
@@ -36,12 +35,16 @@ const sortOptions = [
 	{ value: 'rating', label: 'Đánh giá cao nhất' },
 ];
 
+type Slide = (typeof slides)[number];
+
 function HomeContent() {
 	const params = useParams();
 	const searchParams = useSearchParams();
 	const slug = params.slug?.[0] || null;
-	const selectedCategory = categories.find(c => c.slug === slug)?.slug || null;
 	const sortParam = searchParams.get('sort');
+
+	const [allCats, setAllCats] = useState<Category[]>([]);
+	const selectedCategory = allCats.find(c => c.slug === slug)?.slug || null;
 
 	const [featured, setFeatured] = useState<Product[]>([]);
 	const [newArrivals, setNewArrivals] = useState<Product[]>([]);
@@ -49,6 +52,10 @@ function HomeContent() {
 	const [blogLoading, setBlogLoading] = useState(true);
 	const [loading, setLoading] = useState(true);
 	const [slideIdx, setSlideIdx] = useState(0);
+	const [heroBanners, setHeroBanners] = useState<Banner[]>([]);
+	const [contentBanners, setContentBanners] = useState<Banner[]>([]);
+
+	const displaySlides = heroBanners.length > 0 ? heroBanners : slides;
 
 	// Product listing state
 	const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
@@ -61,20 +68,29 @@ function HomeContent() {
 
 	useEffect(() => {
 		const timer = setInterval(() => {
-			setSlideIdx(p => (p + 1) % slides.length);
+			setSlideIdx(p => (p + 1) % displaySlides.length);
 		}, 4500);
 		return () => clearInterval(timer);
-	}, []);
+	}, [displaySlides.length]);
 
-	const nextSlide = useCallback(() => setSlideIdx(p => (p + 1) % slides.length), []);
-	const prevSlide = useCallback(() => setSlideIdx(p => (p + slides.length - 1) % slides.length), []);
+	const nextSlide = useCallback(() => setSlideIdx(p => (p + 1) % displaySlides.length), [displaySlides.length]);
+	const prevSlide = useCallback(() => setSlideIdx(p => (p + displaySlides.length - 1) % displaySlides.length), [displaySlides.length]);
 
 	// Load static sections
 	useEffect(() => {
 		async function load() {
-			const [f, n] = await Promise.all([getFeaturedProducts(), getNewArrivals()]);
+			const [cats, f, n, hero, content] = await Promise.all([
+				fetchAllCategories(),
+				getBestSellingProducts(),
+				getNewArrivals(),
+				getHeroBanners().catch(() => [] as Banner[]),
+				getAdBanners().catch(() => [] as Banner[]),
+			]);
+			setAllCats(cats);
 			setFeatured(f);
 			setNewArrivals(n);
+			setHeroBanners(hero);
+			setContentBanners(content);
 			setLoading(false);
 		}
 		load();
@@ -92,12 +108,10 @@ function HomeContent() {
 		if (!selectedCategory && !sortParam) return;
 		let active = true;
 
-		const catId = selectedCategory ? categories.find(c => c.slug === selectedCategory)?.id : undefined;
-
 		async function load() {
 			setCatLoading(true);
 			const data = await getProducts({
-				categoryId: catId,
+				categorySlug: selectedCategory || undefined,
 				sort: sortParam || sort,
 			});
 			if (!active) return;
@@ -133,12 +147,25 @@ function HomeContent() {
 
 	const visibleProducts = categoryProducts.slice(0, visibleCount);
 	const hasMore = visibleCount < categoryProducts.length;
-	const categoryName = selectedCategory ? categories.find(c => c.slug === selectedCategory)?.name || 'Danh mục' : '';
+	const categoryName = selectedCategory ? allCats.find(c => c.slug === selectedCategory)?.name || 'Danh mục' : '';
 
 	// Scroll to top when category changes
 	useEffect(() => {
 		if (selectedCategory) window.scrollTo({ top: 0, behavior: 'smooth' });
 	}, [selectedCategory]);
+
+	function getHeroSrc(i: number): string {
+		const s = displaySlides[i];
+		return 'imageUrl' in s ? (s as Banner).imageUrl : (s as Slide).image;
+	}
+
+	function getHeroAlt(i: number): string {
+		return (displaySlides[i] as Banner).altText ?? '';
+	}
+
+	function getHeroLink(i: number): string {
+		return (displaySlides[i] as Banner).linkUrl ?? '/';
+	}
 
 	return (
 		<div>
@@ -156,14 +183,16 @@ function HomeContent() {
 						exit={{ x: -300, opacity: 0 }}
 						transition={{ type: 'spring', stiffness: 80, damping: 20, mass: 0.8 }}
 					>
-						<Image
-							src={slides[slideIdx].image}
-							alt=''
-							fill
-							className='object-cover'
-							sizes='100vw'
-							priority
-						/>
+						<Link href={getHeroLink(slideIdx)} className='block h-full w-full'>
+							<Image
+								src={getHeroSrc(slideIdx)}
+								alt={getHeroAlt(slideIdx)}
+								fill
+								className='object-cover'
+								sizes='100vw'
+								priority
+							/>
+						</Link>
 						<div className='absolute inset-0 bg-gradient-to-r from-black/40 via-black/20 to-transparent' />
 					</motion.div>
 				</AnimatePresence>
@@ -183,7 +212,7 @@ function HomeContent() {
 					<ChevronRight className='w-4 h-4 md:w-5 md:h-5' />
 				</button>
 				<div className='absolute bottom-3 left-1/2 -translate-x-1/2 z-20 flex gap-2'>
-					{slides.map((_, i) => (
+					{displaySlides.map((_, i) => (
 						<button
 							key={i}
 							onClick={() => setSlideIdx(i)}
@@ -195,46 +224,72 @@ function HomeContent() {
 			</section>
 
 			{/* ─── CATEGORIES — always visible ─── */}
-			<section className='py-5'>
-				<div className='grid grid-flow-col grid-rows-2 gap-x-4 gap-y-3 overflow-x-auto overflow-y-hidden pb-2 scrollbar-hover md:flex md:gap-4 md:overflow-x-auto md:overflow-y-hidden md:flex-nowrap md:pb-0 md:scrollbar-hover'>
-					{categories.map((cat, i) => {
-						const isActive = cat.slug === selectedCategory;
-						return (
-							<motion.div
-								key={cat.id}
-								initial={{ opacity: 0, y: 10 }}
-								whileInView={{ opacity: 1, y: 0 }}
-								viewport={{ once: true }}
-								transition={{ delay: i * 0.04, duration: 0.3 }}
-							>
-								<Link href={`/${cat.slug}`} className='flex flex-col items-center gap-2 group w-[76px]'>
-									<div
-										className={`w-[60px] h-[60px] rounded-full overflow-hidden border bg-surface shadow-sm group-hover:border-border group-hover:shadow-md transition-all ${isActive ? 'border-accent/50' : 'border-border'}`}
+				<section className='py-5'>
+					<div className='flex items-start gap-0 group/section'>
+						<button
+							onClick={() => {
+								const el = document.getElementById('cat-scroll');
+								if (el) el.scrollBy({ left: -300, behavior: 'smooth' });
+							}}
+							className='self-center shrink-0 w-8 h-8 md:w-9 md:h-9 rounded-full bg-surface/80 backdrop-blur-sm shadow-sm border border-border flex items-center justify-center text-text3 opacity-0 group-hover/section:opacity-100 hover:bg-surface hover:text-text transition-all duration-300'
+							aria-label='Trái'
+						>
+							<ChevronLeft className='w-4 h-4' />
+						</button>
+						<div
+							id='cat-scroll'
+							className='flex gap-4 overflow-x-auto overflow-y-hidden pb-2 scrollbar-hide'
+						>
+							{allCats.length === 0 && Array.from({ length: 8 }).map((_, i) => (
+								<div key={i} className='flex flex-col items-center gap-2 w-[76px] shrink-0'>
+									<div className='w-[60px] h-[60px] rounded-full skeleton' />
+									<div className='h-4 w-14 skeleton rounded' />
+								</div>
+							))}
+							{allCats.map((cat) => {
+								const isActive = cat.slug === selectedCategory;
+								return (
+									<Link
+										key={cat.id}
+										href={`/${cat.slug}`}
+										className='flex flex-col items-center gap-2 group w-[76px] shrink-0'
 									>
-										<Image
-											src={cat.image!}
-											alt={cat.name}
-											width={60}
-											height={60}
-											className='object-cover w-full h-full group-hover:scale-110 transition-transform duration-500'
-										/>
-									</div>
-									<span
-										className={`min-h-[2rem] text-xs font-medium text-center leading-tight line-clamp-2 transition-colors ${isActive ? 'text-text' : 'text-text2 group-hover:text-text'}`}
-									>
-										{cat.name}
-									</span>
-								</Link>
-							</motion.div>
-						);
-					})}
-				</div>
-			</section>
-
-			{isCategoryView ? (
+										<div
+											className={`w-[60px] h-[60px] rounded-full overflow-hidden border bg-surface shadow-sm group-hover:border-border group-hover:shadow-md transition-all ${isActive ? 'border-accent/50' : 'border-border'}`}
+										>
+											<Image
+												src={cat.image!}
+												alt={cat.name}
+												width={60}
+												height={60}
+												className='object-cover w-full h-full group-hover:scale-110 transition-transform duration-500'
+											/>
+										</div>
+										<span
+											className={`min-h-[2rem] text-xs font-medium text-center leading-tight line-clamp-2 transition-colors ${isActive ? 'text-text' : 'text-text2 group-hover:text-text'}`}
+										>
+											{cat.name}
+										</span>
+									</Link>
+								);
+							})}
+						</div>
+						<button
+							onClick={() => {
+								const el = document.getElementById('cat-scroll');
+								if (el) el.scrollBy({ left: 300, behavior: 'smooth' });
+							}}
+							className='self-center shrink-0 w-8 h-8 md:w-9 md:h-9 rounded-full bg-surface/80 backdrop-blur-sm shadow-sm border border-border flex items-center justify-center text-text3 opacity-0 group-hover/section:opacity-100 hover:bg-surface hover:text-text transition-all duration-300'
+							aria-label='Phải'
+						>
+							<ChevronRight className='w-4 h-4' />
+						</button>
+					</div>
+				</section>
+{isCategoryView ? (
 				/* ─── CATEGORY PRODUCT LISTING ─── */
 				<section className='py-6'>
-					<div className='mb-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between'>
+					<div className='mb-5'>
 						<div className='min-w-0'>
 							<div className='flex items-center gap-2'>
 								<h1 className='truncate text-xl font-semibold tracking-tight text-text'>
@@ -253,22 +308,6 @@ function HomeContent() {
 								</p>
 							)}
 						</div>
-						<Select
-							value={sort}
-							options={sortOptions}
-							onChange={e => {
-								setSort(e.target.value);
-								setCatLoading(true);
-								const catId = selectedCategory
-									? categories.find(c => c.slug === selectedCategory)?.id
-									: undefined;
-								getProducts({ categoryId: catId, sort: e.target.value }).then(data => {
-									setCategoryProducts(data);
-									setVisibleCount(6);
-									setCatLoading(false);
-								});
-							}}
-						/>
 					</div>
 
 					{catLoading ? (
@@ -367,7 +406,18 @@ function HomeContent() {
 
 					{/* AD BANNER 1 */}
 					<section className='py-5'>
-						<AdBanner ad={ads[0]} index={0} />
+						{contentBanners[0] ? (
+							<AdBanner
+								ad={{
+									id: contentBanners[0].id,
+									image: contentBanners[0].imageUrl,
+									link: contentBanners[0].linkUrl ?? '/',
+									alt: contentBanners[0].altText ?? '',
+									type: 'banner',
+								}}
+								index={0}
+							/>
+						) : null}
 					</section>
 
 					{/* BLOG SECTION */}
@@ -375,7 +425,18 @@ function HomeContent() {
 
 					{/* AD BANNER 2 */}
 					<section className='pt-5 pb-4'>
-						<AdBanner ad={ads[1]} index={1} />
+						{contentBanners[1] ? (
+							<AdBanner
+								ad={{
+									id: contentBanners[1].id,
+									image: contentBanners[1].imageUrl,
+									link: contentBanners[1].linkUrl ?? '/',
+									alt: contentBanners[1].altText ?? '',
+									type: 'banner',
+								}}
+								index={1}
+							/>
+						) : null}
 					</section>
 				</>
 			)}

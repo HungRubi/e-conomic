@@ -1,7 +1,6 @@
 'use client';
 
 import { Select as MedusaSelect } from '@medusajs/ui';
-import { ChevronDown } from 'lucide-react';
 
 interface SelectOption {
 	value: string;
@@ -25,9 +24,8 @@ export default function Select({ value, options, onChange, className = '', disab
 		>
 			<MedusaSelect.Trigger className={className}>
 				<MedusaSelect.Value placeholder='Chọn...' />
-				<ChevronDown className='h-4 w-4' />
 			</MedusaSelect.Trigger>
-			<MedusaSelect.Content>
+			<MedusaSelect.Content align='end'>
 				{options.map(opt => (
 					<MedusaSelect.Item key={opt.value} value={opt.value}>
 						{opt.label}

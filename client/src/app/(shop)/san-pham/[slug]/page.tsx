@@ -14,7 +14,7 @@ import { useFlyingCart } from '@/components/product/FlyingCartProvider';
 import { useCartStore } from '@/stores/cart-store';
 import { toast } from '@medusajs/ui';
 import { type Product } from '@/types';
-import { products, getProductBySlug, getRelatedProducts } from '@/lib/products';
+import { getProductBySlug, getRelatedProducts, products } from '@/lib/products';
 
 /* ---------- helpers ---------- */
 
@@ -52,7 +52,8 @@ export default function ProductDetailPage() {
 				setQuantity(1);
 
 				if (nextProduct) {
-					const relatedProducts = await getRelatedProducts(nextProduct.id);
+					const catId = nextProduct.category?.id ?? nextProduct.categoryId;
+					const relatedProducts = await getRelatedProducts(nextProduct.id, catId);
 					if (!cancelled) setRelated(relatedProducts);
 				} else {
 					setRelated([]);

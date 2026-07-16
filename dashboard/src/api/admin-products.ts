@@ -143,12 +143,16 @@ function qs(params?: Record<string, unknown>) {
 function normalizeProduct(row: AdminProductRow): AdminProductRow {
 	const priceNumber = Number(row.price ?? 0);
 	const image = (row as any).image ?? row.thumbnailLarge ?? row.thumbnailSmall ?? row.images?.[0] ?? null;
+	const compareAt = row.compareAtPrice ? Number(row.compareAtPrice) : null;
 	return {
 		...row,
 		image,
 		priceVnd: (row as any).priceVnd ?? priceNumber,
 		priceLabel: (row as any).priceLabel ?? `${priceNumber.toLocaleString('vi-VN')}đ`,
 		type: row.type === 'SIMPLE' ? 'PHYSICAL' : row.type,
+		discountPercent:
+			(row as any).discountPercent ??
+			(compareAt && priceNumber > 0 ? Math.round((1 - priceNumber / compareAt) * 100) : 0),
 	} as AdminProductRow;
 }
 
@@ -162,37 +166,64 @@ function toServerProductBody(data: Partial<ProductBody>): Record<string, unknown
 	const images = Array.isArray(data.images)
 		? data.images.map((img: any) => (typeof img === 'string' ? img : img?.url)).filter(Boolean)
 		: [];
-	return {
-		name: data.name,
-		...(data.slug ? { slug: data.slug } : {}),
-		...(data.sku ? { sku: data.sku } : {}),
-		description: data.description ?? '',
-		shortDescription: (data as any).detailTitle ?? data.shortDescription ?? '',
-		type: data.type === 'PHYSICAL' ? 'SIMPLE' : data.type,
-		status: data.status,
-		price: data.price ?? data.priceVnd ?? 0,
-		thumbnailSmall: data.thumbnailSmall ?? thumbnail ?? null,
-		thumbnailLarge: data.thumbnailLarge ?? thumbnail ?? null,
-		images,
-		stockQuantity: (data as any).stockQuantity ?? 0,
-		trackStock: (data as any).trackStock ?? true,
-		allowBackorder: (data as any).allowBackorder ?? false,
-		isFeatured: data.isFeatured ?? false,
-		sortOrder: data.sortOrder ?? 0,
-		categoryIds: data.categoryIds ?? [],
-		primaryCategoryId: data.primaryCategoryId ?? data.categoryIds?.[0],
-		metadata: {
-			accent: (data as any).accent,
-			parent: (data as any).parent,
-			child: (data as any).child,
-			categorySlugs: (data as any).categorySlugs,
-			custom: (data as any).custom,
-			isBracelet: (data as any).isBracelet,
-			careTips: (data as any).careTips,
-			components: (data as any).components,
-		},
-		attributes: { variants: (data as any).variants ?? [] },
-	};
+	const out: Record<string, unknown> = {};
+	if (data.name !== undefined) out.name = data.name;
+	if (data.slug !== undefined) out.slug = data.slug;
+	if (data.sku !== undefined) out.sku = data.sku;
+	if (data.description !== undefined) out.description = data.description;
+	if (data.shortDescription !== undefined) out.shortDescription = data.shortDescription;
+	if (data.status !== undefined) out.status = data.status;
+	if (data.type !== undefined) out.type = data.type;
+	if (data.isFeatured !== undefined) out.isFeatured = data.isFeatured;
+	if (data.sortOrder !== undefined) out.sortOrder = data.sortOrder;
+	if (data.sold !== undefined) out.soldCount = data.sold;
+	if (data.soldCount !== undefined) out.soldCount = data.soldCount;
+
+	// Price — only send if explicitly provided
+	if (data.price !== undefined || data.priceVnd !== undefined) {
+		out.price = data.price ?? data.priceVnd ?? 0;
+	}
+
+	// Discount: compute compareAtPrice from discountPercent if available
+	if (data.discountPercent !== undefined) {
+		const basePrice = Number(data.price ?? data.priceVnd ?? 0);
+		if (data.discountPercent > 0 && basePrice > 0) {
+			out.compareAtPrice = Math.round(basePrice / (1 - data.discountPercent / 100));
+		} else {
+			out.compareAtPrice = null;
+		}
+	} else if (data.compareAtPrice !== undefined) {
+		out.compareAtPrice = data.compareAtPrice !== null ? Number(data.compareAtPrice) : null;
+	}
+
+	// Images
+	if (data.thumbnailSmall !== undefined) out.thumbnailSmall = data.thumbnailSmall;
+	if (data.thumbnailLarge !== undefined) out.thumbnailLarge = data.thumbnailLarge;
+	if (data.images !== undefined) out.images = images;
+
+	// Stock
+	if ((data as any).stockQuantity !== undefined) out.stockQuantity = (data as any).stockQuantity;
+	if ((data as any).trackStock !== undefined) out.trackStock = (data as any).trackStock;
+	if ((data as any).allowBackorder !== undefined) out.allowBackorder = (data as any).allowBackorder;
+
+	// SEO
+	if (data.seoTitle !== undefined) out.seoTitle = data.seoTitle;
+	if (data.seoDescription !== undefined) out.seoDescription = data.seoDescription;
+	if (data.seoKeywords !== undefined) out.seoKeywords = data.seoKeywords;
+
+	// Physical dimensions
+	if ((data as any).weight !== undefined) out.weight = (data as any).weight;
+	if ((data as any).width !== undefined) out.width = (data as any).width;
+	if ((data as any).height !== undefined) out.height = (data as any).height;
+	if ((data as any).length !== undefined) out.length = (data as any).length;
+
+	// Categories
+	if (data.categoryIds !== undefined) {
+		out.categoryIds = data.categoryIds;
+		out.primaryCategoryId = data.primaryCategoryId ?? data.categoryIds?.[0];
+	}
+
+	return out;
 }
 
 export async function fetchProducts(params?: ListProductsParams): Promise<ProductListResponse> {

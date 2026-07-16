@@ -251,7 +251,7 @@ function DisplayValue(props: EditableFieldProps) {
 }
 
 function EmptyHint({ hint }: { hint?: string }) {
-	return <span className='italic text-muted-foreground'>{hint ?? 'Chưa thiết lập'}</span>;
+	return <span className='text-muted-foreground/60 text-xs'>{hint ?? 'Chưa thiết lập'}</span>;
 }
 
 function EditInput({

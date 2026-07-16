@@ -167,6 +167,7 @@ model Product {
 
   isFeatured Boolean @default(false)
   sortOrder  Int     @default(0)
+  soldCount  Int     @default(0)
 
   attributes Json?
   metadata   Json?
@@ -182,6 +183,7 @@ model Product {
   @@index([type])
   @@index([sortOrder])
   @@index([isFeatured])
+  @@index([soldCount])
   @@map("products")
 }
 
@@ -234,4 +236,23 @@ model ProductCategoryMap {
   @@index([categoryId])
   @@index([productId])
   @@map("product_category_maps")
+}
+
+enum BannerType {
+  HERO
+  BANNER
+}
+
+model Banner {
+  id        String     @id @default(uuid())
+  imageUrl  String
+  linkUrl   String?
+  altText   String?
+  type      BannerType @default(BANNER)
+  sortOrder Int        @default(0)
+  active    Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("banners")
 }

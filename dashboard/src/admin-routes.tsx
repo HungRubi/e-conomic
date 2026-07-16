@@ -65,6 +65,9 @@ const PromotionDiscountDetailPage = React.lazy(() => import('@/pages/promotion-d
 const ImageSizesPage = React.lazy(() => import('@/pages/image-sizes-page'));
 const GlobalConfigPage = React.lazy(() => import('@/pages/global-config-page'));
 const AuditLogsPage = React.lazy(() => import('@/pages/audit-logs-page'));
+const RevenuePage = React.lazy(() => import('@/pages/revenue-page'));
+const BannersPage = React.lazy(() => import('@/pages/banners-page'));
+const BannerDetailPage = React.lazy(() => import('@/pages/banner-detail-page'));
 
 function lazyRoute(node: React.ReactNode) {
 	return (
@@ -90,7 +93,7 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
 		label: 'Tổng quan',
 		items: [
 			{
-				title: 'Dashboard',
+				title: 'Tổng quan',
 				path: '/',
 				icon: LayoutDashboardIcon,
 				iconClassName: 'text-blue-600 dark:text-blue-400',
@@ -131,6 +134,10 @@ export const ADMIN_NAV_SECTIONS: AdminNavSection[] = [
 				path: '/products',
 				icon: ShoppingCartIcon,
 				iconClassName: 'text-violet-600 dark:text-violet-400',
+				children: [
+					{ title: 'Tất cả sản phẩm', path: '/products' },
+					{ title: 'Danh mục', path: '/products/categories' },
+				],
 			},
 			{
 				title: 'Đơn hàng',
@@ -213,8 +220,8 @@ export const ADMIN_QUICK_LINKS = [
 export type BreadcrumbEntry = { label: string; href?: string };
 export function getAdminBreadcrumbs(pathname: string): BreadcrumbEntry[] {
 	const path = pathname === '' ? '/' : pathname;
-	if (path === '/') return [{ label: 'Dashboard' }];
-	const root: BreadcrumbEntry = { label: 'Dashboard', href: '/' };
+	if (path === '/') return [{ label: 'Tổng quan' }];
+	const root: BreadcrumbEntry = { label: 'Tổng quan', href: '/' };
 	const orderDetail = path.match(/^\/orders\/([^/]+)$/);
 	if (orderDetail && orderDetail[1] !== 'pending')
 		return [root, { label: 'Đơn hàng', href: '/orders' }, { label: 'Chi tiết đơn' }];
@@ -231,6 +238,8 @@ export function getAdminBreadcrumbs(pathname: string): BreadcrumbEntry[] {
 			{ label: 'Danh mục', href: '/products/categories' },
 			{ label: 'Chi tiết danh mục' },
 		];
+	const bannerDetail = path.match(/^\/content\/banners\/([^/]+)$/);
+	if (bannerDetail) return [root, { label: 'Nội dung', href: '/content/pages' }, { label: 'Banners', href: '/content/banners' }, { label: 'Chi tiết banner' }];
 	for (const section of ADMIN_NAV_SECTIONS) {
 		for (const item of section.items) {
 			if (item.children?.length) {
@@ -365,6 +374,8 @@ export const adminNestedRouteElements = (
 		<Route path='content/customer-feedbacks/:feedbackId' element={lazyRoute(<CustomerFeedbackDetailPage />)} />
 		<Route path='content/contact-inquiries' element={lazyRoute(<ContactInquiriesPage />)} />
 		<Route path='content/contact-inquiries/:inquiryId' element={lazyRoute(<ContactInquiryDetailPage />)} />
+		<Route path='content/banners' element={lazyRoute(<BannersPage />)} />
+		<Route path='content/banners/:bannerId' element={lazyRoute(<BannerDetailPage />)} />
 		<Route path='content' element={<Navigate to='/content/pages' replace />} />
 		<Route path='campaigns' element={lazyRoute(<CampaignsAdminPage />)} />
 		<Route path='campaigns/:campaignId' element={lazyRoute(<CampaignDetailPage />)} />
@@ -374,6 +385,7 @@ export const adminNestedRouteElements = (
 		<Route path='settings/website' element={lazyRoute(<GlobalConfigPage />)} />
 		<Route path='settings' element={<Navigate to='/settings/image-sizes' replace />} />
 		<Route path='audit-logs' element={lazyRoute(<AuditLogsPage />)} />
+		<Route path='revenue' element={lazyRoute(<RevenuePage />)} />
 		<Route path='*' element={<Navigate to='/' replace />} />
 	</>
 );

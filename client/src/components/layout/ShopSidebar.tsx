@@ -2,63 +2,31 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import {
-	Shirt,
-	Monitor,
-	Home,
-	Sparkles,
-	Trophy,
-	BookOpen,
-	Heart,
-	ToyBrick,
-	Car,
-	ShoppingBasket,
-	HeartPulse,
-	Tablet,
-	Watch,
-	Footprints,
-	Handbag,
 	Clock,
-	PawPrint,
-	Headphones,
 	Zap,
 	Ticket,
 	Gamepad2,
+	Gift,
+	Percent,
 	ChevronRight,
 	Truck,
 	TrendingUp,
-	Gift,
-	Percent,
 	Star,
 	User,
 } from 'lucide-react';
+import { DynamicIcon } from '@/components/ui/DynamicIcon';
 import { useUIStore } from '@/stores/ui-store';
-import { categories } from '@/lib/categories';
+import { getFeaturedCategories } from '@/lib/categories';
 import Sheet from '@/components/ui/Sheet';
-import type { ReactNode } from 'react';
-
-const CATEGORY_ICONS: Record<string, ReactNode> = {
-	'thoi-trang': <Shirt className='w-4 h-4' />,
-	'dien-tu': <Monitor className='w-4 h-4' />,
-	'nha-cua': <Home className='w-4 h-4' />,
-	'sac-dep': <Sparkles className='w-4 h-4' />,
-	'the-thao': <Trophy className='w-4 h-4' />,
-	'sach': <BookOpen className='w-4 h-4' />,
-	'me-va-be': <Heart className='w-4 h-4' />,
-	'do-choi': <ToyBrick className='w-4 h-4' />,
-	'o-to-xe-may': <Car className='w-4 h-4' />,
-	'bach-hoa': <ShoppingBasket className='w-4 h-4' />,
-	'suc-khoe': <HeartPulse className='w-4 h-4' />,
-	'thiet-bi-so': <Tablet className='w-4 h-4' />,
-	'phu-kien': <Watch className='w-4 h-4' />,
-	'giay-dep': <Footprints className='w-4 h-4' />,
-	'tui-vi': <Handbag className='w-4 h-4' />,
-	'dong-ho': <Clock className='w-4 h-4' />,
-	'thu-cung': <PawPrint className='w-4 h-4' />,
-	'am-thanh': <Headphones className='w-4 h-4' />,
-};
+import type { Category } from '@/types';
 
 function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
+const [featuredCats, setFeaturedCats] = useState<Category[]>([]);
+	useEffect(() => {
+		getFeaturedCategories().then(setFeaturedCats).catch(() => {});
+	}, []);
 	const pathname = usePathname();
 	const activeSlug = pathname === '/' ? null : pathname.slice(1);
 
@@ -123,7 +91,7 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 					</span>
 					Gợi ý cho bạn
 				</Link>
-				{categories.map(cat => (
+				{featuredCats.map(cat => (
 					<Link
 						key={cat.id}
 						href={`/${cat.slug}`}
@@ -135,7 +103,7 @@ function SidebarContent({ onLinkClick }: { onLinkClick?: () => void }) {
 						}`}
 					>
 						<span className='flex items-center justify-center w-4 h-4 shrink-0'>
-							{CATEGORY_ICONS[cat.slug] || <ChevronRight className='w-3.5 h-3.5' />}
+							<DynamicIcon name={cat.icon || cat.slug} className='w-4 h-4' fallback={<ChevronRight className='w-3.5 h-3.5' />} />
 						</span>
 						{cat.name}
 					</Link>

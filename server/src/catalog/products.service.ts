@@ -31,6 +31,9 @@ export class ProductsService {
     if (query.type && query.type !== 'all') where.type = query.type;
     if (query.categoryId)
       where.categories = { some: { categoryId: query.categoryId } };
+    if (query.categorySlug)
+      where.categories = { some: { category: { slug: query.categorySlug } } };
+    if (query.isFeatured !== undefined) where.isFeatured = query.isFeatured === 'true' || query.isFeatured === true;
     if (query.q) {
       where.OR = [
         { name: { contains: query.q, mode: 'insensitive' } },
@@ -68,6 +71,15 @@ export class ProductsService {
       include: productInclude,
     });
     if (!row || row.deletedAt) throw new NotFoundException('Product not found');
+    return row;
+  }
+
+  async getBySlug(slug: string, extraWhere?: Prisma.ProductWhereInput) {
+    const row = await this.prisma.product.findFirst({
+      where: { slug, deletedAt: null, ...extraWhere },
+      include: productInclude,
+    });
+    if (!row) throw new NotFoundException('Product not found');
     return row;
   }
 

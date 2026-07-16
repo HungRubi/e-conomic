@@ -21,7 +21,7 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return (
-		<html lang='vi' suppressHydrationWarning className={`${inter.variable} h-full`}>
+		<html lang='vi' suppressHydrationWarning className={`${inter.variable} h-full`} style={{ scrollbarGutter: 'stable' }}>
 				<head>
 					<link rel='preconnect' href='https://fonts.googleapis.com' crossOrigin='anonymous' />
 					<link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />

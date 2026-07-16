@@ -13,6 +13,7 @@ export interface Product {
 	tags: string[];
 	rating: number;
 	reviewCount: number;
+	soldCount?: number;
 	createdAt: string;
 }
 
@@ -25,6 +26,7 @@ export interface ProductVariant {
 	stock: number;
 	price: number;
 	image?: string;
+	
 }
 
 export interface Category {
@@ -32,6 +34,7 @@ export interface Category {
 	slug: string;
 	name: string;
 	image?: string;
+	icon?: string;
 	parentId?: string;
 	children?: Category[];
 }

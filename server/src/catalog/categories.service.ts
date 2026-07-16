@@ -36,6 +36,7 @@ export class CategoriesService {
     if (query.status && query.status !== 'all') where.status = query.status;
     if (query.level !== undefined && query.level !== 'all')
       where.level = Number(query.level);
+    if (query.isFeatured !== undefined) where.isFeatured = query.isFeatured === 'true' || query.isFeatured === true;
     if (query.q) {
       where.OR = [
         { name: { contains: query.q, mode: 'insensitive' } },
@@ -85,6 +86,16 @@ export class CategoriesService {
       include: categoryInclude,
     });
     if (!row || row.deletedAt)
+      throw new NotFoundException('Category not found');
+    return row;
+  }
+
+  async getBySlug(slug: string) {
+    const row = await this.prisma.productCategory.findFirst({
+      where: { slug, deletedAt: null },
+      include: categoryInclude,
+    });
+    if (!row)
       throw new NotFoundException('Category not found');
     return row;
   }
